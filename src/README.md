@@ -1,0 +1,1 @@
+try http://lostechies.com/derickbailey/2014/02/20/how-i-work-around-the-require-problem-in-nodejs/

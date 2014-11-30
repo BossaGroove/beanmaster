@@ -1,0 +1,90 @@
+.box-shadow(@px) {
+	-webkit-box-shadow: @px;
+	-moz-box-shadow: @px;
+	box-shadow: @px;
+}
+
+.border-radius(@px) {
+	-webkit-border-radius: @px;
+	-moz-border-radius: @px;
+	border-radius: @px;
+}
+
+.circle(@px, @color) {
+	border-radius: 50%;
+	width: @px;
+	height: @px;
+	background-color: @color;
+}
+
+.place-holder(@color) {
+	&::-webkit-input-placeholder {
+		color: @color;
+	}
+
+	&:-moz-placeholder {
+		color: @color;
+	}
+
+	&::-moz-placeholder {
+		color: @color;
+	}
+
+	&:-ms-input-placeholder {
+		color: @color;
+	}
+}
+
+.box-sizing(@value) {
+	-webkit-box-sizing: @value;
+	-moz-box-sizing: @value;
+	box-sizing: @value;
+}
+
+.btn-style(@color) {
+	background-color: @color;
+	border: none;
+	color: #FFFFFF;
+
+	&:hover {
+		background-color: lighten(@color, 10%);
+	}
+
+	&:disabled {
+		background-color: darken(@color, 10%);
+		color: darken(#FFFFFF, 10%);
+		cursor: not-allowed;
+	}
+}
+
+
+
+// Transitions, copy from bootstrap 2.3.2
+.transition(@transition) {
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-o-transition: @transition;
+	transition: @transition;
+}
+.transition-delay(@transition-delay) {
+	-webkit-transition-delay: @transition-delay;
+	-moz-transition-delay: @transition-delay;
+	-o-transition-delay: @transition-delay;
+	transition-delay: @transition-delay;
+}
+.transition-duration(@transition-duration) {
+	-webkit-transition-duration: @transition-duration;
+	-moz-transition-duration: @transition-duration;
+	-o-transition-duration: @transition-duration;
+	transition-duration: @transition-duration;
+}
+
+
+// Opacity from bootstrap
+
+.opacity(@opacity) {
+	opacity: @opacity;
+	// IE8 filter
+	@opacity-ie: (@opacity * 100);
+	filter: ~"alpha(opacity=@{opacity-ie})";
+}
