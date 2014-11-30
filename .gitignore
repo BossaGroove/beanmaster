@@ -34,3 +34,5 @@ builtAssets/*
 
 
 *.log
+
+src/app/config/beanstalk.json

@@ -3,18 +3,11 @@ meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
 meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
 meta(name="keywords", content="#{keywords}")
 meta(name="description", content="#{description}")
-meta(property="og:title", content="#{title}")
-meta(property="og:description", content="#{description}")
-meta(property="og:url", content="http://lighted.hk")
-meta(property="og:site_name", content="Lighted.hk")
 title #{title}
 
 != css('lib/bootstrap/css/bootstrap')
 != css('lib/fontawesome/css/font-awesome')
-!= css('lib/jquery.flexslider/css/flexslider')
 != css('css/default/style')
-
-link(href="http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700", rel="stylesheet", type="text/css")
 
 <!--[if IE]>
 script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
@@ -22,9 +15,4 @@ script(src='https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js')
 <![endif]-->
 
 != js('lib/jquery/js/jquery-2.1.1.min')
-!= js('lib/jquery.backstretch/js/jquery.backstretch.min.js')
-!= js('lib/jquery.flexslider/js/jquery.flexslider.min.js')
-!= js('lib/jquery.scrollto/js/jquery.scrollto.js')
-!= js('lib/jquery.mansonry/js/jquery.masonry.min.js')
-!= js('lib/jquery.waypoints/js/waypoints.min.js')
 != js('lib/bootstrap/js/bootstrap.min')

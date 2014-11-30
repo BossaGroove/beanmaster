@@ -10,7 +10,7 @@ module.exports = function (config) {
 		//res.locals.user = req.user;
 
 		// CSRF support
-		res.locals.csrf_token = req.csrfToken();
+		res.locals._csrf = req.csrfToken();
 		next();
 	};
 };

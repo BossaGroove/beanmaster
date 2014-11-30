@@ -1,5 +1,53 @@
 extends ../layouts/default
 
 block content
-	.container
-		| styguhi
+	include ../layouts/includes/header
+	.container-fluid
+		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
+		h1 Server list
+		table#server_list.table.table-bordered.table-striped.table-hover
+			thead
+				tr
+					th Name
+					th Host
+					th Port
+					th Delete
+			tbody
+				each c in config
+					tr
+						td #{c.name}
+						td #{c.host}
+						td #{c.port}
+						td
+							button.btn.btn-danger Delete
+		button.btn.btn-primary#btn_add_server Add Server
+		.modal.fade#add_server
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type="button", data-dismiss="modal")
+							span(aria-hidden="true") &times;
+							span.sr-only Close
+						h4.modal-title Add Server
+					.modal-body
+						form#server_form.form-horizontal(role="form")
+							.form-group
+								label.col-sm-2.control-label(for="name") Name
+								.col-sm-10
+									input.form-control#name(type="text", placeholder="My cool beanstalk server")
+							.form-group
+								label.col-sm-2.control-label(for="host") Host
+								.col-sm-10
+									input.form-control#host(type="text", placeholder="192.168.0.1 / my-cool-beanstalk-server.com")
+							.form-group
+								label.col-sm-2.control-label(for="port") Port
+								.col-sm-10
+									input.form-control#port(type="text", placeholder="11300")
+					.modal-footer
+						span.preloader
+							img(src="/assets/images/preloader.gif")
+						button.btn.btn-default(type="button", data-dismiss="modal") Close
+						button.btn.btn-primary#btn_save_server(type="button") Add
+
+	!= js('lib/validator/js/validator.min')
+	!= js('js/servers')

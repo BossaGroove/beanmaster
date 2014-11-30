@@ -13,10 +13,11 @@
 
 module.exports = function (app, passport) {
 
-	var page = require('../../app/controllers/page');
+	var home = require('../../app/controllers/home');
 
 	// home route
-	app.get('/', page.home);
+	app.get('/', home.home);
+	app.post('/add-server', home.addServer);
 
 	/**
 	 * Error handling
