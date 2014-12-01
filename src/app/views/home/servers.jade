@@ -11,6 +11,7 @@ block content
 					th Name
 					th Host
 					th Port
+					th View
 					th Delete
 			tbody
 				each c in config
@@ -19,7 +20,9 @@ block content
 						td #{c.host}
 						td #{c.port}
 						td
-							button.btn.btn-danger Delete
+							a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
+						td
+							button.btn.btn-danger.delete Delete
 		button.btn.btn-primary#btn_add_server Add Server
 		.modal.fade#add_server
 			.modal-dialog
@@ -48,6 +51,25 @@ block content
 							img(src="/assets/images/preloader.gif")
 						button.btn.btn-default(type="button", data-dismiss="modal") Close
 						button.btn.btn-primary#btn_save_server(type="button") Add
-
+		.modal.fade#delete_server
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type="button", data-dismiss="modal")
+							span(aria-hidden="true") &times;
+							span.sr-only Close
+						h4.modal-title Delete Server
+					.modal-body
+						input#delete_server_host(type="hidden", name="delete_server_host", value="")
+						input#delete_server_port(type="hidden", name="delete_server_port", value="")
+						p
+							| Delete&nbsp;
+							span#delete_server_name
+							| ?
+					.modal-footer
+						span.preloader
+							img(src="/assets/images/preloader.gif")
+						button.btn.btn-default(type="button", data-dismiss="modal") Close
+						button.btn.btn-danger#btn_delete_server(type="button") Delete
 	!= js('lib/validator/js/validator.min')
-	!= js('js/servers')
+	!= js('js/home/server')

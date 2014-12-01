@@ -1,12 +1,12 @@
 /* global $ */
 
 function blockForm() {
-	$('#server_form').find('input,button').attr('disabled', 'disabled');
+	$('#add_server,#delete_server').find('input,button').attr('disabled', 'disabled');
 	$('.preloader').show();
 }
 
 function unblockForm() {
-	$('#server_form').find('input,button').removeAttr('disabled');
+	$('#add_server,#delete_server').find('input,button').removeAttr('disabled');
 	$('.preloader').hide();
 }
 
@@ -34,15 +34,27 @@ function tabulateServer(result) {
 				.append(
 					$(document.createElement('td'))
 						.append(
+						$(document.createElement('a'))
+							.addClass('btn')
+							.addClass('btn-primary')
+							.attr('href', '/' + encodeURIComponent(result[i].host) + ':' + result[i].port)
+							.html('View')
+					)
+				)
+				.append(
+					$(document.createElement('td'))
+						.append(
 						$(document.createElement('button'))
 							.addClass('btn')
 							.addClass('btn-danger')
+							.addClass('delete')
 							.html('Delete')
 					)
 				)
 		);
 	}
 
+	initDeleteButton();
 }
 
 function saveServer() {
@@ -96,16 +108,73 @@ function saveServer() {
 				}
 			},
 			error: function() {
-
+				console.log(err);
 			}
 		});
 	}
+}
 
+function promptDeleteServer(button) {
+	var cells = $(button).parent().parent().find('td');
+	var host = cells.eq(1).text();
+	var port = cells.eq(2).text();
+
+	$('#delete_server').modal({
+		backdrop: 'static'
+	});
+
+	$('#delete_server_host').val(host);
+	$('#delete_server_port').val(port);
+
+	$('span#delete_server_name').html(host + ':' + port);
+}
+
+function deleteServer() {
+	var host = $('#delete_server_host');
+	var port = $('#delete_server_port');
+
+	var data = {
+		_csrf: $('#_csrf').val(),
+		host: host.val(),
+		port: port.val()
+	};
+
+	$.ajax({
+		url: '/delete-server',
+		method: 'POST',
+		data: data,
+		dataType: 'json',
+		beforeSend: function() {
+			blockForm();
+		},
+		complete: function() {
+			unblockForm();
+		},
+		success: function(data) {
+			if (data.err) {
+				console.log(data.err);
+			} else {
+				tabulateServer(data.config);
+				$('#delete_server').modal('hide');
+				host.val('');
+				port.val('');
+			}
+		},
+		error: function(err) {
+			console.log(err);
+		}
+	});
 }
 
 function promptAddServer() {
 	$('#add_server').modal({
 		backdrop: 'static'
+	});
+}
+
+function initDeleteButton() {
+	$('button.delete').on('click', function(){
+		promptDeleteServer(this);
 	});
 }
 
@@ -117,4 +186,11 @@ $(function() {
 	$('#btn_save_server').click(function() {
 		saveServer();
 	});
+
+	$('#btn_delete_server').click(function() {
+		deleteServer();
+	});
+
+
+	initDeleteButton();
 });

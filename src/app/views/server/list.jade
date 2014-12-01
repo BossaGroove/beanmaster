@@ -1,0 +1,7 @@
+extends ../layouts/default
+
+block content
+	include ../layouts/includes/header
+	.container-fluid
+		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
+		h1 #{name?name + ' - ':''}#{host}:#{port}
