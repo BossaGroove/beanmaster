@@ -5,3 +5,21 @@ block content
 	.container-fluid
 		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
 		h1 #{name?name + ' - ':''}#{host}:#{port}
+		table.table.table-bordered.table-condensed.table-hover
+			thead
+				tr
+					th name
+					th Urgent
+					th Ready
+					th Reserved
+					th Delayed
+					th Buried
+					th Total
+					th Using
+					th Watching
+					th Waiting
+					th Pause(cmd)
+					th Pause(sec)
+					th Pause(left)
+			tbody
+				tr

@@ -4,17 +4,16 @@
 var validator = require('validator');
 var _ = require('lodash');
 var BeanstalkConfigManager = require('../../lib/beanstalk_config_manager');
+var fivebeans = require('fivebeans');
 
 /**
  * list all the beanstalk tubes
  * @param req
  * @param res
  */
-exports.listTube = function(req, res) {
+exports.listServerTubes = function(req, res) {
 
 	var host_port = req.params.host_port || null;
-
-	console.log(host_port);
 
 	if (!host_port) {
 		res.redirect('/');
@@ -41,13 +40,24 @@ exports.listTube = function(req, res) {
 						host: host_port[0],
 						port: host_port[1]
 					});
-
 				});
-
-
 			}
 		}
 	}
+};
+
+/**
+ * get server tubes info in json format
+ * @param req
+ * @param res
+ */
+exports.refreshServerTubes = function(req, res) {
+	var host_port = req.params.host_port || null;
+
+	res.json({
+		host_port: host_port
+	});
+
 };
 
 /**

@@ -9,7 +9,9 @@ module.exports = function (app, passport) {
 
 	var server = require('../../app/controllers/server');
 
-	app.get('/:host_port', server.listTube);
+	app.get('/:host_port', server.listServerTubes);
+	app.get('/:host_port/refresh', server.refreshServerTubes);
+
 	app.get('/:host_port/:tube', server.tube);
 
 	/**

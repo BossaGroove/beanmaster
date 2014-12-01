@@ -35,6 +35,7 @@
 		"csurf": "1.6.1",
 		"express": "4.9.5",
 		"express-session": "1.8.2",
+		"fivebeans": "1.1.1",
 		"jade": "1.7.0",
 		"less": "1.7.5",
 		"less-middleware": "1.0.4",
