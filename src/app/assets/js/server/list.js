@@ -2,6 +2,7 @@
  * Created by Bossa on 2/12/14.
  */
 
+//todo: put in utility
 function highlightElement(element) {
 	element.css('background-color', '');
 

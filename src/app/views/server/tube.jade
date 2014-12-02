@@ -1,0 +1,49 @@
+extends ../layouts/default
+
+block content
+	include ../layouts/includes/header
+	.container-fluid
+		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
+		input#host(type="hidden", name="host", value="#{host}")
+		input#port(type="hidden", name="port", value="#{port}")
+		input#tube(type="hidden", name="tube", value="#{tube}")
+		h1
+			a(href="/#{encodeURIComponent(host)}:#{port}") #{name?name + ' - ':''}#{host}:#{port}
+			| &nbsp;/ #{tube}
+		hr
+		table.table.table-bordered.table-hover.table-striped#tube_table
+			thead
+				tr
+					th name
+					th Urgent
+					th Ready
+					th Reserved
+					th Delayed
+					th Buried
+					th Total
+					th Using
+					th Watching
+					th Waiting
+					th Delete (cmd)
+					th Pause (cmd)
+					th Pause (sec)
+					th Pause (left)
+			tbody
+				tr
+					td #{tube_info.name}
+					td #{tube_info['current-jobs-urgent']}
+					td #{tube_info['current-jobs-ready']}
+					td #{tube_info['current-jobs-reserved']}
+					td #{tube_info['current-jobs-delayed']}
+					td #{tube_info['current-jobs-buried']}
+					td #{tube_info['total-jobs']}
+					td #{tube_info['current-using']}
+					td #{tube_info['current-watching']}
+					td #{tube_info['current-waiting']}
+					td #{tube_info['cmd-delete']}
+					td #{tube_info['cmd-pause-tube']}
+					td #{tube_info.pause}
+					td #{tube_info['pause-time-left']}
+
+	!= js('lib/jquery.color/js/jquery.color.min')
+	!= js('js/server/tube')
