@@ -8,7 +8,6 @@ var validator = require('validator'),
 var BeanstalkConfigManager = require('../../lib/beanstalk_config_manager'),
 	BeanstalkConnectionManager = require('../../lib/beanstalk_connection_manager');
 
-//todo: put in util
 function validateHostPort(host_port) {
 	if (!host_port) {
 		return false;
@@ -71,7 +70,7 @@ function getTubesInfo(connection, callback) {
  * @param req
  * @param res
  */
-exports.listServerTubes = function(req, res) {
+exports.listTubes = function(req, res) {
 
 	var host_port = req.params.host_port || null;
 
@@ -115,15 +114,13 @@ exports.listServerTubes = function(req, res) {
  * @param req
  * @param res
  */
-exports.refreshServerTubes = function(req, res) {
+exports.refreshTubes = function(req, res) {
 	var host_port = req.params.host_port || null;
 
 	host_port = validateHostPort(host_port);
 
 	if (host_port) {
-		//get the connection name
-		BeanstalkConfigManager.getConfig(function(err, config) {
-
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
 			if (err) {
 				res.json({
 					host: host_port[0],
@@ -131,31 +128,15 @@ exports.refreshServerTubes = function(req, res) {
 					err: err
 				});
 			} else {
-				//connect to beanstalk
-				var saved_config = _.find(config, {host: host_port[0], port: host_port[1]});
-				var name = saved_config ? saved_config.name : null;
-
-				BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-
-					if (err) {
-						res.json({
-							host: host_port[0],
-							port: host_port[1],
-							err: err
-						});
-					} else {
-						getTubesInfo(connection, function(err, tubes_info) {
-							res.json({
-								host: host_port[0],
-								port: host_port[1],
-								err: err,
-								tubes_info: tubes_info
-							});
-						});
-					}
+				getTubesInfo(connection, function(err, tubes_info) {
+					res.json({
+						host: host_port[0],
+						port: host_port[1],
+						err: err,
+						tubes_info: tubes_info
+					});
 				});
 			}
-
 		});
 	} else {
 		res.json({
@@ -163,6 +144,47 @@ exports.refreshServerTubes = function(req, res) {
 		});
 	}
 };
+
+function getNextJobs(connection, tube, callback) {
+
+	var actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
+
+	connection.use(tube, function(err) {
+		if (err) {
+			callback(err, null);
+		} else {
+			async.mapSeries(actions, function(action, flow_callback) {
+
+				connection[action](function(err, job_id, payload) {
+
+					if (err) {
+						flow_callback(null, null);
+					} else {
+						connection.stats_job(job_id, function(err, stat) {
+
+							if (err) {
+								flow_callback(null, null);
+							} else {
+								flow_callback(null, {
+									payload: payload.toString(),
+									stat: stat
+								});
+							}
+						});
+					}
+				});
+
+			}, function(err, results) {
+				var map_result = {};
+				for (var i = 0; i < actions.length; i++) {
+					map_result[actions[i]] = results[i];
+				}
+
+				callback(err, map_result);
+			});
+		}
+	});
+}
 
 /**
  * show tube detail
@@ -175,8 +197,7 @@ exports.tube = function(req, res) {
 
 	host_port = validateHostPort(host_port);
 
-	if (host_port) {
-
+	if (host_port && tube) {
 		//get the connection name
 		BeanstalkConfigManager.getConfig(function(err, config) {
 
@@ -193,10 +214,19 @@ exports.tube = function(req, res) {
 					} else {
 
 						connection.stats_tube(tube, function(err, tube_info) {
-
-							if (err) {
-								res.redirect('/');
-							} else {
+							async.waterfall([
+								function(flow_callback) {
+									if (tube_info) {
+										getNextJobs(connection, tube, function(err, stats) {
+											flow_callback(err, stats);
+										});
+									} else {
+										flow_callback(err, null);
+									}
+								}
+							], function(err, stats) {
+								tube_info = tube_info || {};
+								stats = stats || {};
 
 								res.render('server/tube', {
 									page: 'tube',
@@ -206,10 +236,10 @@ exports.tube = function(req, res) {
 									port: host_port[1],
 									tube: tube,
 									err: err,
-									tube_info: tube_info
+									tube_info: tube_info,
+									stats: stats
 								});
-							}
-
+							});
 						});
 					}
 				});
@@ -218,5 +248,61 @@ exports.tube = function(req, res) {
 
 	} else {
 		res.redirect('/');
+	}
+};
+
+
+/**
+ * get server tubes info in json format
+ * @param req
+ * @param res
+ */
+exports.refreshTube = function(req, res) {
+	var host_port = req.params.host_port || null;
+	var tube = req.params.tube || null;
+
+	host_port = validateHostPort(host_port);
+
+	if (host_port && tube) {
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+				connection.stats_tube(tube, function(err, tube_info) {
+					async.waterfall([
+						function(flow_callback) {
+							if (tube_info) {
+								getNextJobs(connection, tube, function(err, stats) {
+									flow_callback(err, stats);
+								});
+							} else {
+								flow_callback(err, null);
+							}
+						}
+					], function(err, stats) {
+						tube_info = tube_info || {};
+						stats = stats || {};
+
+						res.json({
+							host: host_port[0],
+							port: host_port[1],
+							tube: tube,
+							err: err,
+							tube_info: tube_info,
+							stats: stats
+						});
+					});
+				});
+			}
+		});
+	} else {
+		res.json({
+			err: 'host_port or tube error'
+		});
 	}
 };

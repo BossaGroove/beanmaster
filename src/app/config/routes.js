@@ -9,10 +9,11 @@ module.exports = function (app, passport) {
 
 	var server = require('../../app/controllers/server');
 
-	app.get('/:host_port', server.listServerTubes);
-	app.get('/:host_port/refresh', server.refreshServerTubes);
+	app.get('/:host_port', server.listTubes);
+	app.get('/:host_port/refresh', server.refreshTubes);
 
 	app.get('/:host_port/:tube', server.tube);
+	app.get('/:host_port/:tube/refresh', server.refreshTube);
 
 	/**
 	 * Error handling

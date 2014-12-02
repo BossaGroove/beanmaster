@@ -11,7 +11,8 @@ block content
 			a(href="/#{encodeURIComponent(host)}:#{port}") #{name?name + ' - ':''}#{host}:#{port}
 			| &nbsp;/ #{tube}
 		hr
-		table.table.table-bordered.table-hover.table-striped#tube_table
+		.alert.alert-warning#not_found(class=((Object.keys(tube_info).length > 0)?'hide':'')) Tube not found
+		table.table.table-bordered.table-hover.table-striped#tube_table(class=((Object.keys(tube_info).length > 0)?'':'hide'))
 			thead
 				tr
 					th name
@@ -44,6 +45,76 @@ block content
 					td #{tube_info['cmd-pause-tube']}
 					td #{tube_info.pause}
 					td #{tube_info['pause-time-left']}
+
+		p
+			strong Actions:&nbsp;
+			.btn-group
+				button.btn.btn-warning
+					i.glyphicon.glyphicon-play
+					| &nbsp;Kick 1
+				button.btn.btn-warning.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
+					span.caret
+					span.sr-only Toggle Dropdown
+				ul.dropdown-menu(role="menu")
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-forward
+							| &nbsp;Kick 10
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-forward
+							| &nbsp;Kick 100
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-fast-forward
+							| &nbsp;Kick all
+			.btn-group
+				button.btn.btn-danger
+					i.glyphicon.glyphicon-trash
+					| &nbsp;Delete 1
+				button.btn.btn-danger.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
+					span.caret
+					span.sr-only Toggle Dropdown
+				ul.dropdown-menu(role="menu")
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-trash
+							| &nbsp;Delete 10
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-trash
+							| &nbsp;Delete 100
+					li
+						a(href="javascript:void(0)")
+							i.glyphicon.glyphicon-remove
+							| &nbsp;Delete all
+
+			button.btn.btn-primary#btn_add_job
+				i.icon-plus-sign.icon-white
+				| Add job
+		hr
+
+		each stat_key in Object.keys(stats)
+			.row-fluid
+				.span.col-md-12
+					h4 Next job in "#{stat_key.split('_')[1]}" state
+			if stats[stat_key]
+				.row-fluid
+					.span.col-md-2
+						p
+							strong Stats
+						table.table.table-condensed
+							tbody
+								each key in Object.keys(stats[stat_key].stat)
+									tr
+										td #{key}
+										td #{stats[stat_key].stat[key]}
+					.span.col-md-10
+						p
+							strong Job data:
+						pre
+							code #{stats[stat_key].payload}
+
 
 	!= js('lib/jquery.color/js/jquery.color.min')
 	!= js('js/server/tube')

@@ -15,6 +15,7 @@ function highlightElement(element) {
 	}, 500);
 }
 
+//todo: put in utility
 function updateCellValue(cell, value) {
 	cell.text(value);
 	highlightElement(cell);
@@ -114,7 +115,6 @@ function tabulateTubeInfo(tubes_info) {
 			}
 		}
 	}
-
 }
 
 function refreshTubeInfo() {
