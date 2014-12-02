@@ -4,8 +4,10 @@ block content
 	include ../layouts/includes/header
 	.container-fluid
 		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
+		input#host(type="hidden", name="host", value="#{host}")
+		input#port(type="hidden", name="port", value="#{port}")
 		h1 #{name?name + ' - ':''}#{host}:#{port}
-		table.table.table-bordered.table-condensed.table-hover
+		table.table.table-bordered.table-hover.table-striped#tube_table
 			thead
 				tr
 					th name
@@ -18,8 +20,28 @@ block content
 					th Using
 					th Watching
 					th Waiting
-					th Pause(cmd)
-					th Pause(sec)
-					th Pause(left)
+					th Delete (cmd)
+					th Pause (cmd)
+					th Pause (sec)
+					th Pause (left)
 			tbody
-				tr
+				each tube in tubes_info
+					tr
+						td
+							a(href="/#{encodeURIComponent(host) + ':' + port}/#{tube.name}") #{tube.name}
+						td #{tube['current-jobs-urgent']}
+						td #{tube['current-jobs-ready']}
+						td #{tube['current-jobs-reserved']}
+						td #{tube['current-jobs-delayed']}
+						td #{tube['current-jobs-buried']}
+						td #{tube['total-jobs']}
+						td #{tube['current-using']}
+						td #{tube['current-watching']}
+						td #{tube['current-waiting']}
+						td #{tube['cmd-delete']}
+						td #{tube['cmd-pause-tube']}
+						td #{tube.pause}
+						td #{tube['pause-time-left']}
+
+	!= js('lib/jquery.color/js/jquery.color.min')
+	!= js('js/server/list')

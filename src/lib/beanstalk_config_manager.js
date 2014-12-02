@@ -94,17 +94,11 @@
 				callback(err, null);
 			} else {
 
-				console.log(input_config);
-
 				var config_to_be_deleted = _.findWhere(all_config, {host: input_config.host, port: input_config.port});
-
-				console.log(config_to_be_deleted);
 
 				if (config_to_be_deleted) {
 					all_config = _.without(all_config, config_to_be_deleted)
 				}
-
-				console.log(all_config);
 
 				_this.saveConfig(all_config, function(err, saved_config) {
 					callback(err, saved_config);

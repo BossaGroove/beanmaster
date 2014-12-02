@@ -58,7 +58,6 @@ exports.deleteServer = function(req, res) {
 	};
 
 	BeanstalkConfigManager.deleteConfig(config_to_be_deleted, function(err, new_config) {
-		console.log(new_config);
 		res.json({
 			err: err,
 			config: new_config
