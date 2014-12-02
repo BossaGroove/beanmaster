@@ -133,6 +133,10 @@ function refreshTubeInfo() {
 			} else {
 				tabulateTubeInfo(data.tubes_info);
 			}
+
+			setTimeout(function(){
+				refreshTubeInfo();
+			}, 1000);
 		},
 		error: function(err) {
 			console.log(err);
@@ -147,7 +151,7 @@ $(function() {
 		refreshTubeInfo();
 	});
 
-	setInterval(function(){
+	setTimeout(function(){
 		refreshTubeInfo();
 	}, 1000);
 

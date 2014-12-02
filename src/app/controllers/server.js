@@ -79,12 +79,10 @@ exports.listServerTubes = function(req, res) {
 						var name = saved_config ? saved_config.name : null;
 
 						BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-
 							if (err) {
 								res.redirect('/');
 							} else {
 								getTubesInfo(connection, function(err, tubes_info) {
-
 									res.render('server/list', {
 										page: 'Servers',
 										title: 'Servers',

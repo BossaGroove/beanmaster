@@ -15,6 +15,15 @@
 
 	BeanstalkConnectionManager.prototype.getConnection = function(host, port, callback) {
 
+		var callback_count = 0;
+
+		var callbackWrapper = function(err, connection) {
+			callback_count++;
+			if (callback_count <= 1) {
+				callback(err, connection);
+			}
+		};
+
 		var _this = this;
 
 		port = parseInt(port);
@@ -36,18 +45,18 @@
 		}
 
 		if (!reinit) {
-			callback(null, this._connection);
+			callbackWrapper(null, this._connection);
 		} else {
 			this._connection = new Fivebeans.client(host, port);
 
 			this._connection
 				.on('connect', function() {
 					console.log('connect successful');
-					callback(null, _this._connection);
+					callbackWrapper(null, _this._connection);
 				})
 				.on('error', function(err) {
 					console.log('connect err: ' + err);
-					callback(err, null);
+					callbackWrapper(err, null);
 				})
 				.on('close', function() {
 					console.log('beanstalk connection closed');
