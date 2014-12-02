@@ -9,6 +9,6 @@ require('./app/config/express')(app);
 require('./app/config/routes')(app);
 
 app.listen(config.port);
-console.log('Nodestalking app started on port ' + config.port);
+console.log('Beanmaster started on port ' + config.port);
 
 module.exports = app;

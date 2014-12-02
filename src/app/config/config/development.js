@@ -1,6 +1,6 @@
 module.exports = {
-	title: 'Nodestalking',
-	keywords: 'Nodestalking',
+	title: 'beanmaster',
+	keywords: 'nodejs,beanstalkd,console',
 	description: 'nodejs beanstalks console',
 	root: require('path').normalize(__dirname + '/../../../'),
 	port: 3001

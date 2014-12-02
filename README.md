@@ -1,4 +1,4 @@
-nodestalking
+beanmaster
 ============
 
 nodejs beanstalkd console
