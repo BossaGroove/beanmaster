@@ -10,7 +10,7 @@
 	var Fivebeans = require('fivebeans');
 
 	function BeanstalkConnectionManager() {
-		this._connection = null;
+		this._connections = {};
 	}
 
 	BeanstalkConnectionManager.prototype.getConnection = function(host, port, callback) {
@@ -28,31 +28,17 @@
 
 		port = parseInt(port);
 
-		var reinit = false;
+		var connection_key = host + ':' + port;
 
-		if (this._connection) {
-			if (this._connection.host !== host ||
-				this._connection.port !== port) {
-				reinit = true;
-				this._connection.end();
-				//console.log('exist connection but host or port is different');
-			} else {
-				//console.log('exist connection');
-			}
+		if (this._connections[connection_key]) {
+			callbackWrapper(null, this._connections[connection_key]);
 		} else {
-			reinit = true;
-			//console.log('no connection at all');
-		}
+			this._connections[connection_key] = new Fivebeans.client(host, port);
 
-		if (!reinit) {
-			callbackWrapper(null, this._connection);
-		} else {
-			this._connection = new Fivebeans.client(host, port);
-
-			this._connection
+			this._connections[connection_key]
 				.on('connect', function() {
 					console.log('connect successful');
-					callbackWrapper(null, _this._connection);
+					callbackWrapper(null, _this._connections[connection_key]);
 				})
 				.on('error', function(err) {
 					console.log('connect err: ' + err);

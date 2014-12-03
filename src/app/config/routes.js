@@ -14,6 +14,7 @@ module.exports = function (app, passport) {
 
 	app.get('/:host_port/:tube', server.tube);
 	app.get('/:host_port/:tube/refresh', server.refreshTube);
+	app.post('/:host_port/:tube/add-job', server.addJob);
 
 	/**
 	 * Error handling
