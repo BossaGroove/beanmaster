@@ -27,4 +27,4 @@ beanmaster -p 4000
 
 ### Acknowledgement
 
-Original design: ptrofimov(https://github.com/ptrofimov)
+Original design: [ptrofimov](https://github.com/ptrofimov)
