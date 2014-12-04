@@ -29,6 +29,7 @@ beanmaster -p 4000
 
 1. Pause auto update
 2. Disconnect beanstalkd connection
+3. Replace connect.session() MemoryStore
 
 ### Acknowledgement
 
