@@ -37,15 +37,15 @@
 
 			this._connections[connection_key]
 				.on('connect', function() {
-					console.log('connect successful');
+					console.log('Beanstalkd connected successfully');
 					callbackWrapper(null, _this._connections[connection_key]);
 				})
 				.on('error', function(err) {
-					console.log('connect err: ' + err);
+					console.log('Beanstalkd connect failed: ' + err);
 					callbackWrapper(err, null);
 				})
 				.on('close', function() {
-					console.log('beanstalk connection closed');
+					console.log('Beanstalkd connection closed');
 				})
 				.connect();
 		}
