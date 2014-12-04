@@ -246,7 +246,7 @@ var addJob = function() {
 
 					finishPendingTask();
 				},
-				error: function() {
+				error: function(err) {
 					console.log(err);
 				}
 			});
@@ -296,7 +296,7 @@ var sendCommand = function(action, value) {
 
 				finishPendingTask();
 			},
-			error: function() {
+			error: function(err) {
 				console.log(err);
 			}
 		});
