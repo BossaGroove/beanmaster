@@ -29,7 +29,7 @@ beanmaster -p 4000
 
 1. Pause auto update
 2. Disconnect beanstalkd connection
-3. Replace connect.session() MemoryStore
+3. Display error message
 4. Multiple viewer may cause unexpected result as several actions require async operation.
 
   a. User 1 tries to add a new job to tube A

@@ -56,11 +56,9 @@ module.exports = function (app) {
 
 	// CookieParser should be above session
 	app.use(cookieParser());
-	app.use(cookieSession({secret: 'secret'}));
-	app.use(session({
-		secret: 'srhgisrjhprgoszrdtujhgsedhtijw489tyh0(#Hj4iho2rl;t467)%2',
-		resave: false,
-		saveUninitialized: true
+
+	app.use(cookieSession({
+		secret: 'srhgisrjhprgoszrdtujhgsedhtijw489tyh0(#Hj4iho2rl;t467)%2'
 	}));
 
 	// connect flash for flash messages - should be declared after sessions
