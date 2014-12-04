@@ -267,7 +267,7 @@ var sendCommand = function(action, value) {
 		};
 	} else {
 
-		if (action instanceof Array) {
+		if (typeof action !== 'string') {
 			value = action[1] || null;
 			action = action[0] || null;
 		}
