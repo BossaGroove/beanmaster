@@ -21,6 +21,10 @@ function updateCellValue(cell, value) {
 	highlightElement(cell);
 }
 
+var busy = false;
+var pending_task = null;
+var resume_auto_update = false;
+
 function tabulateTubeInfo(tube_info) {
 	var cells = $('#tube_table > tbody > tr').find('td');
 	var tube_name = cells.eq(0).text();
@@ -48,6 +52,7 @@ function tabulateTubeInfo(tube_info) {
 }
 
 function tabulateStats(stats) {
+
 	for (var key in stats) {
 		if (stats.hasOwnProperty(key)) {
 
@@ -95,12 +100,20 @@ function tabulateStats(stats) {
 					}
 				}
 
-				container.find('code').html(stats[key].payload);
+				container.find('code').html(stats[key].payload_json || stats[key].payload);
 
 			} else {
 				container.hide();
 			}
 		}
+	}
+}
+
+function updatePause(stats) {
+	if (stats['pause-time-left'] > 0) {
+		$('#btn_pause').html('<i class="glyphicon glyphicon-play"></i> Unpause');
+	} else {
+		$('#btn_pause').html('<i class="glyphicon glyphicon-pause"></i> Pause');
 	}
 }
 
@@ -116,6 +129,8 @@ function showTube() {
 
 function refreshTubeInfo() {
 
+	busy = true;
+
 	$.ajax({
 		url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/' + $('#tube').val() + '/refresh',
 		method: 'get',
@@ -123,6 +138,7 @@ function refreshTubeInfo() {
 		beforeSend: function() {
 		},
 		complete: function() {
+			busy = false;
 		},
 		success: function(data) {
 
@@ -132,11 +148,23 @@ function refreshTubeInfo() {
 				showTube();
 				tabulateTubeInfo(data.tube_info);
 				tabulateStats(data.stats);
+				updatePause(data.tube_info);
 			}
 
-			setTimeout(function() {
-				refreshTubeInfo();
-			}, 1000);
+			if (pending_task) {
+				//todo: if auto update turned on
+				if (true) {
+					resume_auto_update = true;
+				}
+
+				pending_task.callee(pending_task.arguments);
+				busy = false;
+			} else {
+				setTimeout(function() {
+					refreshTubeInfo();
+				}, 1000);
+			}
+
 		},
 		error: function(err) {
 			console.log(err);
@@ -154,38 +182,103 @@ function promptAddJob() {
 }
 
 function blockForm() {
-	$('#add_job').find('input,button,textarea').attr('disabled', 'disabled');
+	$('#add_job,#tube-controls').find('input,button,textarea').attr('disabled', 'disabled');
 	$('.preloader').show();
 }
 
 function unblockForm() {
-	$('#add_job').find('input,button,textarea').removeAttr('disabled');
+	$('#add_job,#tube-controls').find('input,button,textarea').removeAttr('disabled');
 	$('.preloader').hide();
 }
 
-function addJob() {
+function finishPendingTask() {
 
-	var fields = ['tube_name', 'payload', 'priority', 'delay', 'ttr'];
-
-	var valid = true;
-
-	var data = {
-		_csrf: $('#_csrf').val()
-	};
-
-	for (var i = 0; i < fields.length; i++) {
-		var element = $('#' + fields[i]);
-		element.parent().parent().removeClass('has-warning');
-		if (element.hasClass('required') && element.val() === '') {
-			valid = false;
-			element.parent().parent().addClass('has-warning');
-		}
-		data[fields[i]] = element.val();
+	if (resume_auto_update) {
+		refreshTubeInfo();
 	}
+	pending_task = null;
+}
 
-	if (valid) {
+var addJob = function() {
+	if (busy) {
+		pending_task = {
+			callee: addJob,
+			arguments: []
+		};
+	} else {
+		var fields = ['tube_name', 'payload', 'priority', 'delay', 'ttr'];
+
+		var valid = true;
+
+		var data = {
+			_csrf: $('#_csrf').val()
+		};
+
+		for (var i = 0; i < fields.length; i++) {
+			var element = $('#' + fields[i]);
+			element.parent().parent().removeClass('has-warning');
+			if (element.hasClass('required') && element.val() === '') {
+				valid = false;
+				element.parent().parent().addClass('has-warning');
+			}
+			data[fields[i]] = element.val();
+		}
+
+		if (valid) {
+			$.ajax({
+				url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/' + $('#tube').val() + '/add-job',
+				method: 'post',
+				data: data,
+				dataType: 'json',
+				beforeSend: function() {
+					blockForm();
+				},
+				complete: function() {
+					unblockForm();
+				},
+				success: function(data) {
+					if (data.err) {
+						//todo: show error
+						console.log(data.err);
+					} else {
+						$('#add_job').modal('hide');
+					}
+
+					finishPendingTask();
+				},
+				error: function() {
+					console.log(err);
+				}
+			});
+		}
+	}
+};
+
+/**
+ * send command
+ * @param action {string} - action e.g. kick-job, delete-job, toogle-pause
+ * @param value {number=} - optional value
+ */
+var sendCommand = function(action, value) {
+	if (busy) {
+		pending_task = {
+			callee: sendCommand,
+			arguments: arguments
+		};
+	} else {
+
+		if (action instanceof Array) {
+			value = action[1] || null;
+			action = action[0] || null;
+		}
+
+		var data = {
+			_csrf: $('#_csrf').val(),
+			value: value
+		};
+
 		$.ajax({
-			url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/' + $('#tube').val() + '/add-job',
+			url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/' + $('#tube').val() + '/' + action,
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -199,16 +292,16 @@ function addJob() {
 				if (data.err) {
 					//todo: show error
 					console.log(data.err);
-				} else {
-					$('#add_job').modal('hide');
 				}
+
+				finishPendingTask();
 			},
 			error: function() {
 				console.log(err);
 			}
 		});
 	}
-}
+};
 
 $(function() {
 
@@ -226,5 +319,19 @@ $(function() {
 
 	$('#btn_add_job_confirm').click(function() {
 		addJob();
+	});
+
+	$('#btn_pause').click(function() {
+		sendCommand('toggle-pause');
+	});
+
+	$('#btn_kick,#ul_kick > li > a').click(function() {
+		var value = $(this).attr('data-value') || 1;
+		sendCommand('kick-job', value);
+	});
+
+	$('#btn_delete,#ul_delete > li > a').click(function() {
+		var value = $(this).attr('data-value') || 1;
+		sendCommand('delete-job', value);
 	});
 });

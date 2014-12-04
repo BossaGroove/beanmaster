@@ -229,7 +229,7 @@ function getTube(host, port, tube, callback) {
 							tube_info = tube_info || {};
 							stats = stats || {
 								'peek_ready': null,
-								'peek_delay': null,
+								'peek_delayed': null,
 								'peek_buried': null
 							};
 
@@ -334,7 +334,7 @@ exports.addJob = function(req, res) {
 							err: 'use tube ' + req.body.tube_name + ' error'
 						});
 					} else {
-						connection.put(req.body.priority, req.body.delay, req.body.ttr, req.body.payload, function(err, job_id) {
+						connection.put(req.body.priority || 0, req.body.delay || 0, req.body.ttr || 0, req.body.payload, function(err, job_id) {
 							res.json({
 								err: err,
 								job_id: job_id
@@ -342,6 +342,163 @@ exports.addJob = function(req, res) {
 						});
 					}
 				});
+			}
+		});
+
+	} else {
+		res.json({
+			err: 'host_port or tube error'
+		});
+	}
+};
+
+/**
+ * kick next delayed and buried job
+ * @param req
+ * @param res
+ */
+exports.kickJob = function(req, res) {
+	var host_port = req.params.host_port || null;
+	var tube = req.params.tube || null;
+	var value = parseInt(req.body.value);
+
+	if (isNaN(value)) {
+		value = 1;
+	}
+
+	host_port = validateHostPort(host_port);
+
+	if (host_port && tube) {
+
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+				connection.use(tube, function(err, tube_name) {
+					if (err) {
+						res.json({
+							err: 'use tube ' + tube + ' error'
+						});
+					} else {
+						connection.kick(value, function(err, num_kicked) {
+							res.json({
+								err: err,
+								num_kicked: num_kicked
+							});
+						});
+					}
+				});
+			}
+		});
+	} else {
+		res.json({
+			err: 'host_port or tube error'
+		});
+	}
+};
+
+/**
+ * delete next ready job
+ * @param req
+ * @param res
+ */
+exports.deleteJob = function(req, res) {
+	var host_port = req.params.host_port || null;
+	var tube = req.params.tube || null;
+	var value = parseInt(req.body.value);
+
+	if (isNaN(value)) {
+		value = 1;
+	}
+
+	host_port = validateHostPort(host_port);
+
+	if (host_port && tube) {
+
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+				connection.use(tube, function(err, tube_name) {
+					if (err) {
+						res.json({
+							err: 'use tube ' + tube + ' error'
+						});
+					} else {
+						async.timesSeries(value, function(n, callback) {
+							connection.peek_ready(function(err, job_id, payload) {
+								if (err) {
+									callback(err);
+								} else {
+									connection.destroy(job_id, function(err) {
+										callback(err);
+									});
+								}
+							});
+						}, function(err) {
+							res.json({
+								err: err
+							});
+						});
+					}
+				});
+			}
+		});
+
+	} else {
+		res.json({
+			err: 'host_port or tube error'
+		});
+	}
+};
+
+exports.togglePause = function(req, res) {
+	var host_port = req.params.host_port || null;
+	var tube = req.params.tube || null;
+
+	host_port = validateHostPort(host_port);
+
+	if (host_port && tube) {
+
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+				connection.stats_tube(tube, function(err, tube_info) {
+					if (err) {
+						res.json({
+							host: host_port[0],
+							port: host_port[1],
+							err: err
+						});
+					} else {
+
+						var delay = 3600;
+
+						if (tube_info['pause-time-left'] > 0) {
+							delay = 0;
+						}
+
+						connection.pause_tube(tube, delay, function(err) {
+							res.json({
+								err: err
+							});
+						});
+					}
+				});
+
 			}
 		});
 

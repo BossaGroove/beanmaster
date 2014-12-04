@@ -25,6 +25,10 @@ beanmaster -p 4000
 ```
 
 
+### Todo
+
+1. Disconnect beanstalkd connection
+
 ### Acknowledgement
 
 Original design: [ptrofimov](https://github.com/ptrofimov)
