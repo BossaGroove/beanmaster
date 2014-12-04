@@ -138,9 +138,9 @@ function refreshTubeInfo() {
 		beforeSend: function() {
 		},
 		complete: function() {
-			busy = false;
 		},
 		success: function(data) {
+			busy = false;
 
 			if (data.err === 'NOT_FOUND') {
 				hideTube();
