@@ -147,13 +147,7 @@ function refreshTubeInfo() {
 }
 
 $(function() {
-
-	$('#test_btn').click(function(){
-		refreshTubeInfo();
-	});
-
 	setTimeout(function(){
 		refreshTubeInfo();
 	}, 1000);
-
 });

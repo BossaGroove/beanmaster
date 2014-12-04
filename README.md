@@ -27,7 +27,8 @@ beanmaster -p 4000
 
 ### Todo
 
-1. Disconnect beanstalkd connection
+1. Pause auto update
+2. Disconnect beanstalkd connection
 
 ### Acknowledgement
 

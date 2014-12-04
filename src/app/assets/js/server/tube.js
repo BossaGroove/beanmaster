@@ -304,11 +304,6 @@ var sendCommand = function(action, value) {
 };
 
 $(function() {
-
-	$('#test_btn').click(function() {
-		refreshTubeInfo();
-	});
-
 	setTimeout(function() {
 		refreshTubeInfo();
 	}, 1000);
