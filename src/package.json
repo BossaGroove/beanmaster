@@ -8,7 +8,7 @@
 		"beanmaster": "lib/cli.js"
 	},
 	"version": "1.0.0",
-	"private": true,
+	"private": false,
 	"author": {
 		"name": "BossaGroove",
 		"email": "bossagrooveaware@gmail.com",
