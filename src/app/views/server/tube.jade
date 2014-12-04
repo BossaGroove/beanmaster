@@ -48,67 +48,71 @@ block content
 
 		#tube-controls
 			strong Actions:&nbsp;
-			.btn-group
-				button.btn.btn-warning#btn_kick
-					i.glyphicon.glyphicon-play
-					| &nbsp;Kick 1
-				button.btn.btn-warning.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
-					span.caret
-					span.sr-only Toggle Dropdown
-				ul.dropdown-menu#ul_kick(role="menu")
-					li
-						a(href="javascript:void(0)", data-value="10")
-							i.glyphicon.glyphicon-forward
-							| &nbsp;Kick 10
-					li
-						a(href="javascript:void(0)", data-value="100")
-							i.glyphicon.glyphicon-forward
-							| &nbsp;Kick 100
-					li
-						a(href="javascript:void(0)", data-value="1000")
-							i.glyphicon.glyphicon-forward
-							| &nbsp;Kick 1000
-					//li
-						a(href="javascript:void(0)", data-value="all")
-							i.glyphicon.glyphicon-fast-forward
-							| &nbsp;Kick all
-			.btn-group
-				button.btn.btn-danger#btn_delete
-					i.glyphicon.glyphicon-trash
-					| &nbsp;Delete 1
-				button.btn.btn-danger.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
-					span.caret
-					span.sr-only Toggle Dropdown
-				ul.dropdown-menu#ul_delete(role="menu")
-					li
-						a(href="javascript:void(0)", data-value="10")
+			ul
+				li
+					.btn-group
+						button.btn.btn-warning#btn_kick
+							i.glyphicon.glyphicon-play
+							| &nbsp;Kick 1
+						button.btn.btn-warning.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
+							span.caret
+							span.sr-only Toggle Dropdown
+						ul.dropdown-menu#ul_kick(role="menu")
+							li
+								a(href="javascript:void(0)", data-value="10")
+									i.glyphicon.glyphicon-forward
+									| &nbsp;Kick 10
+							li
+								a(href="javascript:void(0)", data-value="100")
+									i.glyphicon.glyphicon-forward
+									| &nbsp;Kick 100
+							li
+								a(href="javascript:void(0)", data-value="1000")
+									i.glyphicon.glyphicon-forward
+									| &nbsp;Kick 1000
+							//li
+								a(href="javascript:void(0)", data-value="all")
+									i.glyphicon.glyphicon-fast-forward
+									| &nbsp;Kick all
+				li
+					.btn-group
+						button.btn.btn-danger#btn_delete
 							i.glyphicon.glyphicon-trash
-							| &nbsp;Delete 10
-					li
-						a(href="javascript:void(0)", data-value="100")
-							i.glyphicon.glyphicon-trash
-							| &nbsp;Delete 100
-					li
-						a(href="javascript:void(0)", data-value="1000")
-							i.glyphicon.glyphicon-trash
-							| &nbsp;Delete 1000
-					//li
-						a(href="javascript:void(0)", data-value="all")
-							i.glyphicon.glyphicon-remove
-							| &nbsp;Delete all
-
-			button.btn.btn-default#btn_pause
-				i.glyphicon(class=(tube_info['pause-time-left'] > 0)?'glyphicon-play':'glyphicon-pause')
-				if (tube_info['pause-time-left'] > 0)
-					| &nbsp;Unpause
-				else
-					| &nbsp;Pause
-
-			button.btn.btn-success#btn_add_job
-				i.glyphicon.glyphicon-plus
-				| &nbsp;Add job
-			span.preloader.action
-				img(src="/assets/images/preloader.gif")
+							| &nbsp;Delete 1
+						button.btn.btn-danger.dropdown-toggle(data-toggle="dropdown",aria-expanded="false")
+							span.caret
+							span.sr-only Toggle Dropdown
+						ul.dropdown-menu#ul_delete(role="menu")
+							li
+								a(href="javascript:void(0)", data-value="10")
+									i.glyphicon.glyphicon-trash
+									| &nbsp;Delete 10
+							li
+								a(href="javascript:void(0)", data-value="100")
+									i.glyphicon.glyphicon-trash
+									| &nbsp;Delete 100
+							li
+								a(href="javascript:void(0)", data-value="1000")
+									i.glyphicon.glyphicon-trash
+									| &nbsp;Delete 1000
+							//li
+								a(href="javascript:void(0)", data-value="all")
+									i.glyphicon.glyphicon-remove
+									| &nbsp;Delete all
+				li
+					button.btn.btn-default#btn_pause
+						i.glyphicon(class=(tube_info['pause-time-left'] > 0)?'glyphicon-play':'glyphicon-pause')
+						if (tube_info['pause-time-left'] > 0)
+							| &nbsp;Unpause
+						else
+							| &nbsp;Pause
+				li
+					button.btn.btn-success#btn_add_job
+						i.glyphicon.glyphicon-plus
+						| &nbsp;Add job
+				li
+					span.preloader.action
+						img(src="/assets/images/preloader.gif")
 		hr
 
 		each stat_key in Object.keys(stats)
