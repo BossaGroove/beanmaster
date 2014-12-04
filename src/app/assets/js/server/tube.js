@@ -156,10 +156,10 @@ function refreshTubeInfo() {
 				if (true) {
 					resume_auto_update = true;
 				}
-
 				pending_task.callee(pending_task.arguments);
-				busy = false;
+
 			} else {
+
 				setTimeout(function() {
 					refreshTubeInfo();
 				}, 1000);
@@ -267,6 +267,8 @@ var sendCommand = function(action, value) {
 		};
 	} else {
 
+		console.log(action)
+		
 		if (typeof action !== 'string') {
 			value = action[1] || null;
 			action = action[0] || null;
