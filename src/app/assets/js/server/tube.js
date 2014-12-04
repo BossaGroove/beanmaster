@@ -201,6 +201,7 @@ function finishPendingTask() {
 
 var addJob = function() {
 	if (busy) {
+		blockForm();
 		pending_task = {
 			callee: addJob,
 			arguments: []
@@ -261,14 +262,15 @@ var addJob = function() {
  */
 var sendCommand = function(action, value) {
 	if (busy) {
+		blockForm();
 		pending_task = {
 			callee: sendCommand,
 			arguments: arguments
 		};
 	} else {
 
-		console.log(action)
-		
+		console.log(action);
+
 		if (typeof action !== 'string') {
 			value = action[1] || null;
 			action = action[0] || null;
