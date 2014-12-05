@@ -10,7 +10,7 @@ commander
 
 port = commander.port || config.port;
 
-console.log('Beanmaster started on port ' + port);
+console.log('Beanmaster listening port ' + port);
 
 // Bootstrap application settings
 require('./app/config/express')(app);
