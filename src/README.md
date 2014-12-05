@@ -12,16 +12,40 @@ npm install -g beanmaster
 
 ### Usage
 
+You can simply start the server and listening 3000 with:
+
 ```
 beanmaster
 ```
-
-And the server will start running and listening 3000 by default
 
 Use `-p` or `--port` to specify port number:
 
 ```
 beanmaster -p 4000
+```
+
+You may start as daemon server:
+
+```
+beanmaster start
+```
+
+Stop the server daemon:
+
+```
+beanmaster stop
+```
+
+Restart the server daemon:
+
+```
+beanmaster restart
+```
+
+See all options:
+
+```
+beanmaster --help
 ```
 
 
