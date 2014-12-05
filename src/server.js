@@ -1,21 +1,16 @@
-var express = require('express');
-var config = require('./app/config/config');
-var app = express();
+var express = require('express'),
+	commander = require('commander');
 
-var args = process.argv,
-	arg = null;
+var app = express(),
+	config = require('./app/config/config');
 
-var port = null;
+commander
+	.option('-p, --port <n>', 'Specify the port number', parseInt)
+	.parse(process.argv);
 
-while (arg = args.shift()) {
-	if (arg === '--port' || arg === '-p') {
-		port = args.shift();
-	}
-}
+port = commander.port || config.port;
 
-if (!port || isNaN(port)) {
-	port = config.port;
-}
+console.log('Beanmaster started on port ' + port);
 
 // Bootstrap application settings
 require('./app/config/express')(app);
@@ -24,4 +19,3 @@ require('./app/config/express')(app);
 require('./app/config/routes')(app);
 
 app.listen(port);
-console.log('Beanmaster started on port ' + port);
