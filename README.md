@@ -45,7 +45,7 @@ beanmaster restart
 See all options:
 
 ```
-beanmaster -help
+beanmaster --help
 ```
 
 
