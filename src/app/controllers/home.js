@@ -16,7 +16,7 @@ exports.servers = function(req, res) {
 	BeanstalkConfigManager.getConfig(function(err, config){
 		res.render('home/servers', {
 			page: 'Servers',
-			title: 'Servers',
+			title: 'Beanmaster',
 			config: config
 		});
 	});

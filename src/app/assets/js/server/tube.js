@@ -2,28 +2,8 @@
  * Created by Bossa on 2/12/14.
  */
 
-//todo: put in utility
-function highlightElement(element) {
-	element.css('background-color', '');
-
-	var color = element.css('background-color');
-
-	element.css({
-		'background-color': '#afa'
-	}).animate({
-			'background-color': color
-		}, 500);
-}
-
-//todo: put in utility
-function updateCellValue(cell, value) {
-	cell.text(value);
-	highlightElement(cell);
-}
-
 var busy = false;
 var pending_task = null;
-var resume_auto_update = false;
 
 function tabulateTubeInfo(tube_info) {
 	var cells = $('#tube_table > tbody > tr').find('td');
@@ -152,17 +132,13 @@ function refreshTubeInfo() {
 			}
 
 			if (pending_task) {
-				//todo: if auto update turned on
-				if (true) {
-					resume_auto_update = true;
-				}
 				pending_task.callee(pending_task.arguments);
-
 			} else {
-
-				setTimeout(function() {
-					refreshTubeInfo();
-				}, 1000);
+				if (auto_update) {
+					setTimeout(function() {
+						refreshTubeInfo();
+					}, 1000);
+				}
 			}
 
 		},
@@ -192,8 +168,7 @@ function unblockForm() {
 }
 
 function finishPendingTask() {
-
-	if (resume_auto_update) {
+	if (auto_update) {
 		refreshTubeInfo();
 	}
 	pending_task = null;
@@ -333,4 +308,6 @@ $(function() {
 		var value = $(this).attr('data-value') || 1;
 		sendCommand('delete-job', value);
 	});
+
+	auto_update_handler = refreshTubeInfo;
 });

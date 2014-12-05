@@ -2,7 +2,8 @@ nav.navbar.navbar-default.navbar-inverse(role="navigation")
 	.container-fluid
 		a.navbar-brand(href="/") Beanmaster
 		.collapse.navbar-collapse
-			ul.nav.navbar-nav.navbar-right.navbar-form
-				li
-					button.btn.btn-default#btn-pause
-						i.glyphicon.glyphicon-pause
+			if (page === 'servers' || page === 'tube')
+				ul.nav.navbar-nav.navbar-right.navbar-form
+					li
+						button.btn.btn-default#btn_toggle_auto_update
+							i.glyphicon.glyphicon-pause

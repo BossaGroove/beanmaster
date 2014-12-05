@@ -2,24 +2,6 @@
  * Created by Bossa on 2/12/14.
  */
 
-//todo: put in utility
-function highlightElement(element) {
-	element.css('background-color', '');
-
-	var color = element.css('background-color');
-
-	element.css({
-		'background-color' : '#afa'
-	}).animate({
-		'background-color' : color
-	}, 500);
-}
-
-//todo: put in utility
-function updateCellValue(cell, value) {
-	cell.text(value);
-	highlightElement(cell);
-}
 
 function getRow(new_tube_info) {
 
@@ -135,9 +117,11 @@ function refreshTubeInfo() {
 				tabulateTubeInfo(data.tubes_info);
 			}
 
-			setTimeout(function(){
-				refreshTubeInfo();
-			}, 1000);
+			if (auto_update) {
+				setTimeout(function(){
+					refreshTubeInfo();
+				}, 1000);
+			}
 		},
 		error: function(err) {
 			console.log(err);
@@ -150,4 +134,6 @@ $(function() {
 	setTimeout(function(){
 		refreshTubeInfo();
 	}, 1000);
+
+	auto_update_handler = refreshTubeInfo;
 });

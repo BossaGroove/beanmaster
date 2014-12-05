@@ -27,10 +27,9 @@ beanmaster -p 4000
 
 ### Todo / Known issue
 
-1. Pause auto update
-2. Disconnect beanstalkd connection
-3. Display error message
-4. Multiple viewer may cause unexpected result as several actions require async operation.
+1. Disconnect beanstalkd connection
+2. Display error message
+3. Multiple viewer may cause unexpected result as several actions require async operation.
 
   a. User 1 tries to add a new job to tube A
 

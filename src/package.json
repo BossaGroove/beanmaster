@@ -5,7 +5,7 @@
   "bin": {
     "beanmaster": "lib/cli.js"
   },
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": false,
   "author": "BossaGroove <bossagrooveaware@gmail.com> (http://www.bossa573.com)",
   "repository": {

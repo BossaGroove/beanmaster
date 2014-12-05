@@ -93,8 +93,8 @@ exports.listTubes = function(req, res) {
 					} else {
 						getTubesInfo(connection, function(err, tubes_info) {
 							res.render('server/list', {
-								page: 'Servers',
-								title: 'Servers',
+								page: 'servers',
+								title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
 								name: name,
 								host: host_port[0],
 								port: host_port[1],
@@ -261,7 +261,7 @@ exports.tube = function(req, res) {
 		getTube(host_port[0], host_port[1], tube, function(err, results) {
 			res.render('server/tube', {
 				page: 'tube',
-				title: 'Tube ' + tube,
+				title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1] + ' / ' + tube,
 				name: results.name,
 				host: host_port[0],
 				port: host_port[1],
