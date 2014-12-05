@@ -67,15 +67,6 @@ function stopServer() {
 	})
 }
 
-/*
- if (process.argv.indexOf('start') !== -1) {
- startServer();
- } else if (process.argv.indexOf('stop') !== -1) {
- stopServer();
- } else {
- require("../server");
- }*/
-
 commander
 	.version(pjson.version)
 	.option('-p, --port <n>', 'Specify the port number', parseInt)
