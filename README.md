@@ -24,7 +24,16 @@ Use `-p` or `--port` to specify port number:
 beanmaster -p 4000
 ```
 
-You may start as daemon server:
+You may start as daemon server (PM2 module required):
+
+Install pm2 module if needed:
+
+```
+npm install -g pm2
+```
+
+And then start Beanmaster:
+
 
 ```
 beanmaster start
@@ -53,7 +62,8 @@ beanmaster --help
 
 1. Disconnect beanstalkd connection
 2. Display error message
-3. Multiple viewer may cause unexpected result as several actions require async operation.
+3. The server does not start properly if pm2 module is not installed on the system
+4. Multiple viewer may cause unexpected result as several actions require async operation.
 
   a. User 1 tries to add a new job to tube A
 
