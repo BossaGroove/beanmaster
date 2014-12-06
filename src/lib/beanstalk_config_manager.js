@@ -5,12 +5,30 @@
 (function() {
 	'use strict';
 
-	var fs = require('fs');
-	var _ = require('lodash');
+	var fs = require('fs'),
+		_ = require('lodash'),
+		path = require('path');
 
-	var config_path = __dirname + '/../app/config/beanstalk.json';
+	var BEANMASTER_HOME_PATH = '';
+
+	if (process.env.BEANMASTER_HOME) {
+		BEANMASTER_HOME_PATH = process.env.BEANMASTER_HOME;
+	} else {
+		BEANMASTER_HOME_PATH = path.resolve(process.env.HOME || process.env.HOMEPATH, '.beanmaster');
+	}
+
+	var BEANMASTER_CONFIG_PATH = BEANMASTER_HOME_PATH + '/config.json';
 
 	function BeanstalkConfigManager() {
+
+		if (!fs.existsSync(BEANMASTER_HOME_PATH)) {
+			fs.mkdirSync(BEANMASTER_HOME_PATH);
+		}
+
+		if (!fs.existsSync(BEANMASTER_CONFIG_PATH)) {
+			fs.writeFileSync(BEANMASTER_CONFIG_PATH);
+		}
+
 		this._cached_config = null;
 	}
 
@@ -21,9 +39,9 @@
 		if (this._cached_config) {
 			callback(null, this._cached_config);
 		} else {
-			fs.exists(config_path, function(exists) {
+			fs.exists(BEANMASTER_CONFIG_PATH, function(exists) {
 				if (exists) {
-					fs.readFile(config_path, function(err, data) {
+					fs.readFile(BEANMASTER_CONFIG_PATH, function(err, data) {
 						if (err) {
 							_this._cached_config = [];
 							callback(null, _this._cached_config);
@@ -52,7 +70,7 @@
 
 		var _this = this;
 
-		fs.writeFile(config_path, data, function(err) {
+		fs.writeFile(BEANMASTER_CONFIG_PATH, data, function(err) {
 
 			if (!err) {
 				_this._cached_config = new_config;
