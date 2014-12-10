@@ -12,12 +12,14 @@ module.exports = function (app, passport) {
 	app.get('/:host_port', server.listTubes);
 	app.get('/:host_port/refresh', server.refreshTubes);
 
-	app.get('/:host_port/:tube', server.tube);
-	app.get('/:host_port/:tube/refresh', server.refreshTube);
-	app.post('/:host_port/:tube/add-job', server.addJob);
-	app.post('/:host_port/:tube/kick-job', server.kickJob);
-	app.post('/:host_port/:tube/delete-job', server.deleteJob);
-	app.post('/:host_port/:tube/toggle-pause', server.togglePause);
+	var tube = require('../../app/controllers/tube');
+
+	app.get('/:host_port/:tube', tube.tube);
+	app.get('/:host_port/:tube/refresh', tube.refreshTube);
+	app.post('/:host_port/:tube/add-job', tube.addJob);
+	app.post('/:host_port/:tube/kick-job', tube.kickJob);
+	app.post('/:host_port/:tube/delete-job', tube.deleteJob);
+	app.post('/:host_port/:tube/toggle-pause', tube.togglePause);
 
 	/**
 	 * Error handling

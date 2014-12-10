@@ -15,39 +15,43 @@
 
 	BeanstalkConnectionManager.prototype.getConnection = function(host, port, callback) {
 
-		var callback_count = 0;
-
-		var callbackWrapper = function(err, connection) {
-			callback_count++;
-			if (callback_count <= 1) {
-				callback(err, connection);
-			}
-		};
-
-		var _this = this;
-
-		port = parseInt(port);
-
-		var connection_key = host + ':' + port;
-
-		if (this._connections[connection_key]) {
-			callbackWrapper(null, this._connections[connection_key]);
+		if (!host || !port) {
+			callback('Host or port invalid', null);
 		} else {
-			this._connections[connection_key] = new Fivebeans.client(host, port);
+			var callback_count = 0;
 
-			this._connections[connection_key]
-				.on('connect', function() {
-					console.log('Beanstalkd connected successfully');
-					callbackWrapper(null, _this._connections[connection_key]);
-				})
-				.on('error', function(err) {
-					console.log('Beanstalkd connect failed: ' + err);
-					callbackWrapper(err, null);
-				})
-				.on('close', function() {
-					console.log('Beanstalkd connection closed');
-				})
-				.connect();
+			var callbackWrapper = function(err, connection) {
+				callback_count++;
+				if (callback_count <= 1) {
+					callback(err, connection);
+				}
+			};
+
+			var _this = this;
+
+			port = parseInt(port);
+
+			var connection_key = host + ':' + port;
+
+			if (this._connections[connection_key]) {
+				callbackWrapper(null, this._connections[connection_key]);
+			} else {
+				this._connections[connection_key] = new Fivebeans.client(host, port);
+
+				this._connections[connection_key]
+					.on('connect', function() {
+						console.log('Beanstalkd connected successfully');
+						callbackWrapper(null, _this._connections[connection_key]);
+					})
+					.on('error', function(err) {
+						console.log('Beanstalkd connect failed: ' + err);
+						callbackWrapper(err, null);
+					})
+					.on('close', function() {
+						console.log('Beanstalkd connection closed');
+					})
+					.connect();
+			}
 		}
 	};
 
