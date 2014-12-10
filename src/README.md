@@ -57,13 +57,11 @@ See all options:
 beanmaster --help
 ```
 
-
 ### Todo / Known issue
 
 1. Disconnect beanstalkd connection
-2. Display error message
-3. The server does not start properly if pm2 module is not installed on the system
-4. Multiple viewer may cause unexpected result as several actions require async operation.
+2. The server does not start properly if pm2 module is not installed on the system
+3. Multiple viewer may cause unexpected result as several actions require async operation.
 
   a. User 1 tries to add a new job to tube A
 
@@ -76,6 +74,10 @@ beanmaster --help
   e. User 1's job added to tube B
 
   This may be solved by initiating connections for each users
+
+### Change Logs
+
+Please refer to CHANGELOG.md
 
 ### Acknowledgement
 
