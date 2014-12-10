@@ -120,6 +120,7 @@ function refreshTubeInfo() {
 		complete: function() {
 		},
 		success: function(data) {
+
 			busy = false;
 
 			if (data.err === 'NOT_FOUND') {
@@ -220,7 +221,9 @@ var addJob = function() {
 						$('#add_job').modal('hide');
 					}
 
-					finishPendingTask();
+					if (pending_task) {
+						finishPendingTask();
+					}
 				},
 				error: function(err) {
 					console.log(err);
@@ -273,7 +276,9 @@ var sendCommand = function(action, value) {
 					console.log(data.err);
 				}
 
-				finishPendingTask();
+				if (pending_task) {
+					finishPendingTask();
+				}
 			},
 			error: function(err) {
 				console.log(err);
