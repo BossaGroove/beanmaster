@@ -123,22 +123,33 @@ function refreshTubeInfo() {
 
 			busy = false;
 
-			if (data.err === 'NOT_FOUND') {
-				hideTube();
-			} else {
-				showTube();
-				tabulateTubeInfo(data.tube_info);
-				tabulateStats(data.stats);
-				updatePause(data.tube_info);
-			}
+			if (data.err) {
 
-			if (pending_task) {
-				pending_task.callee(pending_task.arguments);
+				$('#error_container').append(
+					getErrorBox('warning', data.err)
+				);
+
+				$('button').attr('disabled', 'disabled');
+
 			} else {
-				if (auto_update) {
-					setTimeout(function() {
-						refreshTubeInfo();
-					}, 1000);
+
+				if (Object.keys(data.tube_info).length === 0) {
+					hideTube();
+				} else {
+					showTube();
+					tabulateTubeInfo(data.tube_info);
+					tabulateStats(data.stats);
+					updatePause(data.tube_info);
+				}
+
+				if (pending_task) {
+					pending_task.callee(pending_task.arguments);
+				} else {
+					if (auto_update) {
+						setTimeout(function() {
+							refreshTubeInfo();
+						}, 1000);
+					}
 				}
 			}
 
@@ -288,9 +299,13 @@ var sendCommand = function(action, value) {
 };
 
 $(function() {
-	setTimeout(function() {
-		refreshTubeInfo();
-	}, 1000);
+	if ($('#error').val() === '') {
+		setTimeout(function() {
+			refreshTubeInfo();
+		}, 1000);
+	} else {
+		$('button').attr('disabled', 'disabled');
+	}
 
 	$('#btn_add_job').click(function() {
 		promptAddJob();

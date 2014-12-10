@@ -5,6 +5,13 @@
 var auto_update = true,
 	auto_update_handler = null;
 
+function getErrorBox(level, msg) {
+	return $(document.createElement('div'))
+		.addClass('alert')
+		.addClass('alert-' + level)
+		.html(msg);
+}
+
 function highlightElement(element) {
 	element.css('background-color', '');
 

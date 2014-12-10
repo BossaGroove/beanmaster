@@ -6,8 +6,14 @@ block content
 		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
 		input#host(type="hidden", name="host", value="#{host}")
 		input#port(type="hidden", name="port", value="#{port}")
+		input#error(type="hidden", name="error", value="#{(err || '')}")
 		h1 #{name?name + ' - ':''}#{host}:#{port}
 		hr
+		#error_container
+			if (err)
+				.alert.alert-warning
+					| #{err}
+
 		table.table.table-bordered.table-hover.table-striped#tube_table
 			thead
 				tr
@@ -26,23 +32,24 @@ block content
 					th Pause (sec)
 					th Pause (left)
 			tbody
-				each tube in tubes_info
-					tr
-						td
-							a(href="/#{encodeURIComponent(host) + ':' + port}/#{tube.name}") #{tube.name}
-						td #{tube['current-jobs-urgent']}
-						td #{tube['current-jobs-ready']}
-						td #{tube['current-jobs-reserved']}
-						td #{tube['current-jobs-delayed']}
-						td #{tube['current-jobs-buried']}
-						td #{tube['total-jobs']}
-						td #{tube['current-using']}
-						td #{tube['current-watching']}
-						td #{tube['current-waiting']}
-						td #{tube['cmd-delete']}
-						td #{tube['cmd-pause-tube']}
-						td #{tube.pause}
-						td #{tube['pause-time-left']}
+				if (tubes_info)
+					each tube in tubes_info
+						tr
+							td
+								a(href="/#{encodeURIComponent(host) + ':' + port}/#{tube.name}") #{tube.name}
+							td #{tube['current-jobs-urgent']}
+							td #{tube['current-jobs-ready']}
+							td #{tube['current-jobs-reserved']}
+							td #{tube['current-jobs-delayed']}
+							td #{tube['current-jobs-buried']}
+							td #{tube['total-jobs']}
+							td #{tube['current-using']}
+							td #{tube['current-watching']}
+							td #{tube['current-waiting']}
+							td #{tube['cmd-delete']}
+							td #{tube['cmd-pause-tube']}
+							td #{tube.pause}
+							td #{tube['pause-time-left']}
 
 	!= js('lib/jquery.color/js/jquery.color.min')
 	!= js('js/common')

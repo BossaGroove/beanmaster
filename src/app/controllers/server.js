@@ -70,7 +70,14 @@ exports.listTubes = function(req, res) {
 
 				BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
 					if (err) {
-						res.redirect('/');
+						res.render('server/list', {
+							page: 'servers',
+							title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
+							name: name,
+							host: host_port[0],
+							port: host_port[1],
+							err: err
+						});
 					} else {
 						getTubesInfo(connection, function(err, tubes_info) {
 							res.render('server/list', {

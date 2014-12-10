@@ -97,6 +97,10 @@ function getTube(host, port, tube, callback) {
 								'peek_buried': null
 							};
 
+							if (err === 'NOT_FOUND') {
+								err = null;
+							}
+
 							callback(err, {
 								name: name,
 								tube_info: tube_info,
@@ -126,13 +130,13 @@ exports.tube = function(req, res) {
 			res.render('server/tube', {
 				page: 'tube',
 				title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1] + ' / ' + tube,
-				name: results.name,
+				name: (results)?results.name:null,
 				host: host_port[0],
 				port: host_port[1],
 				tube: tube,
 				err: err,
-				tube_info: results.tube_info,
-				stats: results.stats
+				tube_info: (results)?results.tube_info:{},
+				stats: (results)?results.stats:{}
 			});
 
 		});
@@ -158,8 +162,8 @@ exports.refreshTube = function(req, res) {
 				port: host_port[1],
 				tube: tube,
 				err: err,
-				tube_info: results.tube_info,
-				stats: results.stats
+				tube_info: (results)?results.tube_info:{},
+				stats: (results)?results.stats:{}
 			});
 		});
 	} else {

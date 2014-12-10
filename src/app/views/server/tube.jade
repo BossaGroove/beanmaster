@@ -7,10 +7,15 @@ block content
 		input#host(type="hidden", name="host", value="#{host}")
 		input#port(type="hidden", name="port", value="#{port}")
 		input#tube(type="hidden", name="tube", value="#{tube}")
+		input#error(type="hidden", name="error", value="#{(err || '')}")
 		h1
 			a(href="/#{encodeURIComponent(host)}:#{port}") #{name?name + ' - ':''}#{host}:#{port}
 			| &nbsp;/ #{tube}
 		hr
+		#error_container
+			if (err)
+				.alert.alert-warning
+					| #{err}
 		.alert.alert-warning#not_found(class=((Object.keys(tube_info).length > 0)?'hide':'')) Tube not found
 		table.table.table-bordered.table-hover.table-striped#tube_table(class=((Object.keys(tube_info).length > 0)?'':'hide'))
 			thead

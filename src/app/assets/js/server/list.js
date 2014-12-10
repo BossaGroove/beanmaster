@@ -101,6 +101,8 @@ function tabulateTubeInfo(tubes_info) {
 
 function refreshTubeInfo() {
 
+	$('.alert').remove();
+
 	$.ajax({
 		url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/refresh',
 		method: 'get',
@@ -113,14 +115,20 @@ function refreshTubeInfo() {
 
 			if (data.err) {
 
+				$('#error_container').append(
+					getErrorBox('warning', data.err)
+				);
+
+				$('button').attr('disabled', 'disabled');
+
 			} else {
 				tabulateTubeInfo(data.tubes_info);
-			}
 
-			if (auto_update) {
-				setTimeout(function(){
-					refreshTubeInfo();
-				}, 1000);
+				if (auto_update) {
+					setTimeout(function(){
+						refreshTubeInfo();
+					}, 1000);
+				}
 			}
 		},
 		error: function(err) {
@@ -131,9 +139,13 @@ function refreshTubeInfo() {
 }
 
 $(function() {
-	setTimeout(function(){
-		refreshTubeInfo();
-	}, 1000);
+	if ($('#error').val() === '') {
+		setTimeout(function(){
+			refreshTubeInfo();
+		}, 1000);
+	} else {
+		$('button').attr('disabled', 'disabled');
+	}
 
 	auto_update_handler = refreshTubeInfo;
 });

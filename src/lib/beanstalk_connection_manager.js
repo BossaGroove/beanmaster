@@ -36,19 +36,32 @@
 			if (this._connections[connection_key]) {
 				callbackWrapper(null, this._connections[connection_key]);
 			} else {
+				console.log('Try to initiate a new beanstalk connection: ' + host + ' / ' + port);
+
 				this._connections[connection_key] = new Fivebeans.client(host, port);
+
+				var timeout_handler = setTimeout(function() {
+					_this._connections[connection_key] = null;
+					console.log('Beanstalkd connection timeout');
+					callbackWrapper('Connection timeout', null);
+				}, 10000);
 
 				this._connections[connection_key]
 					.on('connect', function() {
+						clearTimeout(timeout_handler);
 						console.log('Beanstalkd connected successfully');
 						callbackWrapper(null, _this._connections[connection_key]);
 					})
 					.on('error', function(err) {
+						clearTimeout(timeout_handler);
 						console.log('Beanstalkd connect failed: ' + err);
-						callbackWrapper(err, null);
+						_this._connections[connection_key] = null;
+						callbackWrapper(err.toString(), null);
 					})
 					.on('close', function() {
+						clearTimeout(timeout_handler);
 						console.log('Beanstalkd connection closed');
+						_this._connections[connection_key] = null;
 					})
 					.connect();
 			}
