@@ -293,6 +293,11 @@ exports.deleteJob = function(req, res) {
 	});
 };
 
+/**
+ * Pausing tube by setting pause value to 1 hour
+ * @param req
+ * @param res
+ */
 exports.togglePause = function(req, res) {
 	var host_port = Utility.validateHostPort(req.params.host_port);
 	var tube = req.params.tube || null;
