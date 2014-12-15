@@ -126,3 +126,76 @@ exports.refreshTubes = function(req, res) {
 		}
 	});
 };
+
+/**
+ * search job detail by job id
+ * @param req
+ * @param res
+ */
+exports.searchJob = function(req, res) {
+	var host_port = Utility.validateHostPort(req.params.host_port);
+	var job_id = parseInt(req.body.job_id);
+
+	if (isNaN(job_id)) {
+		res.json({
+			host: host_port[0],
+			port: host_port[1],
+			err: 'job_id error'
+		});
+	} else {
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+
+				connection.stats_job(job_id, function(err, stat) {
+
+					res.json({
+						host: host_port[0],
+						port: host_port[1],
+						err: err,
+						stat: stat
+					});
+
+				});
+			}
+		});
+	}
+};
+
+exports.kickJobId = function(req, res) {
+	var host_port = Utility.validateHostPort(req.params.host_port);
+	var job_id = parseInt(req.body.job_id);
+
+	if (isNaN(job_id)) {
+		res.json({
+			host: host_port[0],
+			port: host_port[1],
+			err: 'job_id error'
+		});
+	} else {
+		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
+			if (err) {
+				res.json({
+					host: host_port[0],
+					port: host_port[1],
+					err: err
+				});
+			} else {
+
+				connection.kick_job(job_id, function(err) {
+					res.json({
+						host: host_port[0],
+						port: host_port[1],
+						err: err
+					});
+
+				});
+			}
+		});
+	}
+};

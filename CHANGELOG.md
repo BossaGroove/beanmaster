@@ -1,3 +1,7 @@
+# 1.0.14
+- Added search job by job id
+- Fix header
+
 # 1.0.13
 - Better file structure
 - Fix duplicate refresh event
@@ -8,4 +12,3 @@
 
 - Added change log
 - Relocated config file path
-

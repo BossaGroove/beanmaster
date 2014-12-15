@@ -2,6 +2,8 @@
  * Created by Bossa on 2/12/14.
  */
 
+var busy = false;
+var pending_task = null;
 
 function getRow(new_tube_info) {
 
@@ -99,9 +101,28 @@ function tabulateTubeInfo(tubes_info) {
 	}
 }
 
+function blockForm() {
+	$('#search_job').find('input,button,textarea').attr('disabled', 'disabled');
+	$('.preloader').show();
+}
+
+function unblockForm() {
+	$('#search_job').find('input,button,textarea').removeAttr('disabled');
+	$('.preloader').hide();
+}
+
+function finishPendingTask() {
+	if (auto_update) {
+		refreshTubeInfo();
+	}
+	pending_task = null;
+}
+
 function refreshTubeInfo() {
 
-	$('.alert').remove();
+	busy = true;
+
+	$('#error_container > .alert').remove();
 
 	$.ajax({
 		url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/refresh',
@@ -112,6 +133,8 @@ function refreshTubeInfo() {
 		complete: function() {
 		},
 		success: function(data) {
+
+			busy = false;
 
 			if (data.err) {
 
@@ -124,10 +147,14 @@ function refreshTubeInfo() {
 			} else {
 				tabulateTubeInfo(data.tubes_info);
 
-				if (auto_update) {
-					setTimeout(function(){
-						refreshTubeInfo();
-					}, 1000);
+				if (pending_task) {
+					pending_task.callee(pending_task.arguments);
+				} else {
+					if (auto_update) {
+						setTimeout(function() {
+							refreshTubeInfo();
+						}, 1000);
+					}
 				}
 			}
 		},
@@ -135,17 +162,190 @@ function refreshTubeInfo() {
 			console.log(err);
 		}
 	});
-
 }
+
+
+function promptSearchJob() {
+	$('#search_job').modal({
+		backdrop: 'static'
+	}).find('input,textarea').val('');
+}
+
+var searchJob = function() {
+
+	$('#search_error_container').html('');
+	$('#search_result').hide();
+	$('#btn_kick_job').hide();
+
+	if (busy) {
+		blockForm();
+		pending_task = {
+			callee: searchJob,
+			arguments: []
+		};
+	} else {
+		var fields = ['job_id'];
+
+		var valid = true;
+
+		var data = {
+			_csrf: $('#_csrf').val()
+		};
+
+		for (var i = 0; i < fields.length; i++) {
+			var element = $('#' + fields[i]);
+			element.parent().parent().removeClass('has-warning');
+			if (element.hasClass('required') && element.val() === '') {
+				valid = false;
+				element.parent().parent().addClass('has-warning');
+			}
+			data[fields[i]] = element.val();
+		}
+
+		if (valid) {
+			$.ajax({
+				url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/search-job',
+				method: 'post',
+				data: data,
+				dataType: 'json',
+				beforeSend: function() {
+					blockForm();
+				},
+				complete: function() {
+					unblockForm();
+				},
+				success: function(data) {
+
+					if (data.err) {
+
+						$('#search_error_container').append(
+							getErrorBox('warning', data.err)
+						);
+
+					} else {
+						$('#btn_kick_job').removeClass('hide').show();
+
+						var tbody = $('#search_result').removeClass('hide').show().find('tbody');
+
+						tbody.html('');
+
+						for (var key in data.stat) {
+							if (data.stat.hasOwnProperty(key)) {
+								tbody.append(
+									$(document.createElement('tr'))
+										.append(
+											$(document.createElement('td'))
+												.html(key)
+										)
+										.append(
+											$(document.createElement('td'))
+												.html(data.stat[key])
+										)
+								);
+							}
+						}
+					}
+
+					if (pending_task) {
+						finishPendingTask();
+					}
+				},
+				error: function(err) {
+					console.log(err);
+				}
+			});
+		}
+	}
+};
+
+var kickJobId = function() {
+	$('#search_error_container').html('');
+	$('#btn_kick_job').hide();
+
+	if (busy) {
+		blockForm();
+		pending_task = {
+			callee: kickJobId,
+			arguments: []
+		};
+	} else {
+		var fields = ['job_id'];
+
+		var valid = true;
+
+		var data = {
+			_csrf: $('#_csrf').val()
+		};
+
+		for (var i = 0; i < fields.length; i++) {
+			var element = $('#' + fields[i]);
+			element.parent().parent().removeClass('has-warning');
+			if (element.hasClass('required') && element.val() === '') {
+				valid = false;
+				element.parent().parent().addClass('has-warning');
+			}
+			data[fields[i]] = element.val();
+		}
+
+		if (valid) {
+			$.ajax({
+				url: '/' + encodeURIComponent($('#host').val()) + ':' + $('#port').val() + '/kick-job-id',
+				method: 'post',
+				data: data,
+				dataType: 'json',
+				beforeSend: function() {
+					blockForm();
+				},
+				complete: function() {
+					unblockForm();
+				},
+				success: function(data) {
+
+					if (data.err) {
+
+						$('#search_error_container').append(
+							getErrorBox('warning', data.err)
+						);
+
+					} else {
+
+						$('#search_error_container').append(
+							getErrorBox('success', 'Job kicked')
+						);
+					}
+
+					if (pending_task) {
+						finishPendingTask();
+					}
+				},
+				error: function(err) {
+					console.log(err);
+				}
+			});
+		}
+	}
+};
 
 $(function() {
 	if ($('#error').val() === '') {
-		setTimeout(function(){
+		setTimeout(function() {
 			refreshTubeInfo();
 		}, 1000);
 	} else {
 		$('button').attr('disabled', 'disabled');
 	}
+
+	$('#btn_search').click(function() {
+		promptSearchJob();
+	});
+
+	$('#btn_search_job_confirm').click(function() {
+		searchJob();
+	});
+
+	$('#btn_kick_job').click(function() {
+		kickJobId();
+	});
 
 	auto_update_handler = refreshTubeInfo;
 });

@@ -51,6 +51,36 @@ block content
 							td #{tube.pause}
 							td #{tube['pause-time-left']}
 
+		.modal.fade#search_job
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type="button", data-dismiss="modal")
+							span(aria-hidden="true") &times;
+							span.sr-only Close
+						h4.modal-title Search job
+					.modal-body
+						#search_error_container
+
+						form#server_form.form-horizontal(role="form")
+							.form-group
+								label.col-sm-2.control-label(for="job_id") Job ID
+								.col-sm-10
+									input.form-control#job_id.required(type="text", value="")
+
+						#search_result.hide
+							hr
+							p
+								strong Stats
+							table.table.table-condensed
+								tbody
+
+					.modal-footer
+						span.preloader
+							img(src="/assets/images/preloader.gif")
+						button.btn.btn-danger#btn_kick_job.hide(type="button") Kick Job
+						button.btn.btn-default(type="button", data-dismiss="modal") Close
+						button.btn.btn-primary#btn_search_job_confirm(type="button") Search
 	!= js('lib/jquery.color/js/jquery.color.min')
 	!= js('js/common')
 	!= js('js/server/list')

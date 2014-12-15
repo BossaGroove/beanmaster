@@ -11,6 +11,8 @@ module.exports = function (app, passport) {
 
 	app.get('/:host_port', server.listTubes);
 	app.get('/:host_port/refresh', server.refreshTubes);
+	app.post('/:host_port/search-job', server.searchJob);
+	app.post('/:host_port/kick-job-id', server.kickJobId);
 
 	var tube = require('../../app/controllers/tube');
 
