@@ -5,24 +5,25 @@ block content
 	.container-fluid
 		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
 		h1 Servers
-		table#server_list.table.table-bordered.table-striped.table-hover
-			thead
-				tr
-					th Name
-					th Host
-					th Port
-					th View
-					th Delete
-			tbody
-				each c in config
+		.table-responsive
+			table#server_list.table.table-bordered.table-striped.table-hover
+				thead
 					tr
-						td #{c.name}
-						td #{c.host}
-						td #{c.port}
-						td
-							a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
-						td
-							button.btn.btn-danger.delete Delete
+						th Name
+						th Host
+						th Port
+						th View
+						th Delete
+				tbody
+					each c in config
+						tr
+							td #{c.name}
+							td #{c.host}
+							td #{c.port}
+							td
+								a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
+							td
+								button.btn.btn-danger.delete Delete
 		button.btn.btn-primary#btn_add_server Add Server
 		.modal.fade#add_server
 			.modal-dialog

@@ -1,3 +1,7 @@
+# 1.0.15
+- Fix bug when server disconnected
+- Responsive table
+
 # 1.0.14
 - Added search job by job id
 - Fix header
