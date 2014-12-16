@@ -35,14 +35,16 @@ function getTubesInfo(connection, callback) {
 
 	], function(err, results) {
 
-		if (results) {
-			results = _.sortBy(results, 'name');
-		}
-
 		var result_map = {};
 
-		for (var i = 0; i < results.length; i++) {
-			result_map[results[i].name] = results[i];
+		if (!err && _.isArray(results)) {
+			if (results) {
+				results = _.sortBy(results, 'name');
+			}
+
+			for (var i = 0; i < results.length; i++) {
+				result_map[results[i].name] = results[i];
+			}
 		}
 
 		callback(err, result_map);
