@@ -12,6 +12,11 @@ block content
 						th Name
 						th Host
 						th Port
+						th Connections
+						th Server Version
+						th Total Jobs
+						th PID
+						th Up time
 						th View
 						th Delete
 				tbody
@@ -20,6 +25,11 @@ block content
 							td #{c.name}
 							td #{c.host}
 							td #{c.port}
+							td #{c.server_info['current-connections'] || '-'}
+							td #{c.server_info.version || '-'}
+							td #{c.server_info['total-jobs'] || '-'}
+							td #{c.server_info.pid || '-'}
+							td #{c.server_info.uptime || '-'}
 							td
 								a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
 							td
