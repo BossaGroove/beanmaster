@@ -40,7 +40,7 @@ function tabulateTubeInfo(tubes_info) {
 	var rows = $('#tube_table > tbody').find('tr');
 
 	var cells = null,
-		i = 0;
+		i;
 
 	for (i = 0; i < rows.length; i++) {
 
