@@ -1,11 +1,17 @@
 {
 	"name": "beanmaster",
 	"description": "nodejs beanstalkd console",
-	"keywords": ["beanstalkd", "admin", "console"],
+	"keywords": [
+		"beanstalkd",
+		"admin",
+		"console",
+		"beanstalk",
+		""
+	],
 	"bin": {
 		"beanmaster": "lib/cli.js"
 	},
-	"version": "1.0.15",
+	"version": "1.0.17",
 	"private": false,
 	"author": "BossaGroove <bossagrooveaware@gmail.com> (http://www.bossa573.com)",
 	"repository": {

@@ -24,16 +24,7 @@ Use `-p` or `--port` to specify port number:
 beanmaster -p 4000
 ```
 
-You may start as daemon server (PM2 module required):
-
-Install pm2 module if needed:
-
-```
-npm install -g pm2
-```
-
-And then start Beanmaster:
-
+You may start as daemon server:
 
 ```
 beanmaster start
