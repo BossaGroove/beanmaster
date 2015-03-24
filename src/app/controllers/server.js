@@ -16,7 +16,7 @@ function getTubesInfo(connection, callback) {
 		//get the tubes
 		function(flow_callback) {
 			connection.list_tubes(function(err, tubes) {
-				flow_callback(err, tubes)
+				flow_callback(err, tubes);
 			});
 		},
 
@@ -29,7 +29,7 @@ function getTubesInfo(connection, callback) {
 				});
 
 			}, function(err, results) {
-				flow_callback(err, results)
+				flow_callback(err, results);
 			});
 		}
 

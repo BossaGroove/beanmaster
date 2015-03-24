@@ -115,7 +115,7 @@
 				var config_to_be_deleted = _.findWhere(all_config, {host: input_config.host, port: input_config.port});
 
 				if (config_to_be_deleted) {
-					all_config = _.without(all_config, config_to_be_deleted)
+					all_config = _.without(all_config, config_to_be_deleted);
 				}
 
 				_this.saveConfig(all_config, function(err, saved_config) {

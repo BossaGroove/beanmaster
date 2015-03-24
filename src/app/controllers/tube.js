@@ -180,7 +180,6 @@ exports.refreshTube = function(req, res) {
  */
 exports.addJob = function(req, res) {
 	var host_port = Utility.validateHostPort(req.params.host_port);
-	var tube = req.params.tube || null;
 
 	BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
 		if (err) {
@@ -190,7 +189,7 @@ exports.addJob = function(req, res) {
 				err: err
 			});
 		} else {
-			connection.use(req.body.tube_name, function(err, tube_name) {
+			connection.use(req.body.tube_name, function(err) {
 				if (err) {
 					res.json({
 						err: 'use tube ' + req.body.tube_name + ' error'
@@ -230,7 +229,7 @@ exports.kickJob = function(req, res) {
 				err: err
 			});
 		} else {
-			connection.use(tube, function(err, tube_name) {
+			connection.use(tube, function(err) {
 				if (err) {
 					res.json({
 						err: 'use tube ' + tube + ' error'
@@ -270,14 +269,14 @@ exports.deleteJob = function(req, res) {
 				err: err
 			});
 		} else {
-			connection.use(tube, function(err, tube_name) {
+			connection.use(tube, function(err) {
 				if (err) {
 					res.json({
 						err: 'use tube ' + tube + ' error'
 					});
 				} else {
 					async.timesSeries(value, function(n, callback) {
-						connection.peek_ready(function(err, job_id, payload) {
+						connection.peek_ready(function(err, job_id) {
 							if (err) {
 								callback(err);
 							} else {

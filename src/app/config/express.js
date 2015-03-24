@@ -2,18 +2,16 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var session = require('express-session');
-var compression = require('compression');
-var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var csrf = require('csurf');
-var morgan = require('morgan');
-
-var flash = require('connect-flash');
-var config = require('./config');
+var express = require('express'),
+	compression = require('compression'),
+	cookieParser = require('cookie-parser'),
+	cookieSession = require('cookie-session'),
+	bodyParser = require('body-parser'),
+	methodOverride = require('method-override'),
+	csrf = require('csurf'),
+	morgan = require('morgan'),
+	flash = require('connect-flash'),
+	config = require('./config');
 
 var env = process.env.NODE_ENV || 'development';
 

@@ -5,8 +5,6 @@
 (function() {
 	'use strict';
 
-	var fs = require('fs');
-	var _ = require('lodash');
 	var Fivebeans = require('fivebeans');
 
 	function BeanstalkConnectionManager() {
