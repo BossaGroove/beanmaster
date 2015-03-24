@@ -1,4 +1,25 @@
-/* global $ */
+/* global $,validator */
+
+function promptDeleteServer(button) {
+	var cells = $(button).parent().parent().find('td');
+	var host = cells.eq(1).text();
+	var port = cells.eq(2).text();
+
+	$('#delete_server').modal({
+		backdrop: 'static'
+	});
+
+	$('#delete_server_host').val(host);
+	$('#delete_server_port').val(port);
+
+	$('span#delete_server_name').html(host + ':' + port);
+}
+
+function initDeleteButton() {
+	$('button.delete').on('click', function(){
+		promptDeleteServer(this);
+	});
+}
 
 function blockForm() {
 	$('#add_server,#delete_server').find('input,button').attr('disabled', 'disabled');
@@ -30,6 +51,26 @@ function tabulateServer(result) {
 				.append(
 					$(document.createElement('td'))
 						.html(result[i].port)
+				)
+				.append(
+					$(document.createElement('td'))
+						.html(result[i].server_info['current-connections'] || '-')
+				)
+				.append(
+					$(document.createElement('td'))
+						.html(result[i].server_info.version || '-')
+				)
+				.append(
+					$(document.createElement('td'))
+						.html(result[i].server_info['total-jobs'] || '-')
+				)
+				.append(
+					$(document.createElement('td'))
+						.html(result[i].server_info.pid || '-')
+				)
+				.append(
+					$(document.createElement('td'))
+						.html(result[i].server_info.uptime || '-')
 				)
 				.append(
 					$(document.createElement('td'))
@@ -108,25 +149,10 @@ function saveServer() {
 				}
 			},
 			error: function() {
-				console.log(err);
+
 			}
 		});
 	}
-}
-
-function promptDeleteServer(button) {
-	var cells = $(button).parent().parent().find('td');
-	var host = cells.eq(1).text();
-	var port = cells.eq(2).text();
-
-	$('#delete_server').modal({
-		backdrop: 'static'
-	});
-
-	$('#delete_server_host').val(host);
-	$('#delete_server_port').val(port);
-
-	$('span#delete_server_name').html(host + ':' + port);
 }
 
 function deleteServer() {
@@ -169,12 +195,6 @@ function deleteServer() {
 function promptAddServer() {
 	$('#add_server').modal({
 		backdrop: 'static'
-	});
-}
-
-function initDeleteButton() {
-	$('button.delete').on('click', function(){
-		promptDeleteServer(this);
 	});
 }
 

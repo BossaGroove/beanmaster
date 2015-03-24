@@ -1,3 +1,5 @@
+/*global $,Utility*/
+
 /**
  * Created by Bossa on 2/12/14.
  */
@@ -55,7 +57,7 @@ function tabulateTubeInfo(tubes_info) {
 						var cell = cells.eq(column);
 
 						if (parseInt(tubes_info[tube_name][key]) !== parseInt(cell.text())) {
-							updateCellValue(cell, tubes_info[tube_name][key]);
+							Utility.updateCellValue(cell, tubes_info[tube_name][key]);
 						}
 					}
 					column++;
@@ -78,6 +80,8 @@ function tabulateTubeInfo(tubes_info) {
 
 			var new_row = null;
 			var row_added = false;
+			var last_row = null;
+
 			//search the position
 			for (i = 0; i < rows.length; i++) {
 				var row = $(rows[i]);
@@ -90,12 +94,16 @@ function tabulateTubeInfo(tubes_info) {
 					row_added = true;
 					break;
 				}
+
+				last_row = row;
 			}
 
 			//last row
 			if (!row_added) {
 				new_row = getRow(tubes_info[new_tube_name]);
-				row.after(new_row);
+				if (last_row) {
+					last_row.after(new_row);
+				}
 			}
 		}
 	}
@@ -111,12 +119,6 @@ function unblockForm() {
 	$('.preloader').hide();
 }
 
-function finishPendingTask() {
-	if (auto_update) {
-		refreshTubeInfo();
-	}
-	pending_task = null;
-}
 
 function refreshTubeInfo() {
 
@@ -139,7 +141,7 @@ function refreshTubeInfo() {
 			if (data.err) {
 
 				$('#error_container').append(
-					getErrorBox('warning', data.err)
+					Utility.getErrorBox('warning', data.err)
 				);
 
 				$('button').attr('disabled', 'disabled');
@@ -150,7 +152,7 @@ function refreshTubeInfo() {
 				if (pending_task) {
 					pending_task.callee(pending_task.arguments);
 				} else {
-					if (auto_update) {
+					if (Utility.isAutoUpdate()) {
 						setTimeout(function() {
 							refreshTubeInfo();
 						}, 1000);
@@ -164,6 +166,12 @@ function refreshTubeInfo() {
 	});
 }
 
+function finishPendingTask() {
+	if (Utility.isAutoUpdate()) {
+		refreshTubeInfo();
+	}
+	pending_task = null;
+}
 
 function promptSearchJob() {
 	$('#search_job').modal({
@@ -219,7 +227,7 @@ var searchJob = function() {
 					if (data.err) {
 
 						$('#search_error_container').append(
-							getErrorBox('warning', data.err)
+							Utility.getErrorBox('warning', data.err)
 						);
 
 					} else {
@@ -304,13 +312,13 @@ var kickJobId = function() {
 					if (data.err) {
 
 						$('#search_error_container').append(
-							getErrorBox('warning', data.err)
+							Utility.getErrorBox('warning', data.err)
 						);
 
 					} else {
 
 						$('#search_error_container').append(
-							getErrorBox('success', 'Job kicked')
+							Utility.getErrorBox('success', 'Job kicked')
 						);
 					}
 
@@ -347,5 +355,5 @@ $(function() {
 		kickJobId();
 	});
 
-	auto_update_handler = refreshTubeInfo;
+	Utility.setAutoUpdateHandler(refreshTubeInfo);
 });

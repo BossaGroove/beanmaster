@@ -1,3 +1,5 @@
+/* global $,Utility */
+
 /**
  * Created by Bossa on 2/12/14.
  */
@@ -7,7 +9,6 @@ var pending_task = null;
 
 function tabulateTubeInfo(tube_info) {
 	var cells = $('#tube_table > tbody > tr').find('td');
-	var tube_name = cells.eq(0).text();
 
 	if (tube_info) {
 		//check cells content
@@ -18,7 +19,7 @@ function tabulateTubeInfo(tube_info) {
 				var cell = cells.eq(column);
 				if (column > 0) {
 					if (parseInt(tube_info[key]) !== parseInt(cell.text())) {
-						updateCellValue(cell, tube_info[key]);
+						Utility.updateCellValue(cell, tube_info[key]);
 					}
 				} else {
 					cell.text(tube_info[key]);
@@ -26,8 +27,6 @@ function tabulateTubeInfo(tube_info) {
 				column++;
 			}
 		}
-	} else {
-		//row on table did not exists anymore in the info from server
 	}
 }
 
@@ -46,7 +45,7 @@ function tabulateStats(stats) {
 				var rows = tbody.find('tr');
 				var stat_key = null;
 
-				if (rows.length == 0) {
+				if (rows.length === 0) {
 					for (stat_key in stats[key].stat) {
 						if (stats[key].stat.hasOwnProperty(stat_key)) {
 							tbody.append(
@@ -59,7 +58,7 @@ function tabulateStats(stats) {
 										$(document.createElement('td'))
 											.html(stats[key].stat[stat_key])
 									)
-							)
+							);
 						}
 					}
 				} else {
@@ -75,7 +74,7 @@ function tabulateStats(stats) {
 						}
 
 						if (new_value !== existing_value) {
-							updateCellValue(cells.eq(1), stats[key].stat[stat_key]);
+							Utility.updateCellValue(cells.eq(1), stats[key].stat[stat_key]);
 						}
 					}
 				}
@@ -126,7 +125,7 @@ function refreshTubeInfo() {
 			if (data.err) {
 
 				$('#error_container').append(
-					getErrorBox('warning', data.err)
+					Utility.getErrorBox('warning', data.err)
 				);
 
 				$('button').attr('disabled', 'disabled');
@@ -145,7 +144,7 @@ function refreshTubeInfo() {
 				if (pending_task) {
 					pending_task.callee(pending_task.arguments);
 				} else {
-					if (auto_update) {
+					if (Utility.isAutoUpdate()) {
 						setTimeout(function() {
 							refreshTubeInfo();
 						}, 1000);
@@ -180,7 +179,7 @@ function unblockForm() {
 }
 
 function finishPendingTask() {
-	if (auto_update) {
+	if (Utility.isAutoUpdate()) {
 		refreshTubeInfo();
 	}
 	pending_task = null;
@@ -327,5 +326,5 @@ $(function() {
 		sendCommand('delete-job', value);
 	});
 
-	auto_update_handler = refreshTubeInfo;
+	Utility.setAutoUpdateHandler(refreshTubeInfo);
 });
