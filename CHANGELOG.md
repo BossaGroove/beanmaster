@@ -1,3 +1,9 @@
+# 1.0.16
+- Removed pm2 dependency
+- Updated package dependencies
+- Added preferGlobal flag in package.json
+- Added server info on listing page
+
 # 1.0.15
 - Fix bug when server disconnected
 - Responsive table

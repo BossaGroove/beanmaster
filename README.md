@@ -60,8 +60,7 @@ beanmaster --help
 ### Todo / Known issue
 
 1. Disconnect beanstalkd connection
-2. The server does not start properly if pm2 module is not installed on the system
-3. Multiple viewer may cause unexpected result as several actions require async operation.
+2. Multiple viewer may cause unexpected result as several actions require async operation.
 
   a. User 1 tries to add a new job to tube A
 
