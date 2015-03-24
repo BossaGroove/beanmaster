@@ -5,7 +5,12 @@ var pjson = require('../package.json'),
 	config = require('../app/config/config'),
 	p = require('path'),
 	daemonize = require('daemonize2'),
+	Utility = require('./utility'),
 	daemon = null;
+
+var BEANMASTER_HOME_PATH = Utility.getHomePath();
+
+var BEANMASTER_PID_PATH = BEANMASTER_HOME_PATH + '/beanmaster.pid';
 
 function startServer() {
 	daemon.start().once('started', function() {
@@ -53,7 +58,7 @@ commander
 var daemon_option = {
 	main: p.resolve(__dirname, '../server.js'),
 	name: 'beanmaster',
-	pidfile: p.resolve(__dirname, '../etc/beanmaster.pid'),
+	pidfile: BEANMASTER_PID_PATH,
 	silent: true
 };
 

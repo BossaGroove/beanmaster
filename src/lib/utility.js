@@ -29,6 +29,18 @@
 		return host_port;
 	};
 
+	Utility.getHomePath = function() {
+		var path = require('path'),
+			beanmaster_home_path = '';
+
+		if (process.env.BEANMASTER_HOME) {
+			beanmaster_home_path = process.env.BEANMASTER_HOME;
+		} else {
+			beanmaster_home_path = path.resolve(process.env.HOME || process.env.HOMEPATH, '.beanmaster');
+		}
+
+		return beanmaster_home_path;
+	};
 
 	module.exports = Utility;
 

@@ -1,3 +1,6 @@
+# 1.0.19
+- Fixed PID path
+
 # 1.0.16
 - Removed pm2 dependency
 - Updated package dependencies

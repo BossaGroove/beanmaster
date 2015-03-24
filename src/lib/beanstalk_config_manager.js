@@ -7,16 +7,10 @@
 
 	var fs = require('fs'),
 		_ = require('lodash'),
-		path = require('path');
+		path = require('path'),
+		Utility = require('./utility');
 
-	var BEANMASTER_HOME_PATH = '';
-
-	if (process.env.BEANMASTER_HOME) {
-		BEANMASTER_HOME_PATH = process.env.BEANMASTER_HOME;
-	} else {
-		BEANMASTER_HOME_PATH = path.resolve(process.env.HOME || process.env.HOMEPATH, '.beanmaster');
-	}
-
+	var BEANMASTER_HOME_PATH = Utility.getHomePath();
 	var BEANMASTER_CONFIG_PATH = BEANMASTER_HOME_PATH + '/config.json';
 
 	function BeanstalkConfigManager() {
