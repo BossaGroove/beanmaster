@@ -1,112 +1,94 @@
 #!/usr/bin/env node
-process.env.PM2_SILENT = true;
 
-var pjson = require('../package.json');
-var pm2 = require('pm2');
-var commander = require('commander');
-var config = require('../app/config/config');
+var pjson = require('../package.json'),
+	commander = require('commander'),
+	config = require('../app/config/config'),
+	p = require('path'),
+	daemonize = require('daemonize2'),
+	daemon = null;
 
 function startServer() {
-	pm2.connect(function(err) {
-		if (err) {
-			console.log('PM2 connect failed');
-			console.log(err);
-		} else {
-			var options = {
-				name: 'beanmaster'
-			};
-
-			if (commander.port) {
-				options.scriptArgs = ['-p', commander.port];
-			}
-
-			pm2.start(__dirname + '/../server.js', options, function(err, proc) {
-				if (err) {
-					console.log('Beanmaster startup failed');
-				} else {
-					console.log('Beanmaster listening port ' + (commander.port || config.port));
-				}
-				pm2.disconnect(function() {
-					process.exit(0)
-				});
-			});
-		}
-	})
+	daemon.start().once('started', function() {
+		process.exit();
+	});
 }
 
-function listServer() {
-	pm2.connect(function(err) {
-		if (err) {
-			console.log('PM2 connect failed');
-			console.log(err);
-		} else {
-			pm2.list(function(err, process_list) {
-				console.log(process_list);
-				pm2.disconnect(function() {
-					process.exit(0)
-				});
-			});
-		}
-	})
+function serverStatus() {
+	var pid = daemon.status();
+	if (pid) {
+		console.log('Beanmaster daemon running. PID: ' + pid);
+	} else {
+		console.log('Beanmaster daemon is not running.');
+	}
 }
 
 function restartServer() {
-	pm2.connect(function(err) {
-		if (err) {
-			console.log('PM2 connect failed');
-			console.log(err);
-		} else {
-			pm2.restart('beanmaster', function(err, process_list) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('Beanmaster server restarted');
-				}
-				pm2.disconnect(function() {
-					process.exit(0)
-				});
-			});
-		}
-	})
+	if (daemon.status()) {
+		daemon.stop().once('stopped', function() {
+			startServer();
+		});
+	} else {
+		startServer();
+	}
 }
 
 function stopServer() {
-	pm2.connect(function(err) {
-		if (err) {
-			console.log('PM2 connect failed');
-			console.log(err);
-		} else {
-			pm2.delete('beanmaster', function(err, proc) {
-				if (err) {
-					console.log(err.msg);
-				} else {
-					console.log('Beanmaster server stopped');
-				}
-				pm2.disconnect(function() {
-					process.exit(0)
-				});
-			});
-		}
-	})
+	daemon.stop();
+}
+
+function killServer() {
+	daemon.kill();
 }
 
 commander
 	.version(pjson.version)
 	.option('-p, --port <n>', 'Specify the port number', parseInt)
 	.option('start', 'Start server as a daemon process')
-	.option('list', 'Show server daemon detail')
+	.option('status', 'Show server daemon status')
 	.option('restart', 'Restart server daemon')
 	.option('stop', 'Stop server daemon')
+	.option('kill', 'Kill server daemon')
 	.parse(process.argv);
+
+var daemon_option = {
+	main: p.resolve(__dirname, '../server.js'),
+	name: 'beanmaster',
+	pidfile: p.resolve(__dirname, '../etc/beanmaster.pid'),
+	silent: true
+};
+
+if (commander.port) {
+	daemon_option.args = ['-p ' + commander.port];
+}
+
+daemon = daemonize.setup(daemon_option);
+
+daemon.on('starting', function() {
+	console.log('Starting Beanmaster daemon...');
+}).on('started', function(pid) {
+	console.log('Beanmaster daemon started. PID: ' + pid + ', port: ' + (commander.port || config.port));
+}).on('stopping', function() {
+	console.log('Stopping Beanmaster daemon...');
+}).on('stopped', function() {
+	console.log('Beanmaster daemon stopped.');
+}).on('running', function(pid) {
+	console.log('Beanmaster daemon already running. PID: ' + pid);
+}).on('notrunning', function() {
+	console.log('Beanmaster daemon is not running');
+}).on('error', function(err) {
+	console.log('Beanmaster daemon failed to start:  ' + err.message);
+});
 
 if (commander.start) {
 	startServer();
-} else if (commander.list) {
-	listServer();
+} else if (commander.status) {
+	serverStatus();
 } else if (commander.restart) {
 	restartServer();
 } else if (commander.stop) {
 	stopServer();
+} else if (commander.kill) {
+	killServer();
 } else {
-	require("../server");
+	require('../server');
 }
