@@ -119,6 +119,11 @@ function saveServer() {
 		valid = false;
 	}
 
+	if (port.val() < 0 || port.val() >= 65536) {
+		port.parent().parent().addClass('has-warning');
+		valid = false;
+	}
+
 	var data = {
 		_csrf: $('#_csrf').val(),
 		name: name.val(),
