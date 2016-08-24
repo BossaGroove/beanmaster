@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 
-var pjson = require('../package.json'),
-	commander = require('commander'),
-	config = require('../app/config/config'),
-	p = require('path'),
-	daemonize = require('daemonize2'),
-	Utility = require('./utility'),
-	daemon = null;
+'use strict';
 
-var BEANMASTER_HOME_PATH = Utility.getHomePath();
+const pjson = require('../package.json');
+const commander = require('commander');
+const config = require('../app/config/config');
+const p = require('path');
+const daemonize = require('daemonize2');
+const Utility = require('./utility');
 
-var BEANMASTER_PID_PATH = BEANMASTER_HOME_PATH + '/beanmaster.pid';
+let daemon = null;
+
+const BEANMASTER_HOME_PATH = Utility.getHomePath();
+
+const BEANMASTER_PID_PATH = BEANMASTER_HOME_PATH + '/beanmaster.pid';
 
 function startServer() {
 	daemon.start().once('started', function() {

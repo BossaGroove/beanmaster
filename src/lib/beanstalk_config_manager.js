@@ -2,19 +2,17 @@
  * Created by Bossa on 2014/10/05.
  */
 
-(function() {
-	'use strict';
+'use strict';
 
-	var fs = require('fs'),
-		_ = require('lodash'),
-		path = require('path'),
-		Utility = require('./utility');
+const fs = require('fs');
+const _ = require('lodash');
+const Utility = require('./utility');
 
-	var BEANMASTER_HOME_PATH = Utility.getHomePath();
-	var BEANMASTER_CONFIG_PATH = BEANMASTER_HOME_PATH + '/config.json';
+const BEANMASTER_HOME_PATH = Utility.getHomePath();
+const BEANMASTER_CONFIG_PATH = BEANMASTER_HOME_PATH + '/config.json';
 
-	function BeanstalkConfigManager() {
-
+class BeanstalkConfigManager {
+	constructor() {
 		if (!fs.existsSync(BEANMASTER_HOME_PATH)) {
 			fs.mkdirSync(BEANMASTER_HOME_PATH);
 		}
@@ -26,7 +24,7 @@
 		this._cached_config = null;
 	}
 
-	BeanstalkConfigManager.prototype.getConfig = function(callback) {
+	getConfig(callback) {
 
 		var _this = this;
 
@@ -57,9 +55,9 @@
 				}
 			});
 		}
-	};
+	}
 
-	BeanstalkConfigManager.prototype.saveConfig = function(new_config, callback) {
+	saveConfig(new_config, callback) {
 		var data = JSON.stringify(new_config, null, '\t');
 
 		var _this = this;
@@ -72,9 +70,9 @@
 
 			callback(err, _this._cached_config);
 		});
-	};
+	}
 
-	BeanstalkConfigManager.prototype.addConfig = function(input_config, callback) {
+	addConfig(input_config, callback) {
 
 		var _this = this;
 
@@ -95,9 +93,9 @@
 				}
 			}
 		});
-	};
+	}
 
-	BeanstalkConfigManager.prototype.deleteConfig = function(input_config, callback) {
+	deleteConfig(input_config, callback) {
 
 		var _this = this;
 
@@ -118,17 +116,8 @@
 
 			}
 		});
-	};
+	}
+}
 
-	BeanstalkConfigManager.instance = null;
 
-	BeanstalkConfigManager.getInstance = function() {
-		if (this.instance === null) {
-			this.instance = new BeanstalkConfigManager();
-		}
-		return this.instance;
-	};
-
-	module.exports = BeanstalkConfigManager.getInstance();
-
-})();
+module.exports = new BeanstalkConfigManager();

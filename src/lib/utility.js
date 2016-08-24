@@ -2,17 +2,13 @@
  * Created by Bossa on 10/12/14.
  */
 
+'use strict';
 
-(function() {
-	'use strict';
+const path = require('path');
+const validator = require('validator');
 
-	var validator = require('validator');
-
-	function Utility() {
-
-	}
-
-	Utility.validateHostPort = function(host_port) {
+class Utility {
+	static validateHostPort(host_port) {
 		if (!host_port) {
 			return false;
 		} else {
@@ -27,11 +23,10 @@
 		}
 
 		return host_port;
-	};
+	}
 
-	Utility.getHomePath = function() {
-		var path = require('path'),
-			beanmaster_home_path = '';
+	static getHomePath() {
+		let beanmaster_home_path = '';
 
 		if (process.env.BEANMASTER_HOME) {
 			beanmaster_home_path = process.env.BEANMASTER_HOME;
@@ -40,8 +35,7 @@
 		}
 
 		return beanmaster_home_path;
-	};
+	}
+}
 
-	module.exports = Utility;
-
-})();
+module.exports = Utility;

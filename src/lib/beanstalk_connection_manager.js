@@ -2,17 +2,16 @@
  * Created by Bossa on 2014/10/05.
  */
 
-(function() {
-	'use strict';
+'use strict';
 
-	var Fivebeans = require('fivebeans');
+const Fivebeans = require('fivebeans');
 
-	function BeanstalkConnectionManager() {
-		this._connections = {};
+class BeanstalkConnectionManager {
+	constructor() {
+		this._connections = {};	
 	}
 
-	BeanstalkConnectionManager.prototype.getConnection = function(host, port, callback) {
-
+	getConnection(host, port, callback) {
 		if (!host || !port) {
 			callback('Host or port invalid', null);
 		} else {
@@ -64,18 +63,7 @@
 					.connect();
 			}
 		}
-	};
+	}
+}
 
-
-	BeanstalkConnectionManager.instance = null;
-
-	BeanstalkConnectionManager.getInstance = function() {
-		if (this.instance === null) {
-			this.instance = new BeanstalkConnectionManager();
-		}
-		return this.instance;
-	};
-
-	module.exports = BeanstalkConnectionManager.getInstance();
-
-})();
+module.exports = new BeanstalkConnectionManager();
