@@ -2,12 +2,14 @@
 
 'use strict';
 
+const root = require('app-root-path');
 const pjson = require('../package.json');
 const commander = require('commander');
-const config = require('../app/config/config');
 const p = require('path');
 const daemonize = require('daemonize2');
 const Utility = require('./utility');
+
+const config = require(`${root}/config`);
 
 let daemon = null;
 

@@ -1,14 +1,15 @@
-/**
- * Created by Bossa on 10/12/14.
- */
 'use strict';
 
+const root = require('app-root-path');
 const _ = require('lodash');
 const async = require('async');
-const Utility = require('../../lib/utility');
 
-const BeanstalkConfigManager = require('../../lib/beanstalk_config_manager');
-const BeanstalkConnectionManager = require('../../lib/beanstalk_connection_manager');
+const lib = require(`${root}/lib`);
+const BeanstalkConfigManager = lib.BeanstalkConfigManager;
+const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+const Utility = lib.Utility;
+
+const AbstractController = require('../includes/abstract_controller');
 
 function getNextJobs(connection, tube, callback) {
 	let actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
@@ -108,17 +109,13 @@ function getTube(host, port, tube, callback) {
 }
 
 
-class TubeController {
-	constructor() {
-
-	}
-
+class TubeController extends AbstractController {
 	/**
 	 * show tube detail
 	 * @param req
 	 * @param res
 	 */
-	tube(req, res) {
+	index(req, res) {
 		let host_port = req.params.host_port || null;
 		let tube = req.params.tube || null;
 

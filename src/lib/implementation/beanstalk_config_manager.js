@@ -24,37 +24,45 @@ class BeanstalkConfigManager {
 		this._cached_config = null;
 	}
 
-	getConfig(callback) {
-
-		var _this = this;
-
+	* getConfig() {
 		if (this._cached_config) {
-			callback(null, this._cached_config);
-		} else {
-			fs.exists(BEANMASTER_CONFIG_PATH, function(exists) {
-				if (exists) {
-					fs.readFile(BEANMASTER_CONFIG_PATH, function(err, data) {
-						if (err) {
-							_this._cached_config = [];
-							callback(null, _this._cached_config);
-						} else {
+			return this._cached_config;
+		}
 
-							data = data.toString();
-
-							try {
-								_this._cached_config = JSON.parse(data);
-							} catch (e) {
-								_this._cached_config = [];
-							}
-							callback(null, _this._cached_config);
-						}
-					});
+		const path_exists = yield (new Promise(function (resolve, reject) {
+			fs.stat(BEANMASTER_CONFIG_PATH, function (err, stat) {
+				if (err || !stat) {
+					reject(err);
 				} else {
-					_this._cached_config = [];
-					callback(null, _this._cached_config);
+					resolve(stat.isFile());
 				}
 			});
+		}));
+
+		if (!path_exists) {
+			this._cached_config = [];
+			return this._cached_config;
 		}
+
+		let config_data = yield (new Promise(function (resolve, reject) {
+			fs.readFile(BEANMASTER_CONFIG_PATH, function (err, data) {
+				if (err) {
+					resolve([]);
+				} else {
+					resolve(data);
+				}
+			});
+		}));
+
+		config_data = config_data.toString();
+
+		try {
+			this._cached_config = JSON.parse(config_data);
+		} catch (e) {
+			this._cached_config = [];
+		}
+
+		return this._cached_config;
 	}
 
 	saveConfig(new_config, callback) {
@@ -62,7 +70,7 @@ class BeanstalkConfigManager {
 
 		var _this = this;
 
-		fs.writeFile(BEANMASTER_CONFIG_PATH, data, function(err) {
+		fs.writeFile(BEANMASTER_CONFIG_PATH, data, function (err) {
 
 			if (!err) {
 				_this._cached_config = new_config;
@@ -73,10 +81,9 @@ class BeanstalkConfigManager {
 	}
 
 	addConfig(input_config, callback) {
-
 		var _this = this;
 
-		this.getConfig(function(err, all_config) {
+		this.getConfig(function (err, all_config) {
 			if (err) {
 				callback(err, null);
 			} else {
@@ -87,7 +94,7 @@ class BeanstalkConfigManager {
 				} else {
 					all_config.push(input_config);
 
-					_this.saveConfig(all_config, function(err, saved_config) {
+					_this.saveConfig(all_config, function (err, saved_config) {
 						callback(err, saved_config);
 					});
 				}
@@ -96,10 +103,9 @@ class BeanstalkConfigManager {
 	}
 
 	deleteConfig(input_config, callback) {
-
 		var _this = this;
 
-		this.getConfig(function(err, all_config) {
+		this.getConfig(function (err, all_config) {
 			if (err) {
 				callback(err, null);
 			} else {
@@ -110,7 +116,7 @@ class BeanstalkConfigManager {
 					all_config = _.without(all_config, config_to_be_deleted);
 				}
 
-				_this.saveConfig(all_config, function(err, saved_config) {
+				_this.saveConfig(all_config, function (err, saved_config) {
 					callback(err, saved_config);
 				});
 

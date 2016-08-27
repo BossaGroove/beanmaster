@@ -24,16 +24,17 @@
     "node": ">=4"
   },
   "license": "MIT",
-  "scripts": {
-    "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js"
-  },
+  "scripts": {},
   "preferGlobal": true,
   "dependencies": {
+    "app-root-path": "^1.3.0",
     "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "change-case": "^3.0.0",
     "clone": "^1.0.2",
     "co": "^4.6.0",
+    "co-event": "^0.1.0",
+    "co-express": "^1.2.2",
     "commander": "^2.9.0",
     "compression": "^1.6.2",
     "connect-assets": "^5.3.2",
@@ -43,15 +44,15 @@
     "csurf": "^1.9.0",
     "daemonize2": "^0.4.2",
     "express": "^4.14.0",
-    "express-session": "^1.14.0",
+    "express-session": "^1.14.1",
     "fivebeans": "^1.4.1",
     "jade": "^1.11.0",
     "less": "^2.7.1",
     "less-middleware": "^2.2.0",
     "lodash": "^4.15.0",
-    "method-override": "^2.3.6",
     "moment": "^2.14.1",
     "morgan": "^1.7.0",
+    "require-all": "^2.0.0",
     "validator": "^5.5.0"
   },
   "devDependencies": {
@@ -70,5 +71,5 @@
     "url": "https://github.com/BossaGroove/beanmaster/issues"
   },
   "homepage": "https://github.com/BossaGroove/beanmaster",
-  "main": "server.js"
+  "main": "./bin/server.js"
 }

@@ -1,14 +1,15 @@
-/**
- * Created by Bossa on 14/11/30.
- */
 'use strict';
 
+const root = require('app-root-path');
 const _ = require('lodash');
 const async = require('async');
-const Utility = require('../../lib/utility');
 
-const BeanstalkConfigManager = require('../../lib/beanstalk_config_manager');
-const BeanstalkConnectionManager = require('../../lib/beanstalk_connection_manager');
+const lib = require(`${root}/lib`);
+const BeanstalkConfigManager = lib.BeanstalkConfigManager;
+const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+const Utility = lib.Utility;
+
+const AbstractController = require('../includes/abstract_controller');
 
 function getTubesInfo(connection, callback) {
 	async.waterfall([
@@ -49,17 +50,13 @@ function getTubesInfo(connection, callback) {
 	});
 }
 
-class ServerController {
-	constructor() {
-
-	}
-
+class ServerController extends AbstractController {
 	/**
 	 * list all the beanstalk tubes
 	 * @param req
 	 * @param res
 	 */
-	listTubes(req, res) {
+	index(req, res) {
 		let host_port = Utility.validateHostPort(req.params.host_port);
 
 		if (host_port) {

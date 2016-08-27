@@ -1,12 +1,15 @@
-/**
- * Created by Bossa on 2014/11/30.
- */
 'use strict';
 
-const BeanstalkConfigManager = require('../../lib/beanstalk_config_manager');
-const BeanstalkConnectionManager = require('../../lib/beanstalk_connection_manager');
+const root = require('app-root-path');
 const async = require('async');
 const _ = require('lodash');
+
+const lib = require(`${root}/lib`);
+const BeanstalkConfigManager = lib.BeanstalkConfigManager;
+const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+
+const AbstractController = require('../includes/abstract_controller');
+const BeanstalkHelper = require('../includes/beanstalk_helper');
 
 /**
  * get server info
@@ -34,9 +37,10 @@ function getServerInfo(configs, callback) {
 	});
 }
 
-class HomeController {
-	constructor() {
-
+class HomeController extends AbstractController {
+	constructor(beanstalk_helper) {
+		super();
+		this.beanstalk_helper = beanstalk_helper || BeanstalkHelper;
 	}
 
 	/**
@@ -46,24 +50,26 @@ class HomeController {
 	 * @param req
 	 * @param res
 	 */
-	index(req, res) {
-		BeanstalkConfigManager.getConfig(function (err, configs) {
-			getServerInfo(configs, function (err, config_with_detail) {
-				if (err || !config_with_detail) {
-					config_with_detail = [];
-				}
-				res.render('home/servers', {
-					page: 'Servers',
-					title: 'Beanmaster',
-					config: config_with_detail
-				});
+	* index(req, res) {
+		let configs = yield BeanstalkConfigManager.getConfig();
 
+		let info = yield BeanstalkHelper.getServerInfo(configs);
+
+		/*getServerInfo(configs, function (err, config_with_detail) {
+			if (err || !config_with_detail) {
+				config_with_detail = [];
+			}
+			res.render('home/servers', {
+				page: 'Servers',
+				title: 'Beanmaster',
+				config: config_with_detail
 			});
-		});
+
+		});*/
 	}
 
 	/**
-	 * POST /addServer
+	 * POST /servers/add
 	 * add server
 	 * @param req
 	 * @param res
@@ -86,7 +92,7 @@ class HomeController {
 	}
 
 	/**
-	 * POST /deleteServer
+	 * POST /servers/delete
 	 * delete server
 	 * @param req
 	 * @param res
