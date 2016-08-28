@@ -5,7 +5,6 @@
 'use strict';
 
 const _ = require('lodash');
-const coEvent = require('co-event');
 const Fivebeans = require('fivebeans');
 
 class BeanstalkConnectionManager {

@@ -33,7 +33,6 @@
     "change-case": "^3.0.0",
     "clone": "^1.0.2",
     "co": "^4.6.0",
-    "co-event": "^0.1.0",
     "co-express": "^1.2.2",
     "commander": "^2.9.0",
     "compression": "^1.6.2",
