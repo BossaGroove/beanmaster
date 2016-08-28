@@ -53,19 +53,13 @@ class HomeController extends AbstractController {
 	* index(req, res) {
 		let configs = yield BeanstalkConfigManager.getConfig();
 
-		let info = yield BeanstalkHelper.getServerInfo(configs);
+		let infos = yield BeanstalkHelper.getServerInfo(configs);
 
-		/*getServerInfo(configs, function (err, config_with_detail) {
-			if (err || !config_with_detail) {
-				config_with_detail = [];
-			}
-			res.render('home/servers', {
-				page: 'Servers',
-				title: 'Beanmaster',
-				config: config_with_detail
-			});
-
-		});*/
+		res.render('home/servers', {
+			page: 'Servers',
+			title: 'Beanmaster',
+			configs: infos
+		});
 	}
 
 	/**

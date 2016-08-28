@@ -27,6 +27,8 @@ class BeanstalkConnectionManager {
 		}
 
 		this._connections[connection_key] = yield this.connectServer(host, port);
+
+		return this._connections[connection_key];
 	}
 
 	* connectServer(host, port) {
@@ -36,52 +38,42 @@ class BeanstalkConnectionManager {
 
 		client.connect();
 
-		let e;
-
-		while (e = yield coEvent(client)) {
-			switch (e.type) {
-				case 'connect':
-					console.log('Beanstalkd connected successfully');
-					break;
-				case 'error':
-					console.log('Beanstalkd connect failed');
-					break;
-				case 'close':
-					console.log('Beanstalkd connection closed');
-					break;
-			}
-		}
-
-		console.log('END');
-
-		return client;
-			/*
-
 		yield (new Promise(function (resolve, reject) {
+			let callback_count = 0;
+			let callbackWrapper = function(err) {
+				callback_count++;
+				if (callback_count <= 1) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve();
+					}
+				}
+			};
+
 			let timeout_handler = setTimeout(function () {
 				console.log('Beanstalkd connection timeout');
-
+				callbackWrapper('timeout');
 			}, 10000);
 
 			client
 				.on('connect', function () {
 					clearTimeout(timeout_handler);
 					console.log('Beanstalkd connected successfully');
-					callbackWrapper(null, _this._connections[connection_key]);
+					callbackWrapper();
 				})
 				.on('error', function (err) {
 					clearTimeout(timeout_handler);
 					console.log('Beanstalkd connect failed: ' + err);
-					_this._connections[connection_key] = null;
-					callbackWrapper(err.toString(), null);
+					callbackWrapper(err);
 				})
 				.on('close', function () {
 					clearTimeout(timeout_handler);
 					console.log('Beanstalkd connection closed');
-					_this._connections[connection_key] = null;
-				})
-				.connect();
-		}));*/
+				});
+		}));
+
+		return client;
 	}
 
 }

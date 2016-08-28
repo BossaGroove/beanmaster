@@ -8,27 +8,20 @@ const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
 
 class BeanstalkHelper {
 	static *getServerInfo(configs) {
-		let connection_generators = [];
-
 		for (let i = 0; i < configs.length; i++) {
-			connection_generators.push(BeanstalkConnectionManager.getConnection(configs[i].host, configs[i].port));
+			let connection = yield BeanstalkConnectionManager.getConnection(configs[i].host, configs[i].port);
+			configs[i].server_info = yield (new Promise(function(resolve, reject){
+				connection.stats(function (err, results) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(results);
+					}
+				});
+			}));
 		}
 
-
-		let connections = yield connection_generators;
-
-		/*
-				let config_with_detail = _.cloneDeep(config);
-				config_with_detail.server_info = {};
-
-				if (!err) {
-					connection.stats(function (err, results) {
-						config_with_detail.server_info = results;
-						flow_callback(null, config_with_detail);
-					});
-				} else {
-					flow_callback(null, config_with_detail);
-				}*/
+		return configs;
 	}
 }
 
