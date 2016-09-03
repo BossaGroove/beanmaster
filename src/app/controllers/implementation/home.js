@@ -2,22 +2,16 @@
 
 const root = require('app-root-path');
 const requireAll = require('require-all');
-const changeCase = require('change-case');
-
-const async = require('async');
-const _ = require('lodash');
 
 const lib = require(`${root}/lib`);
 const BeanstalkConfigManager = lib.BeanstalkConfigManager;
 const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
 
 const AbstractController = require('../includes/abstract_controller');
-const BeanstalkHelper = require('../includes/beanstalk_helper');
 
 class HomeController extends AbstractController {
-	constructor(beanstalk_helper, request_handlers) {
+	constructor(request_handlers) {
 		super();
-		this._beanstalk_helper = beanstalk_helper || BeanstalkHelper;
 		this.wireEndpointDependencies(request_handlers, requireAll({
 			dirname: `${root}/app/controllers/includes/common`,
 			resolve: function (Adaptor) {
