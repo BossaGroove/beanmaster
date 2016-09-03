@@ -26,7 +26,7 @@ class BeanstalkConfigManager {
 
 	* getConfig() {
 		if (this._cached_config) {
-			return this._cached_config;
+			return BeanstalkConfigManager.output(this._cached_config);
 		}
 
 		const path_exists = yield (new Promise(function (resolve, reject) {
@@ -62,66 +62,65 @@ class BeanstalkConfigManager {
 			this._cached_config = [];
 		}
 
-		return this._cached_config;
+		return BeanstalkConfigManager.output(this._cached_config);
 	}
 
-	saveConfig(new_config, callback) {
+	* saveConfig(new_config) {
 		var data = JSON.stringify(new_config, null, '\t');
 
 		var _this = this;
 
-		fs.writeFile(BEANMASTER_CONFIG_PATH, data, function (err) {
-
-			if (!err) {
-				_this._cached_config = new_config;
-			}
-
-			callback(err, _this._cached_config);
-		});
-	}
-
-	addConfig(input_config, callback) {
-		var _this = this;
-
-		this.getConfig(function (err, all_config) {
-			if (err) {
-				callback(err, null);
-			} else {
-				var existing_config = _.find(all_config, {host: input_config.host, port: input_config.port});
-
-				if (existing_config) {
-					callback(null, all_config);
+		yield (new Promise(function(resolve, reject){
+			fs.writeFile(BEANMASTER_CONFIG_PATH, data, function (err) {
+				if (err) {
+					reject(err);
 				} else {
-					all_config.push(input_config);
-
-					_this.saveConfig(all_config, function (err, saved_config) {
-						callback(err, saved_config);
-					});
+					resolve();
 				}
-			}
-		});
+			});
+		}));
+
+		_this._cached_config = new_config;
+
+		return _this._cached_config;
 	}
 
-	deleteConfig(input_config, callback) {
-		var _this = this;
+	* addConfig(input_config, callback) {
+		let configs = yield this.getConfig();
 
-		this.getConfig(function (err, all_config) {
-			if (err) {
-				callback(err, null);
-			} else {
+		// find if same config exists
+		if (_.find(configs, {host: input_config.host, port: input_config.port})) {
+			return configs;
+		}
 
-				var config_to_be_deleted = _.findWhere(all_config, {host: input_config.host, port: input_config.port});
-
-				if (config_to_be_deleted) {
-					all_config = _.without(all_config, config_to_be_deleted);
-				}
-
-				_this.saveConfig(all_config, function (err, saved_config) {
-					callback(err, saved_config);
-				});
-
-			}
+		configs.push({
+			name: input_config.name,
+			host: input_config.host,
+			port: input_config.port
 		});
+
+		return yield this.saveConfig(configs);
+	}
+
+	* deleteConfig(input_config, callback) {
+
+		let configs = yield this.getConfig();
+
+		var config_to_be_deleted = _.find(configs, {host: input_config.host, port: input_config.port});
+
+		if (config_to_be_deleted) {
+			configs = _.without(configs, config_to_be_deleted);
+		}
+
+		return yield this.saveConfig(configs);
+	}
+
+	static output(configs) {
+		let output = _.cloneDeep(configs);
+		output.map(function (config) {
+			return config.connection_key = config.host + ':' + config.port;
+		});
+		return output;
 	}
 }
 

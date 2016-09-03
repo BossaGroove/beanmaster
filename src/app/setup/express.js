@@ -9,13 +9,12 @@ const bodyParser = require('body-parser');
 const csrf = require('csurf');
 const morgan = require('morgan');
 const flash = require('connect-flash');
-
 const config = require(`${root}/config`);
+const viewHelpers = require('../middlewares/view');
+const errorHandler = require('../middlewares/error_handler');
+const router = require('./routes');
 
 const env = process.env.NODE_ENV || 'development';
-
-const viewHelpers = require('../middlewares/view');
-const router = require('./routes');
 
 const app = express();
 
@@ -67,5 +66,7 @@ app.use(viewHelpers(config));
 
 // router
 app.use('/', router);
+
+app.use(errorHandler);
 
 module.exports = app;

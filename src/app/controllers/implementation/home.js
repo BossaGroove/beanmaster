@@ -1,6 +1,9 @@
 'use strict';
 
 const root = require('app-root-path');
+const requireAll = require('require-all');
+const changeCase = require('change-case');
+
 const async = require('async');
 const _ = require('lodash');
 
@@ -11,36 +14,16 @@ const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
 const AbstractController = require('../includes/abstract_controller');
 const BeanstalkHelper = require('../includes/beanstalk_helper');
 
-/**
- * get server info
- * @param configs {Array} - configs
- * @param callback {function(Object, Array=)} - finish callback
- */
-function getServerInfo(configs, callback) {
-	async.mapLimit(configs, 5, function (config, flow_callback) {
-		BeanstalkConnectionManager.getConnection(config.host, config.port, function (err, connection) {
-
-			let config_with_detail = _.cloneDeep(config);
-			config_with_detail.server_info = {};
-
-			if (!err) {
-				connection.stats(function (err, results) {
-					config_with_detail.server_info = results;
-					flow_callback(null, config_with_detail);
-				});
-			} else {
-				flow_callback(null, config_with_detail);
-			}
-		});
-	}, function (err, config_with_detail) {
-		callback(err, config_with_detail);
-	});
-}
-
 class HomeController extends AbstractController {
-	constructor(beanstalk_helper) {
+	constructor(beanstalk_helper, request_handlers) {
 		super();
-		this.beanstalk_helper = beanstalk_helper || BeanstalkHelper;
+		this._beanstalk_helper = beanstalk_helper || BeanstalkHelper;
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/common`,
+			resolve: function (Adaptor) {
+				return new Adaptor();
+			}
+		}));
 	}
 
 	/**
@@ -53,12 +36,31 @@ class HomeController extends AbstractController {
 	* index(req, res) {
 		let configs = yield BeanstalkConfigManager.getConfig();
 
-		let infos = yield BeanstalkHelper.getServerInfo(configs);
-
 		res.render('home/servers', {
 			page: 'Servers',
 			title: 'Beanmaster',
-			configs: infos
+			configs: configs
+		});
+	}
+
+	* getInfo(req, res) {
+		let data = this._host_port_adaptor.getData(req);
+
+		let connection_info;
+		let error = null;
+
+		try {
+			this._host_port_validator.validate(data);
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			connection_info = yield connection.statsAsync();
+		} catch (e) {
+			error = e.message;
+			connection_info = null;
+		}
+
+		res.json({
+			err: error,
+			connection_info: connection_info
 		});
 	}
 

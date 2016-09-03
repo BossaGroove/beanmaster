@@ -16,7 +16,7 @@ function promptDeleteServer(button) {
 }
 
 function initDeleteButton() {
-	$('button.delete').on('click', function(){
+	$('button.delete').on('click', function () {
 		promptDeleteServer(this);
 	});
 }
@@ -32,7 +32,7 @@ function unblockForm() {
 }
 
 function tabulateServer(result) {
-	var tbody = $('#server_list > tbody');
+	var tbody = $('#server_list').find('tbody');
 
 	//remove existing
 	tbody.find('tr').remove();
@@ -75,22 +75,22 @@ function tabulateServer(result) {
 				.append(
 					$(document.createElement('td'))
 						.append(
-						$(document.createElement('a'))
-							.addClass('btn')
-							.addClass('btn-primary')
-							.attr('href', '/' + encodeURIComponent(result[i].host) + ':' + result[i].port)
-							.html('View')
-					)
+							$(document.createElement('a'))
+								.addClass('btn')
+								.addClass('btn-primary')
+								.attr('href', '/' + encodeURIComponent(result[i].host) + ':' + result[i].port)
+								.html('View')
+						)
 				)
 				.append(
 					$(document.createElement('td'))
 						.append(
-						$(document.createElement('button'))
-							.addClass('btn')
-							.addClass('btn-danger')
-							.addClass('delete')
-							.html('Delete')
-					)
+							$(document.createElement('button'))
+								.addClass('btn')
+								.addClass('btn-danger')
+								.addClass('delete')
+								.html('Delete')
+						)
 				)
 		);
 	}
@@ -138,13 +138,13 @@ function saveServer() {
 			method: 'POST',
 			data: data,
 			dataType: 'json',
-			beforeSend: function() {
+			beforeSend: function () {
 				blockForm();
 			},
-			complete: function() {
+			complete: function () {
 				unblockForm();
 			},
-			success: function(data) {
+			success: function (data) {
 				if (data.err) {
 					console.log(data.err);
 				} else {
@@ -153,7 +153,7 @@ function saveServer() {
 					$('#server_form').find('input').val('');
 				}
 			},
-			error: function() {
+			error: function () {
 
 			}
 		});
@@ -175,13 +175,13 @@ function deleteServer() {
 		method: 'POST',
 		data: data,
 		dataType: 'json',
-		beforeSend: function() {
+		beforeSend: function () {
 			blockForm();
 		},
-		complete: function() {
+		complete: function () {
 			unblockForm();
 		},
-		success: function(data) {
+		success: function (data) {
 			if (data.err) {
 				console.log(data.err);
 			} else {
@@ -191,7 +191,7 @@ function deleteServer() {
 				port.val('');
 			}
 		},
-		error: function(err) {
+		error: function (err) {
 			console.log(err);
 		}
 	});
@@ -203,19 +203,57 @@ function promptAddServer() {
 	});
 }
 
-$(function() {
-	$('#btn_add_server').click(function() {
+function getInfo(row_element) {
+	var id = row_element.attr('id');
+	var host = row_element.data('host');
+	var port = row_element.data('port');
+
+	$.ajax({
+		url: '/server/info',
+		data: {
+			host: host,
+			port: port
+		},
+		method: 'get',
+		success: function (data) {
+			if (!data.err) {
+				// render the info
+				var tds = row_element.find('td');
+				tds.eq(3).html(data.connection_info['current-connections']);
+				tds.eq(4).html(data.connection_info.version);
+				tds.eq(5).html(data.connection_info['total-jobs']);
+				tds.eq(6).html(data.connection_info.pid);
+				tds.eq(7).html(data.connection_info.uptime);
+			}
+		},
+		error: function (err) {
+
+		}
+	});
+}
+
+function initConnections() {
+	var servers = $('#server_list').find('tbody').find('tr');
+
+	for (var i = 0; i < servers.length; i++) {
+		getInfo(servers.eq(i));
+	}
+}
+
+$(function () {
+	$('#btn_add_server').click(function () {
 		promptAddServer();
 	});
 
-	$('#btn_save_server').click(function() {
+	$('#btn_save_server').click(function () {
 		saveServer();
 	});
 
-	$('#btn_delete_server').click(function() {
+	$('#btn_delete_server').click(function () {
 		deleteServer();
 	});
 
-
 	initDeleteButton();
+
+	initConnections();
 });

@@ -4,8 +4,10 @@
 
 'use strict';
 
-const _ = require('lodash');
 const Fivebeans = require('fivebeans');
+const coTimeout = require('co-timeout');
+const coEvent = require('co-event');
+const bluebird = require('bluebird');
 
 class BeanstalkConnectionManager {
 	constructor() {
@@ -27,6 +29,10 @@ class BeanstalkConnectionManager {
 
 		this._connections[connection_key] = yield this.connectServer(host, port);
 
+		this._connections[connection_key]
+			.on('error', this.errorHandler('error', connection_key))
+			.on('close', this.errorHandler('close', connection_key));
+
 		return this._connections[connection_key];
 	}
 
@@ -35,46 +41,36 @@ class BeanstalkConnectionManager {
 
 		let client = new Fivebeans.client(host, port);
 
+		bluebird.promisifyAll(client);
+
 		client.connect();
 
-		yield (new Promise(function (resolve, reject) {
-			let callback_count = 0;
-			let callbackWrapper = function(err) {
-				callback_count++;
-				if (callback_count <= 1) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
+		yield coTimeout(10000, function*() {
+			let events = true;
+			while (events) {
+				let e = yield coEvent(client);
+				switch (e.type) {
+					case 'connect':
+						console.log(`Beanstalkd ${host}:${port} connected successfully`);
+						events = false;
+						return;
+					case 'close':
+						break;
+					case 'error':
+						break;
 				}
-			};
-
-			let timeout_handler = setTimeout(function () {
-				console.log('Beanstalkd connection timeout');
-				callbackWrapper('timeout');
-			}, 10000);
-
-			client
-				.on('connect', function () {
-					clearTimeout(timeout_handler);
-					console.log('Beanstalkd connected successfully');
-					callbackWrapper();
-				})
-				.on('error', function (err) {
-					clearTimeout(timeout_handler);
-					console.log('Beanstalkd connect failed: ' + err);
-					callbackWrapper(err);
-				})
-				.on('close', function () {
-					clearTimeout(timeout_handler);
-					console.log('Beanstalkd connection closed');
-				});
-		}));
+			}
+		});
 
 		return client;
 	}
 
+	errorHandler(event, connection_key) {
+		return (function (err) {
+			console.log(`Beanstalkd ${connection_key} ${event}, err: ${err}`);
+			this._connections[connection_key] = null;
+		}).bind(this);
+	}
 }
 
 module.exports = new BeanstalkConnectionManager();

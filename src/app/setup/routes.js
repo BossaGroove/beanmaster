@@ -6,6 +6,7 @@ const router = require('express').Router();
 const Controller = require(`${root}/app/controllers`);
 
 router.get('/', Controller.Home.action('index'));
+router.get('/server/info', Controller.Home.action('getInfo'));
 router.post('/server/add', Controller.Home.action('addServer'));
 router.post('/server/delete', Controller.Home.action('deleteServer'));
 

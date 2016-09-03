@@ -21,15 +21,15 @@ block content
 						th Delete
 				tbody
 					each c in configs
-						tr
+						tr(id="#{c.connection_key}", data-host="#{c.host}", data-port="#{c.port}")
 							td #{c.name}
 							td #{c.host}
 							td #{c.port}
-							td #{c.server_info['current-connections'] || '-'}
-							td #{c.server_info.version || '-'}
-							td #{c.server_info['total-jobs'] || '-'}
-							td #{c.server_info.pid || '-'}
-							td #{c.server_info.uptime || '-'}
+							td -
+							td -
+							td -
+							td -
+							td -
 							td
 								a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
 							td
