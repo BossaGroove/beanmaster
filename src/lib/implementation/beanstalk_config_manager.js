@@ -26,7 +26,7 @@ class BeanstalkConfigManager {
 
 	* getConfig() {
 		if (this._cached_config) {
-			return BeanstalkConfigManager.output(this._cached_config);
+			return this._cached_config;
 		}
 
 		const path_exists = yield (new Promise(function (resolve, reject) {
@@ -62,7 +62,7 @@ class BeanstalkConfigManager {
 			this._cached_config = [];
 		}
 
-		return BeanstalkConfigManager.output(this._cached_config);
+		return this._cached_config;
 	}
 
 	* saveConfig(new_config) {
@@ -85,12 +85,12 @@ class BeanstalkConfigManager {
 		return _this._cached_config;
 	}
 
-	* addConfig(input_config, callback) {
+	* addConfig(input_config) {
 		let configs = yield this.getConfig();
 
 		// find if same config exists
 		if (_.find(configs, {host: input_config.host, port: input_config.port})) {
-			return configs;
+			throw new Error('Connection already exists');
 		}
 
 		configs.push({
@@ -102,8 +102,7 @@ class BeanstalkConfigManager {
 		return yield this.saveConfig(configs);
 	}
 
-	* deleteConfig(input_config, callback) {
-
+	* deleteConfig(input_config) {
 		let configs = yield this.getConfig();
 
 		var config_to_be_deleted = _.find(configs, {host: input_config.host, port: input_config.port});
@@ -113,14 +112,6 @@ class BeanstalkConfigManager {
 		}
 
 		return yield this.saveConfig(configs);
-	}
-
-	static output(configs) {
-		let output = _.cloneDeep(configs);
-		output.map(function (config) {
-			return config.connection_key = config.host + ':' + config.port;
-		});
-		return output;
 	}
 }
 

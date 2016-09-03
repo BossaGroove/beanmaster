@@ -36,6 +36,13 @@ class BeanstalkConnectionManager {
 		return this._connections[connection_key];
 	}
 
+	removeConnection(host, port) {
+		let connection_key = host + ':' + port;
+		if (this._connections[connection_key]) {
+			this._connections[connection_key] = null;
+		}
+	}
+
 	* connectServer(host, port) {
 		console.log('Try to initiate a new beanstalk connection: ' + host + ' / ' + port);
 

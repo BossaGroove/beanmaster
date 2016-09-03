@@ -21,7 +21,7 @@ block content
 						th Delete
 				tbody
 					each c in configs
-						tr(id="#{c.connection_key}", data-host="#{c.host}", data-port="#{c.port}")
+						tr(id="#{c.host}:#{c.port}", data-host="#{c.host}", data-port="#{c.port}")
 							td #{c.name}
 							td #{c.host}
 							td #{c.port}

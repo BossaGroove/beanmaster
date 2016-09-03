@@ -24,6 +24,13 @@ class HomeController extends AbstractController {
 				return new Adaptor();
 			}
 		}));
+
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/home`,
+			resolve: function (Adaptor) {
+				return new Adaptor();
+			}
+		}));
 	}
 
 	/**
@@ -46,21 +53,21 @@ class HomeController extends AbstractController {
 	* getInfo(req, res) {
 		let data = this._host_port_adaptor.getData(req);
 
-		let connection_info;
+		let stat;
 		let error = null;
 
 		try {
 			this._host_port_validator.validate(data);
 			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			connection_info = yield connection.statsAsync();
+			stat = yield connection.statsAsync();
 		} catch (e) {
 			error = e.message;
-			connection_info = null;
+			stat = null;
 		}
 
 		res.json({
 			err: error,
-			connection_info: connection_info
+			stat: stat
 		});
 	}
 
@@ -70,20 +77,36 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	addServer(req, res) {
-		let new_config = {
-			name: req.body.name.trim(),
-			host: req.body.host.trim(),
-			port: req.body.port.replace(/[^0-9]/, '')
-		};
+	* addServer(req, res) {
+		let data = this._add_server_adaptor.getData(req);
 
-		BeanstalkConfigManager.addConfig(new_config, function (err, new_config) {
-			getServerInfo(new_config, function (err, config_with_detail) {
-				res.json({
-					err: err,
-					config: config_with_detail
-				});
+		let connection_info;
+		let error = null;
+
+		try {
+			this._add_server_validator.validate(data);
+
+			yield BeanstalkConfigManager.addConfig({
+				name: data.name,
+				host: data.host,
+				port: data.port
 			});
+
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			connection_info = yield connection.statsAsync();
+
+		} catch (e) {
+			error = e.message;
+		}
+
+		res.json({
+			err: error,
+			connection: {
+				name: data.name,
+				host: data.host,
+				port: data.port
+			},
+			stat: connection_info
 		});
 	}
 
@@ -93,19 +116,24 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	deleteServer(req, res) {
-		var config_to_be_deleted = {
-			host: req.body.host.trim(),
-			port: req.body.port.replace(/[^0-9]/, '')
-		};
+	* deleteServer(req, res) {
+		let data = this._delete_server_adaptor.getData(req);
+		let error = null;
+		try {
+			this._delete_server_validator.validate(data);
 
-		BeanstalkConfigManager.deleteConfig(config_to_be_deleted, function (err, new_config) {
-			getServerInfo(new_config, function (err, config_with_detail) {
-				res.json({
-					err: err,
-					config: config_with_detail
-				});
+			yield BeanstalkConfigManager.deleteConfig({
+				host: data.host,
+				port: data.port
 			});
+
+			BeanstalkConnectionManager.removeConnection(data.host, data.port);
+		} catch (e) {
+			error = e.message;
+		}
+
+		res.json({
+			err: error
 		});
 	}
 }
