@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const DataValidator = require('../data_validator');
+const validator = require('validator');
 
 class HostPortValidator extends DataValidator {
 	/**
@@ -16,6 +17,10 @@ class HostPortValidator extends DataValidator {
 
 		if (!_.isNumber(_.get(data, 'port'))) {
 			this.failWith('port is invalid');
+		}
+
+		if (!validator.isURL(data.host) && !validator.isIP(data.host)) {
+			this.failWith('host must be an IP');
 		}
 
 		if (data.port < 1 || data.port > 65535) {

@@ -1,6 +1,7 @@
 'use strict';
 
 const root = require('app-root-path');
+const requireAll = require('require-all');
 const _ = require('lodash');
 const async = require('async');
 
@@ -51,52 +52,60 @@ function getTubesInfo(connection, callback) {
 }
 
 class ServerController extends AbstractController {
+	constructor(request_handlers) {
+		super();
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/common`,
+			resolve: function (Adaptor) {
+				return new Adaptor();
+			}
+		}));
+	}
 	/**
 	 * list all the beanstalk tubes
 	 * @param req
 	 * @param res
 	 */
-	index(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
+	* index(req, res) {
+		let data = this._host_port_tube_adaptor.getData(req);
 
-		if (host_port) {
-			//get the connection name
-			BeanstalkConfigManager.getConfig(function(err, config) {
-				if (err) {
-					res.redirect('/');
-				} else {
-					//connect to beanstalk
-					let saved_config = _.find(config, {host: host_port[0], port: host_port[1]});
-					let name = saved_config ? saved_config.name : null;
-
-					BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-						if (err) {
-							res.render('server/list', {
-								page: 'servers',
-								title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
-								name: name,
-								host: host_port[0],
-								port: host_port[1],
-								err: err
-							});
-						} else {
-							getTubesInfo(connection, function(err, tubes_info) {
-								res.render('server/list', {
-									page: 'servers',
-									title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
-									name: name,
-									host: host_port[0],
-									port: host_port[1],
-									err: err,
-									tubes_info: tubes_info
-								});
-							});
-						}
-					});
-				}
-			});
-		} else {
+		try {
+			this._host_port_tube_validator.validate(data);
+		} catch(e) {
+			// error = e.message;
 			res.redirect('/');
+			return;
+		}
+
+		let name = null;
+
+		try {
+			let configs = yield BeanstalkConfigManager.getConfig();
+			name = _.get(_.find(configs, {host: data.host, port: data.port}), 'name', null);
+
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+
+			getTubesInfo(connection, function(err, tubes_info) {
+				res.render('server/list', {
+					page: 'servers',
+					title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
+					name: name,
+					host: data.host,
+					port: data.port,
+					err: err,
+					tubes_info: tubes_info
+				});
+			});
+
+		} catch (e) {
+			res.render('server/list', {
+				page: 'servers',
+				title: 'Beanmaster - ' + data.host + ':' + data.port,
+				name: name,
+				host: data.host,
+				port: data.port,
+				err: e.message
+			});
 		}
 	}
 
