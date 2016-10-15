@@ -1,3 +1,7 @@
+# 2.0.0
+- ES6 required - support node ver > 4 only
+- Fixed startup issue when specifying port number during daemonize
+
 # 1.0.19
 - Fixed PID path
 
