@@ -1,3 +1,6 @@
+# 2.0.2
+- Removed `app-root-path` usage due to incompatibility with `daemonize2` 
+
 # 2.0.1
 - Fixed cli path
 
