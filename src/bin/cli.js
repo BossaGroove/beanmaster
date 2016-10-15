@@ -67,10 +67,6 @@ let daemon_option = {
 	silent: true
 };
 
-if (commander.port) {
-	daemon_option.args = ['-p', commander.port];
-}
-
 daemon = daemonize.setup(daemon_option);
 
 daemon
