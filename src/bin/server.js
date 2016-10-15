@@ -1,6 +1,6 @@
 'use strict';
 
-const app_root = require('app-root-path');
+const app_root = `${__dirname}/../`;
 const commander = require('commander');
 
 const config = require(`${app_root}/config`);

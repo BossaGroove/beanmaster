@@ -1,9 +1,8 @@
 'use strict';
 
-const app_root = require('app-root-path');
 const requireAll = require('require-all');
 
-const lib = require(`${app_root}/lib`);
+const lib = require('../../../lib');
 const BeanstalkConfigManager = lib.BeanstalkConfigManager;
 const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
 
@@ -13,14 +12,14 @@ class HomeController extends AbstractController {
 	constructor(request_handlers) {
 		super();
 		this.wireEndpointDependencies(request_handlers, requireAll({
-			dirname: `${app_root}/app/controllers/includes/common`,
+			dirname: `${__dirname}/../includes/common`,
 			resolve: function (Adapter) {
 				return new Adapter();
 			}
 		}));
 
 		this.wireEndpointDependencies(request_handlers, requireAll({
-			dirname: `${app_root}/app/controllers/includes/home`,
+			dirname: `${__dirname}/../includes/home`,
 			resolve: function (Adapter) {
 				return new Adapter();
 			}

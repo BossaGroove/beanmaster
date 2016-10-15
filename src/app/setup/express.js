@@ -1,6 +1,6 @@
 'use strict';
 
-const app_root = require('app-root-path');
+const app_root = `${__dirname}/../..`;
 const express = require('express');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
