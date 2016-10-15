@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const DataAdapter = require('../data_adapter');
 
-class DeleteServerAdaptor extends DataAdapter {
+class DeleteServerAdapter extends DataAdapter {
 	/**
 	 * Get data from request and return an App object
 	 * @param req
@@ -18,4 +18,4 @@ class DeleteServerAdaptor extends DataAdapter {
 	}
 }
 
-module.exports = DeleteServerAdaptor;
+module.exports = DeleteServerAdapter;

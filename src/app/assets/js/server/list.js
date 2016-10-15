@@ -220,13 +220,10 @@ var searchJob = function() {
 					unblockForm();
 				},
 				success: function(data) {
-
 					if (data.err) {
-
 						$('#search_error_container').append(
 							Utility.getErrorBox('warning', data.err)
 						);
-
 					} else {
 						$('#btn_kick_job').removeClass('hide').show();
 

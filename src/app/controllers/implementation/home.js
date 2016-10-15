@@ -14,15 +14,15 @@ class HomeController extends AbstractController {
 		super();
 		this.wireEndpointDependencies(request_handlers, requireAll({
 			dirname: `${root}/app/controllers/includes/common`,
-			resolve: function (Adaptor) {
-				return new Adaptor();
+			resolve: function (Adapter) {
+				return new Adapter();
 			}
 		}));
 
 		this.wireEndpointDependencies(request_handlers, requireAll({
 			dirname: `${root}/app/controllers/includes/home`,
-			resolve: function (Adaptor) {
-				return new Adaptor();
+			resolve: function (Adapter) {
+				return new Adapter();
 			}
 		}));
 	}
@@ -44,8 +44,13 @@ class HomeController extends AbstractController {
 		});
 	}
 
+	/**
+	 * GET /server/info
+	 * @param req
+	 * @param res
+	 */
 	* getInfo(req, res) {
-		let data = this._host_port_adaptor.getData(req);
+		let data = this._host_port_adapter.getData(req);
 
 		let stat;
 		let error = null;
@@ -54,6 +59,7 @@ class HomeController extends AbstractController {
 			this._host_port_validator.validate(data);
 			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
 			stat = yield connection.statsAsync();
+			stat = stat[0];
 		} catch (e) {
 			error = e.message;
 			stat = null;
@@ -72,7 +78,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	* addServer(req, res) {
-		let data = this._add_server_adaptor.getData(req);
+		let data = this._add_server_adapter.getData(req);
 
 		let connection_info;
 		let error = null;
@@ -88,6 +94,7 @@ class HomeController extends AbstractController {
 
 			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
 			connection_info = yield connection.statsAsync();
+			connection_info = connection_info[0];
 		} catch (e) {
 			error = e.message;
 		}
@@ -110,7 +117,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	* deleteServer(req, res) {
-		let data = this._delete_server_adaptor.getData(req);
+		let data = this._delete_server_adapter.getData(req);
 		let error = null;
 		try {
 			this._delete_server_validator.validate(data);

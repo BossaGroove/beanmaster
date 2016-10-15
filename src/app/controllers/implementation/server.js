@@ -3,12 +3,10 @@
 const root = require('app-root-path');
 const requireAll = require('require-all');
 const _ = require('lodash');
-const async = require('async');
 
 const lib = require(`${root}/lib`);
 const BeanstalkConfigManager = lib.BeanstalkConfigManager;
 const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
-const Utility = lib.Utility;
 
 const AbstractController = require('../includes/abstract_controller');
 
@@ -17,18 +15,26 @@ class ServerController extends AbstractController {
 		super();
 		this.wireEndpointDependencies(request_handlers, requireAll({
 			dirname: `${root}/app/controllers/includes/common`,
-			resolve: function (Adaptor) {
-				return new Adaptor();
+			resolve: function (Adapter) {
+				return new Adapter();
+			}
+		}));
+
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/server`,
+			resolve: function (Adapter) {
+				return new Adapter();
 			}
 		}));
 	}
 	/**
+	 * GET /:host_port/
 	 * list all the beanstalk tubes
 	 * @param req
 	 * @param res
 	 */
 	* index(req, res) {
-		let data = this._host_port_tube_adaptor.getData(req);
+		let data = this._host_port_tube_adapter.getData(req);
 
 		try {
 			this._host_port_validator.validate(data);
@@ -63,12 +69,13 @@ class ServerController extends AbstractController {
 	}
 
 	/**
+	 * GET /:host_port/refresh
 	 * get server tubes info in json format
 	 * @param req
 	 * @param res
 	 */
 	* refreshTubes(req, res) {
-		let data = this._host_port_tube_adaptor.getData(req);
+		let data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
 		try {
@@ -92,6 +99,69 @@ class ServerController extends AbstractController {
 		});
 	}
 
+	/**
+	 * POST /:host_port/search-job
+	 * search job detail by job id
+	 * @param req
+	 * @param res
+	 */
+	* searchJob(req, res) {
+		let data = this._job_id_adapter.getData(req);
+		let err = null;
+
+		try {
+			this._job_id_validator.validate(data);
+		} catch (e) {
+			err = e.message;
+		}
+
+		let stat = null;
+
+		try {
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			stat = (yield connection.stats_jobAsync(data.job_id))[0];
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.json({
+			host: data.host,
+			port: data.port,
+			stat: stat,
+			err: err
+		});
+	}
+
+
+	/**
+	 * POST /:host_port/kick-job-id
+	 * kick a job by job id
+	 * @param req
+	 * @param res
+	 */
+	* kickJobId(req, res) {
+		let data = this._job_id_adapter.getData(req);
+		let err = null;
+
+		try {
+			this._job_id_validator.validate(data);
+		} catch (e) {
+			err = e.message;
+		}
+
+		try {
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			yield connection.kick_jobAsync(data.job_id);
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.json({
+			host: data.host,
+			port: data.port,
+			err: err
+		});
+	}
 
 	/**
 	 * get tubes info for a connection
@@ -101,87 +171,16 @@ class ServerController extends AbstractController {
 	* getTubesInfo(connection) {
 		// get tubes
 		let tubes = yield connection.list_tubesAsync();
+		tubes = tubes[0];
 		tubes.sort();
 
 		let tubes_info = {};
 
 		for (let i = 0; i < tubes.length; i++) {
-			tubes_info[tubes[i]] = yield connection.stats_tubeAsync(tubes[i]);
+			tubes_info[tubes[i]] = (yield connection.stats_tubeAsync(tubes[i]))[0];
 		}
 
 		return tubes_info;
-	}
-
-
-	/**
-	 * search job detail by job id
-	 * @param req
-	 * @param res
-	 */
-	searchJob(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let job_id = parseInt(req.body.job_id);
-
-		if (isNaN(job_id)) {
-			res.json({
-				host: host_port[0],
-				port: host_port[1],
-				err: 'job_id error'
-			});
-		} else {
-			BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-				if (err) {
-					res.json({
-						host: host_port[0],
-						port: host_port[1],
-						err: err
-					});
-				} else {
-					connection.stats_job(job_id, function(err, stat) {
-						res.json({
-							host: host_port[0],
-							port: host_port[1],
-							err: err,
-							stat: stat
-						});
-
-					});
-				}
-			});
-		}
-	}
-
-
-	kickJobId(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let job_id = parseInt(req.body.job_id);
-
-		if (isNaN(job_id)) {
-			res.json({
-				host: host_port[0],
-				port: host_port[1],
-				err: 'job_id error'
-			});
-		} else {
-			BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-				if (err) {
-					res.json({
-						host: host_port[0],
-						port: host_port[1],
-						err: err
-					});
-				} else {
-					connection.kick_job(job_id, function(err) {
-						res.json({
-							host: host_port[0],
-							port: host_port[1],
-							err: err
-						});
-
-					});
-				}
-			});
-		}
 	}
 }
 

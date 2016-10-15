@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const DataAdapter = require('../data_adapter');
 
-class HostPortAdaptor extends DataAdapter {
+class HostPortTubeAdapter extends DataAdapter {
 	/**
 	 * Get data from request and return an App object
 	 * @param req
@@ -24,4 +24,4 @@ class HostPortAdaptor extends DataAdapter {
 	}
 }
 
-module.exports = HostPortAdaptor;
+module.exports = HostPortTubeAdapter;

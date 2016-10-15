@@ -1,6 +1,7 @@
 'use strict';
 
 const root = require('app-root-path');
+const requireAll = require('require-all');
 const _ = require('lodash');
 const async = require('async');
 
@@ -11,328 +12,288 @@ const Utility = lib.Utility;
 
 const AbstractController = require('../includes/abstract_controller');
 
-function getNextJobs(connection, tube, callback) {
-	let actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
-
-	connection.use(tube, function(err) {
-		if (err) {
-			callback(err, null);
-		} else {
-			async.mapSeries(actions, function(action, flow_callback) {
-				connection[action](function(err, job_id, payload) {
-					if (err) {
-						flow_callback(null, null);
-					} else {
-						connection.stats_job(job_id, function(err, stat) {
-							if (err) {
-								flow_callback(null, null);
-							} else {
-								let payload_parsed = payload.toString();
-
-								let payload_parsed_json = null;
-
-								try {
-									payload_parsed_json = JSON.parse(payload_parsed);
-									payload_parsed_json = JSON.stringify(payload_parsed_json, null, 2);
-								} catch (e) {
-									payload_parsed_json = null;
-								}
-
-								flow_callback(null, {
-									payload: payload_parsed,
-									payload_json: payload_parsed_json,
-									stat: stat
-								});
-							}
-						});
-					}
-				});
-			}, function(err, results) {
-				let map_result = {};
-				for (let i = 0; i < actions.length; i++) {
-					map_result[actions[i]] = results[i];
-				}
-
-				callback(err, map_result);
-			});
-		}
-	});
-}
-
-function getTube(host, port, tube, callback) {
-	BeanstalkConfigManager.getConfig(function(err, config) {
-		if (err) {
-			callback(err, null);
-		} else {
-			//connect to beanstalk
-			let saved_config = _.find(config, {host: host, port: port});
-			let name = saved_config ? saved_config.name : null;
-
-			BeanstalkConnectionManager.getConnection(host, port, function(err, connection) {
-				if (err) {
-					callback(err, null);
-				} else {
-					connection.stats_tube(tube, function(err, tube_info) {
-						async.waterfall([
-							function(flow_callback) {
-								if (tube_info) {
-									getNextJobs(connection, tube, function(err, stats) {
-										flow_callback(err, stats);
-									});
-								} else {
-									flow_callback(err, null);
-								}
-							}
-						], function(err, stats) {
-							tube_info = tube_info || {};
-							stats = stats || {
-								'peek_ready': null,
-								'peek_delayed': null,
-								'peek_buried': null
-							};
-
-							if (err === 'NOT_FOUND') {
-								err = null;
-							}
-
-							callback(err, {
-								name: name,
-								tube_info: tube_info,
-								stats: stats
-							});
-						});
-					});
-				}
-			});
-		}
-	});
-}
-
 
 class TubeController extends AbstractController {
+	constructor(request_handlers) {
+		super();
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/common`,
+			resolve: function (Adapter) {
+				return new Adapter();
+			}
+		}));
+
+		this.wireEndpointDependencies(request_handlers, requireAll({
+			dirname: `${root}/app/controllers/includes/tube`,
+			resolve: function (Adapter) {
+				return new Adapter();
+			}
+		}));
+	}
+
 	/**
+	 * GET /:host_port/:tube
 	 * show tube detail
 	 * @param req
 	 * @param res
 	 */
-	index(req, res) {
-		let host_port = req.params.host_port || null;
-		let tube = req.params.tube || null;
+	* index(req, res) {
+		let data = this._host_port_tube_adapter.getData(req);
 
-		host_port = Utility.validateHostPort(host_port);
-
-		if (host_port && tube) {
-			getTube(host_port[0], host_port[1], tube, function(err, results) {
-				res.render('server/tube', {
-					page: 'tube',
-					title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1] + ' / ' + tube,
-					name: (results)?results.name:null,
-					host: host_port[0],
-					port: host_port[1],
-					tube: tube,
-					err: err,
-					tube_info: (results)?results.tube_info:{},
-					stats: (results)?results.stats:{}
-				});
-
-			});
-		} else {
+		try {
+			this._host_port_tube_validator.validate(data);
+		} catch (e) {
 			res.redirect('/');
+			return;
 		}
+
+		let err = null;
+		let tube_info = {
+			name: null,
+			tube_info: {},
+			stats: {}
+		};
+
+		try {
+			tube_info = yield this.getTubeInfo(data.host, data.port, data.tube);
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.render('server/tube', {
+			page: 'tube',
+			title: 'Beanmaster - ' + data.host + ':' + data.port + ' / ' + data.tube,
+			name: tube_info.name,
+			host: data.host,
+			port: data.port,
+			tube: data.tube,
+			err: err,
+			tube_info: tube_info.tube_info,
+			stats: tube_info.stats
+		});
 	}
 
 
 	/**
+	 * GET /:host_port/:tube/refresh
 	 * get server tubes info in json format
 	 * @param req
 	 * @param res
 	 */
-	refreshTube(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let tube = req.params.tube || null;
+	* refreshTube(req, res) {
+		let data = this._host_port_tube_adapter.getData(req);
+		let err = null;
 
-		if (host_port && tube) {
-			getTube(host_port[0], host_port[1], tube, function(err, results) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					tube: tube,
-					err: err,
-					tube_info: (results)?results.tube_info:{},
-					stats: (results)?results.stats:{}
-				});
-			});
-		} else {
-			res.json({
-				err: 'host, port or tube error'
-			});
+		try {
+			this._host_port_tube_validator.validate(data);
+		} catch (e) {
+			err = e.message;
 		}
+
+		let tube_info = null;
+
+		if (!err) {
+			try {
+				tube_info = yield this.getTubeInfo(data.host, data.port, data.tube);
+			} catch (e) {
+				err = e.message;
+			}
+		}
+
+		res.json({
+			host: data.host,
+			port: data.port,
+			tube: data.tube,
+			err: err,
+			tube_info: tube_info.tube_info,
+			stats: tube_info.stats
+		});
 	}
 
+
+	* getTubeInfo(host, port, tube) {
+		let configs = yield BeanstalkConfigManager.getConfig();
+		let name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
+		let connection = yield BeanstalkConnectionManager.getConnection(host, port);
+
+		let tube_info = (yield connection.stats_tubeAsync(tube))[0];
+		let stats = {
+			'peek_ready': null,
+			'peek_delayed': null,
+			'peek_buried': null
+		};
+
+		if (tube_info) {
+			let next_job = yield this.getNextJobs(connection, tube);
+			if (!_.isEmpty(next_job)) {
+				stats = next_job;
+			}
+		}
+
+		return {
+			name: name,
+			tube_info: tube_info || {},
+			stats: stats
+		};
+	}
+
+
+	* getNextJobs(connection, tube) {
+		let actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
+		let output = {};
+
+		yield connection.useAsync(tube);
+
+		for (let i = 0; i < actions.length; i++) {
+			let job = null;
+			let job_id = null;
+			let payload = null;
+
+			try {
+				job = yield connection[`${actions[i]}Async`]();
+				job_id = parseInt(job[0], 10);
+				payload = job[1].toString();
+			} catch(e) {
+				if (e.message !== 'NOT_FOUND') {
+					throw e;
+				}
+			}
+
+			if (!_.isFinite(job_id)) {
+				output[actions[i]] = null;
+				continue;
+			}
+
+			let job_stat = (yield connection.stats_jobAsync(job_id))[0];
+
+			// try to beautify the payload
+			let payload_json = null;
+
+			try {
+				payload_json = JSON.stringify(JSON.parse(payload), null, 2);
+			} catch (e) {
+				payload_json = null;
+			}
+
+			output[actions[i]] = {
+				stat: job_stat,
+				payload: payload,
+				payload_json: payload_json
+			};
+		}
+
+		return output;
+	}
+
+
 	/**
+	 * POST /:host_port/:tube/add-job
 	 * add job
 	 * @param req
 	 * @param res
 	 */
-	addJob(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
+	* addJob(req, res) {
+		let data = this._add_job_adapter.getData(req);
+		let err = null;
+		let job_id = null;
 
-		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-			if (err) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					err: err
-				});
-			} else {
-				connection.use(req.body.tube_name, function(err) {
-					if (err) {
-						res.json({
-							err: 'use tube ' + req.body.tube_name + ' error'
-						});
-					} else {
-						connection.put(req.body.priority || 0, req.body.delay || 0, req.body.ttr || 0, req.body.payload, function(err, job_id) {
-							res.json({
-								err: err,
-								job_id: job_id
-							});
-						});
-					}
-				});
-			}
+		try {
+			this._add_job_validator.validate(data);
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			yield connection.useAsync(data.tube_name);
+			job_id = (yield connection.putAsync(data.priority, data.delay, data.ttr, data.payload))[0];
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.json({
+			err: err,
+			job_id: job_id
 		});
 	}
 
 	/**
+	 * POST /:host_port/:tube/kick-job
 	 * kick next delayed and buried job
 	 * @param req
 	 * @param res
 	 */
-	kickJob(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let tube = req.params.tube || null;
-		let value = parseInt(req.body.value);
+	* kickJob(req, res) {
+		let data = this._repeat_operation_adapter.getData(req);
+		let err = null;
+		let num_kicked = null;
 
-		if (isNaN(value)) {
-			value = 1;
+		try {
+			this._repeat_operation_validator.validate(data);
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			yield connection.useAsync(data.tube);
+			num_kicked = (yield connection.kickAsync(data.value))[0];
+		} catch (e) {
+			err = e.message;
 		}
 
-		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-			if (err) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					err: err
-				});
-			} else {
-				connection.use(tube, function(err) {
-					if (err) {
-						res.json({
-							err: 'use tube ' + tube + ' error'
-						});
-					} else {
-						connection.kick(value, function(err, num_kicked) {
-							res.json({
-								err: err,
-								num_kicked: num_kicked
-							});
-						});
-					}
-				});
-			}
+		res.json({
+			err: err,
+			num_kicked: num_kicked
 		});
 	}
 
 	/**
+	 * POST /:host_port/:tube/delete-job
 	 * delete next ready job
 	 * @param req
 	 * @param res
 	 */
-	deleteJob(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let tube = req.params.tube || null;
-		let value = parseInt(req.body.value);
+	* deleteJob(req, res) {
+		let data = this._repeat_operation_adapter.getData(req);
+		let err = null;
 
-		if (isNaN(value)) {
-			value = 1;
+		try {
+			this._repeat_operation_validator.validate(data);
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			yield connection.useAsync(data.tube);
+
+			for (let i = 0; i < data.value; i++) {
+				let job_id = (yield connection.peek_readyAsync())[0];
+				yield connection.destroyAsync(job_id);
+			}
+		} catch (e) {
+			err = e.message;
 		}
 
-		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-			if (err) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					err: err
-				});
-			} else {
-				connection.use(tube, function(err) {
-					if (err) {
-						res.json({
-							err: 'use tube ' + tube + ' error'
-						});
-					} else {
-						async.timesSeries(value, function(n, callback) {
-							connection.peek_ready(function(err, job_id) {
-								if (err) {
-									callback(err);
-								} else {
-									connection.destroy(job_id, function(err) {
-										callback(err);
-									});
-								}
-							});
-						}, function(err) {
-							res.json({
-								err: err
-							});
-						});
-					}
-				});
-			}
+		res.json({
+			err: err
 		});
 	}
 
 	/**
+	 * POST /:host_port/:tube/toggle-pause
 	 * Pausing tube by setting pause value to 1 hour
 	 * @param req
 	 * @param res
 	 */
-	togglePause(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
-		let tube = req.params.tube || null;
+	* togglePause(req, res) {
+		let data = this._host_port_tube_adapter.getData(req);
+		let err = null;
 
-		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-			if (err) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					err: err
-				});
-			} else {
-				connection.stats_tube(tube, function(err, tube_info) {
-					if (err) {
-						res.json({
-							host: host_port[0],
-							port: host_port[1],
-							err: err
-						});
-					} else {
+		try {
+			this._host_port_tube_validator.validate(data);
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			let tube_info = (yield connection.stats_tubeAsync(data.tube))[0];
 
-						let delay = 3600;
+			let delay = 3600;
 
-						if (tube_info['pause-time-left'] > 0) {
-							delay = 0;
-						}
-
-						connection.pause_tube(tube, delay, function(err) {
-							res.json({
-								err: err
-							});
-						});
-					}
-				});
-
+			if (tube_info['pause-time-left'] > 0) {
+				delay = 0;
 			}
+
+			yield connection.pause_tubeAsync(data.tube, delay);
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.json({
+			err: err
 		});
 	}
 }

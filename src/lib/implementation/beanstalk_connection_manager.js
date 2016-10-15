@@ -48,7 +48,9 @@ class BeanstalkConnectionManager {
 
 		let client = new Fivebeans.client(host, port);
 
-		bluebird.promisifyAll(client);
+		bluebird.promisifyAll(client, {
+			multiArgs: true
+		});
 
 		client.connect();
 

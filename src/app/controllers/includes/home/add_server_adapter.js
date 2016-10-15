@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const DataAdapter = require('../data_adapter');
 
-class AddServerAdaptor extends DataAdapter {
+class AddServerAdapter extends DataAdapter {
 	/**
 	 * Get data from request and return an App object
 	 * @param req
@@ -19,4 +19,4 @@ class AddServerAdaptor extends DataAdapter {
 	}
 }
 
-module.exports = AddServerAdaptor;
+module.exports = AddServerAdapter;
