@@ -1,3 +1,6 @@
+# 2.0.1
+- Fixed cli path
+
 # 2.0.0
 - ES6 required - support node ver > 4 only
 - Fixed startup issue when specifying port number during daemonize
