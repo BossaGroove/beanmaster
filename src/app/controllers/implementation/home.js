@@ -88,7 +88,6 @@ class HomeController extends AbstractController {
 
 			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
 			connection_info = yield connection.statsAsync();
-
 		} catch (e) {
 			error = e.message;
 		}

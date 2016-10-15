@@ -12,45 +12,6 @@ const Utility = lib.Utility;
 
 const AbstractController = require('../includes/abstract_controller');
 
-function getTubesInfo(connection, callback) {
-	async.waterfall([
-		//get the tubes
-		function(flow_callback) {
-			connection.list_tubes(function(err, tubes) {
-				flow_callback(err, tubes);
-			});
-		},
-
-		function(tubes, flow_callback) {
-
-			async.mapSeries(tubes, function(tube, tube_callback) {
-
-				connection.stats_tube(tube, function(err, tube_data) {
-					tube_callback(err, tube_data);
-				});
-
-			}, function(err, results) {
-				flow_callback(err, results);
-			});
-		}
-
-	], function(err, results) {
-		let result_map = {};
-
-		if (!err && _.isArray(results)) {
-			if (results) {
-				results = _.sortBy(results, 'name');
-			}
-
-			for (let i = 0; i < results.length; i++) {
-				result_map[results[i].name] = results[i];
-			}
-		}
-
-		callback(err, result_map);
-	});
-}
-
 class ServerController extends AbstractController {
 	constructor(request_handlers) {
 		super();
@@ -70,43 +31,35 @@ class ServerController extends AbstractController {
 		let data = this._host_port_tube_adaptor.getData(req);
 
 		try {
-			this._host_port_tube_validator.validate(data);
-		} catch(e) {
-			// error = e.message;
+			this._host_port_validator.validate(data);
+		} catch (e) {
 			res.redirect('/');
 			return;
 		}
 
 		let name = null;
+		let err = null;
+		let tubes_info = null;
 
 		try {
 			let configs = yield BeanstalkConfigManager.getConfig();
 			name = _.get(_.find(configs, {host: data.host, port: data.port}), 'name', null);
 
 			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-
-			getTubesInfo(connection, function(err, tubes_info) {
-				res.render('server/list', {
-					page: 'servers',
-					title: 'Beanmaster - ' + host_port[0] + ':' + host_port[1],
-					name: name,
-					host: data.host,
-					port: data.port,
-					err: err,
-					tubes_info: tubes_info
-				});
-			});
-
+			tubes_info = yield this.getTubesInfo(connection);
 		} catch (e) {
-			res.render('server/list', {
-				page: 'servers',
-				title: 'Beanmaster - ' + data.host + ':' + data.port,
-				name: name,
-				host: data.host,
-				port: data.port,
-				err: e.message
-			});
+			err = e.message;
 		}
+
+		res.render('server/list', {
+			page: 'servers',
+			title: 'Beanmaster - ' + data.host + ':' + data.port,
+			name: name,
+			host: data.host,
+			port: data.port,
+			err: err,
+			tubes_info: tubes_info
+		});
 	}
 
 	/**
@@ -114,29 +67,50 @@ class ServerController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	refreshTubes(req, res) {
-		let host_port = Utility.validateHostPort(req.params.host_port);
+	* refreshTubes(req, res) {
+		let data = this._host_port_tube_adaptor.getData(req);
+		let err = null;
 
-		BeanstalkConnectionManager.getConnection(host_port[0], host_port[1], function(err, connection) {
-			if (err) {
-				res.json({
-					host: host_port[0],
-					port: host_port[1],
-					err: err
-				});
-			} else {
-				getTubesInfo(connection, function(err, tubes_info) {
-					res.json({
-						host: host_port[0],
-						port: host_port[1],
-						err: err,
-						tubes_info: tubes_info
-					});
-				});
-			}
+		try {
+			this._host_port_validator.validate(data);
+		} catch (e) {
+			err = e.message;
+		}
+
+		let tubes_info = null;
+
+		try {
+			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
+			tubes_info = yield this.getTubesInfo(connection);
+		} catch (e) {
+			err = e.message;
+		}
+
+		res.json({
+			err: err,
+			tubes_info: tubes_info
 		});
 	}
 
+
+	/**
+	 * get tubes info for a connection
+	 * @param {Object} connection - fivebean connection object
+	 * @returns {Object} - tube info, with tube name as key
+	 */
+	* getTubesInfo(connection) {
+		// get tubes
+		let tubes = yield connection.list_tubesAsync();
+		tubes.sort();
+
+		let tubes_info = {};
+
+		for (let i = 0; i < tubes.length; i++) {
+			tubes_info[tubes[i]] = yield connection.stats_tubeAsync(tubes[i]);
+		}
+
+		return tubes_info;
+	}
 
 
 	/**

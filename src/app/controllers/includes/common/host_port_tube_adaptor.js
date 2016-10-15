@@ -15,7 +15,7 @@ class HostPortAdaptor extends DataAdapter {
 		host_port = host_port.split(':');
 		if (host_port.length === 2) {
 			data.host = host_port[0];
-			data.port = host_port[1];
+			data.port = parseInt(host_port[1], 10);
 		}
 
 		this._setValue(data, 'tube', _.get(req, 'params.tube'));

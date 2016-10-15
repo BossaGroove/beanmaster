@@ -135,17 +135,14 @@ function refreshTubeInfo() {
 		complete: function() {
 		},
 		success: function(data) {
-
 			busy = false;
 
 			if (data.err) {
-
 				$('#error_container').append(
 					Utility.getErrorBox('warning', data.err)
 				);
 
 				$('button').attr('disabled', 'disabled');
-
 			} else {
 				tabulateTubeInfo(data.tubes_info);
 
