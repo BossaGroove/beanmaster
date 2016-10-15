@@ -1,6 +1,6 @@
 'use strict';
 
-const root = require('app-root-path');
+const app_root = require('app-root-path');
 const express = require('express');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const csrf = require('csurf');
 const morgan = require('morgan');
 const flash = require('connect-flash');
-const config = require(`${root}/config`);
+const config = require(`${app_root}/config`);
 const viewHelpers = require('../middlewares/view');
 const errorHandler = require('../middlewares/error_handler');
 const router = require('./routes');
@@ -24,10 +24,10 @@ app.use(compression({
 }));
 
 // Static files middleware
-app.use(express.static(`${root}/public`));
+app.use(express.static(`${app_root}/public`));
 
 // set views path, template engine and default layout
-app.set('views', `${root}/app/views`);
+app.set('views', `${app_root}/app/views`);
 app.set('view engine', 'jade');
 
 app.set('showStackError', true);
@@ -49,11 +49,11 @@ app.use(cookieSession({
 app.use(flash());
 
 app.use(require('connect-assets')({
-	paths: [`${root}/app/assets`],
+	paths: [`${app_root}/app/assets`],
 	servePath: 'assets'
 }));
 
-app.use(require('less-middleware')(`${root}/public`));
+app.use(require('less-middleware')(`${app_root}/public`));
 
 app.use(csrf());
 

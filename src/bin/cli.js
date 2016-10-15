@@ -2,14 +2,14 @@
 
 'use strict';
 
-const root = require('app-root-path');
+const app_root = require('app-root-path');
 const pjson = require('../package.json');
 const commander = require('commander');
 const p = require('path');
 const daemonize = require('daemonize2');
-const Utility = require('./utility');
+const Utility = require('../lib/implementation/utility');
 
-const config = require(`${root}/config`);
+const config = require(`${app_root}/config`);
 
 let daemon = null;
 
@@ -18,13 +18,13 @@ const BEANMASTER_HOME_PATH = Utility.getHomePath();
 const BEANMASTER_PID_PATH = BEANMASTER_HOME_PATH + '/beanmaster.pid';
 
 function startServer() {
-	daemon.start().once('started', function() {
+	daemon.start().once('started', function () {
 		process.exit();
 	});
 }
 
 function serverStatus() {
-	var pid = daemon.status();
+	let pid = daemon.status();
 	if (pid) {
 		console.log('Beanmaster daemon running. PID: ' + pid);
 	} else {
@@ -34,7 +34,7 @@ function serverStatus() {
 
 function restartServer() {
 	if (daemon.status()) {
-		daemon.stop().once('stopped', function() {
+		daemon.stop().once('stopped', function () {
 			startServer();
 		});
 	} else {
@@ -60,34 +60,43 @@ commander
 	.option('kill', 'Kill server daemon')
 	.parse(process.argv);
 
-var daemon_option = {
-	main: p.resolve(__dirname, '../server.js'),
+let daemon_option = {
+	main: p.resolve(__dirname, './server.js'),
 	name: 'beanmaster',
 	pidfile: BEANMASTER_PID_PATH,
 	silent: true
 };
 
 if (commander.port) {
-	daemon_option.args = ['-p ' + commander.port];
+	daemon_option.args = ['-p', commander.port];
 }
 
 daemon = daemonize.setup(daemon_option);
 
-daemon.on('starting', function() {
-	console.log('Starting Beanmaster daemon...');
-}).on('started', function(pid) {
-	console.log('Beanmaster daemon started. PID: ' + pid + ', port: ' + (commander.port || config.port));
-}).on('stopping', function() {
-	console.log('Stopping Beanmaster daemon...');
-}).on('stopped', function() {
-	console.log('Beanmaster daemon stopped.');
-}).on('running', function(pid) {
-	console.log('Beanmaster daemon already running. PID: ' + pid);
-}).on('notrunning', function() {
-	console.log('Beanmaster daemon is not running');
-}).on('error', function(err) {
-	console.log('Beanmaster daemon failed to start:  ' + err.message);
-});
+daemon
+	.on('starting', function () {
+		console.log('Starting Beanmaster daemon...');
+	})
+	.on('started', function (pid) {
+		console.log('Beanmaster daemon started. PID: ' + pid + ', port: ' + (commander.port || config.port));
+	})
+	.on('stopping', function () {
+		console.log('Stopping Beanmaster daemon...');
+	})
+	.on('stopped', function () {
+		console.log('Beanmaster daemon stopped.');
+	})
+	.on('running', function (pid) {
+		console.log('Beanmaster daemon already running. PID: ' + pid);
+	})
+	.on('notrunning', function () {
+		console.log('Beanmaster daemon is not running');
+	})
+	.on('error', function (err) {
+		console.log(err);
+		console.log(err.stack);
+		console.log('Beanmaster daemon failed to start:  ' + err.message);
+	});
 
 if (commander.start) {
 	startServer();
@@ -100,5 +109,5 @@ if (commander.start) {
 } else if (commander.kill) {
 	killServer();
 } else {
-	require('../server');
+	require('./server');
 }

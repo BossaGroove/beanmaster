@@ -66,11 +66,11 @@ class BeanstalkConfigManager {
 	}
 
 	* saveConfig(new_config) {
-		var data = JSON.stringify(new_config, null, '\t');
+		let data = JSON.stringify(new_config, null, '\t');
 
-		var _this = this;
+		let _this = this;
 
-		yield (new Promise(function(resolve, reject){
+		yield (new Promise(function (resolve, reject) {
 			fs.writeFile(BEANMASTER_CONFIG_PATH, data, function (err) {
 				if (err) {
 					reject(err);
@@ -105,7 +105,7 @@ class BeanstalkConfigManager {
 	* deleteConfig(input_config) {
 		let configs = yield this.getConfig();
 
-		var config_to_be_deleted = _.find(configs, {host: input_config.host, port: input_config.port});
+		let config_to_be_deleted = _.find(configs, {host: input_config.host, port: input_config.port});
 
 		if (config_to_be_deleted) {
 			configs = _.without(configs, config_to_be_deleted);

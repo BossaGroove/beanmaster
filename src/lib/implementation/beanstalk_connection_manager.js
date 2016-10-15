@@ -54,7 +54,7 @@ class BeanstalkConnectionManager {
 
 		client.connect();
 
-		yield coTimeout(10000, function*() {
+		yield coTimeout(10000, function* () {
 			let events = true;
 			while (events) {
 				let e = yield coEvent(client);
@@ -66,6 +66,8 @@ class BeanstalkConnectionManager {
 					case 'close':
 						break;
 					case 'error':
+						break;
+					default:
 						break;
 				}
 			}

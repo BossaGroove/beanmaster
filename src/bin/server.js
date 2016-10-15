@@ -1,12 +1,11 @@
 'use strict';
 
-const root = require('app-root-path');
-const express = require('express');
+const app_root = require('app-root-path');
 const commander = require('commander');
 
-const config = require(`${root}/config`);
+const config = require(`${app_root}/config`);
 
-const lib = require(`${root}/lib`);
+const lib = require(`${app_root}/lib`);
 
 commander
 	.option('-p, --port <n>', 'Specify the port number', parseInt)
@@ -14,9 +13,9 @@ commander
 
 const port = commander.port || config.port;
 
-console.log('Beanmaster listening port ' + port);
-
 // Bootstrap application settings
-lib.SharedManager.app = require(`${root}/app/setup/express`);
+lib.SharedManager.app = require(`${app_root}/app/setup/express`);
 
 lib.SharedManager.app.listen(port);
+
+console.log('Beanmaster listening port ' + port);

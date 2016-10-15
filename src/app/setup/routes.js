@@ -1,9 +1,9 @@
 'use strict';
 
-const root = require('app-root-path');
+const app_root = require('app-root-path');
 const router = require('express').Router();
 
-const Controller = require(`${root}/app/controllers`);
+const Controller = require(`${app_root}/app/controllers`);
 
 router.get('/', Controller.Home.action('index'));
 router.get('/server/info', Controller.Home.action('getInfo'));

@@ -1,75 +1,24 @@
 'use strict';
 
-module.exports = function(grunt) {
+const loadGruntConfig = require('load-grunt-config');
+const path = require('path');
 
-	// Project configuration.
-	grunt.initConfig({
-		jshint: {
-			options: {
-				jshintrc: '.jshintrc'
-			},
-			gruntfile: {
-				src: 'Gruntfile.js'
-			},
-			app: {
-				src: ['app/assets/js/**/*.js', 'app/controllers/**/*.js', 'app/config/**/*.js', 'app/models/**/*.js']
-			},
-			lib: {
-				src: ['lib/**/*.js']
-			},
-			test: {
-				src: ['test/**/*.js']
-			}
+module.exports = function (grunt) {
+	loadGruntConfig(grunt, {
+		pkg: grunt.file.readJSON('package.json'), // Loads grunt tasks defined in package.json
+		configPath: path.join(process.cwd(), 'grunt_config'), // path to task.js files, defaults to grunt dir
+		init: true, // auto grunt.initConfig
+		config: {
+			// additional config vars
 		},
-		watch: {
-			gruntfile: {
-				files: '<%= jshint.gruntfile.src %>',
-				tasks: ['jshint:gruntfile']
-			},
-			app: {
-				files: '<%= jshint.app.src %>',
-				tasks: ['jshint:app']
-			},
-			lib: {
-				files: '<%= jshint.lib.src %>',
-				tasks: ['jshint:lib']
-			},
-			test: {
-				files: '<%= jshint.test.src %>',
-				tasks: ['jshint:test']
-			}
+		loadGruntTasks: {
+			pattern: ['grunt-*', '@*/grunt-*']
 		}
-		/*sshconfig: {
-			"ssh": grunt.file.readJSON('./key/ssh_key.json')
-		},
-		shell: {
-			dev: {
-				options: {
-					stderr: true
-				},
-				command: 'npm start'
-			}
-		},
-		sshexec: {
-			deploy: {
-				command: 'git pull',
-				options: {
-					config: 'ssh'
-				}
-			}
-		}*/
 	});
 
-	// These plugins provide necessary tasks.
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-ssh');
-	grunt.loadNpmTasks('grunt-prompt');
-	grunt.loadNpmTasks('grunt-shell');
-	grunt.loadNpmTasks('grunt-ec2');
+	// Tasks
+	grunt.registerTask('lint', ['eslint']);
 
-	// Default task.
-	grunt.registerTask('default', ['jshint']);
-
-	grunt.registerTask('deploy', ['jshint', 'sshexec:deploy']);
-
+	// Default task
+	grunt.registerTask('default', []);
 };

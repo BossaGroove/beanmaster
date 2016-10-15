@@ -1,14 +1,12 @@
 'use strict';
 
-const root = require('app-root-path');
+const app_root = require('app-root-path');
 const requireAll = require('require-all');
 const _ = require('lodash');
-const async = require('async');
 
-const lib = require(`${root}/lib`);
+const lib = require(`${app_root}/lib`);
 const BeanstalkConfigManager = lib.BeanstalkConfigManager;
 const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
-const Utility = lib.Utility;
 
 const AbstractController = require('../includes/abstract_controller');
 
@@ -17,14 +15,14 @@ class TubeController extends AbstractController {
 	constructor(request_handlers) {
 		super();
 		this.wireEndpointDependencies(request_handlers, requireAll({
-			dirname: `${root}/app/controllers/includes/common`,
+			dirname: `${app_root}/app/controllers/includes/common`,
 			resolve: function (Adapter) {
 				return new Adapter();
 			}
 		}));
 
 		this.wireEndpointDependencies(request_handlers, requireAll({
-			dirname: `${root}/app/controllers/includes/tube`,
+			dirname: `${app_root}/app/controllers/includes/tube`,
 			resolve: function (Adapter) {
 				return new Adapter();
 			}
@@ -153,7 +151,7 @@ class TubeController extends AbstractController {
 				job = yield connection[`${actions[i]}Async`]();
 				job_id = parseInt(job[0], 10);
 				payload = job[1].toString();
-			} catch(e) {
+			} catch (e) {
 				if (e.message !== 'NOT_FOUND') {
 					throw e;
 				}

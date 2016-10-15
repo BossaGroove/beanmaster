@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const HostPortValidator = require('./host_port_validator');
-const validator = require('validator');
 
 class HostPortTubeValidator extends HostPortValidator {
 	/**
@@ -14,7 +13,7 @@ class HostPortTubeValidator extends HostPortValidator {
 		super.validate(data);
 		if (_.isEmpty(_.get(data, 'tube'))) {
 			this.failWith('tube is invalid');
-		}		
+		}
 	}
 }
 
