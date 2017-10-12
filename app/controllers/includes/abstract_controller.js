@@ -1,6 +1,5 @@
 'use strict';
 
-const coExpress = require('co-express');
 const _ = require('lodash');
 
 /**
@@ -11,7 +10,8 @@ const _ = require('lodash');
 class AbstractController {
 	action(action) {
 		if (this[action]) {
-			return coExpress(this[action].bind(this));
+			// return coExpress(this[action].bind(this));
+			return this[action].bind(this);
 		}
 
 		throw new Error('No action "' + action + '" in controller "' + this.constructor.name + '"');

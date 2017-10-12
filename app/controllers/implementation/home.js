@@ -33,8 +33,8 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* index(req, res) {
-		let configs = yield BeanstalkConfigManager.getConfig();
+	async index(req, res) {
+		let configs = await BeanstalkConfigManager.getConfig();
 
 		res.render('home/servers', {
 			page: 'Servers',
@@ -48,7 +48,7 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* getInfo(req, res) {
+	async getInfo(req, res) {
 		let data = this._host_port_adapter.getData(req);
 
 		let stat;
@@ -56,8 +56,8 @@ class HomeController extends AbstractController {
 
 		try {
 			this._host_port_validator.validate(data);
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			stat = yield connection.statsAsync();
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			stat = await connection.statsAsync();
 			stat = stat[0];
 		} catch (e) {
 			error = e.message;
@@ -76,7 +76,7 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* addServer(req, res) {
+	async addServer(req, res) {
 		let data = this._add_server_adapter.getData(req);
 
 		let connection_info;
@@ -85,14 +85,14 @@ class HomeController extends AbstractController {
 		try {
 			this._add_server_validator.validate(data);
 
-			yield BeanstalkConfigManager.addConfig({
+			await BeanstalkConfigManager.addConfig({
 				name: data.name,
 				host: data.host,
 				port: data.port
 			});
 
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			connection_info = yield connection.statsAsync();
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			connection_info = await connection.statsAsync();
 			connection_info = connection_info[0];
 		} catch (e) {
 			error = e.message;
@@ -115,13 +115,13 @@ class HomeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* deleteServer(req, res) {
+	async deleteServer(req, res) {
 		let data = this._delete_server_adapter.getData(req);
 		let error = null;
 		try {
 			this._delete_server_validator.validate(data);
 
-			yield BeanstalkConfigManager.deleteConfig({
+			await BeanstalkConfigManager.deleteConfig({
 				host: data.host,
 				port: data.port
 			});

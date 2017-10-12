@@ -32,7 +32,7 @@ class ServerController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* index(req, res) {
+	async index(req, res) {
 		let data = this._host_port_tube_adapter.getData(req);
 
 		try {
@@ -47,11 +47,11 @@ class ServerController extends AbstractController {
 		let tubes_info = null;
 
 		try {
-			let configs = yield BeanstalkConfigManager.getConfig();
+			let configs = await BeanstalkConfigManager.getConfig();
 			name = _.get(_.find(configs, {host: data.host, port: data.port}), 'name', null);
 
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			tubes_info = yield this.getTubesInfo(connection);
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			tubes_info = await this.getTubesInfo(connection);
 		} catch (e) {
 			err = e.message;
 		}
@@ -73,7 +73,7 @@ class ServerController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* refreshTubes(req, res) {
+	async refreshTubes(req, res) {
 		let data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
@@ -86,8 +86,8 @@ class ServerController extends AbstractController {
 		let tubes_info = null;
 
 		try {
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			tubes_info = yield this.getTubesInfo(connection);
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			tubes_info = await this.getTubesInfo(connection);
 		} catch (e) {
 			err = e.message;
 		}
@@ -104,7 +104,7 @@ class ServerController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* searchJob(req, res) {
+	async searchJob(req, res) {
 		let data = this._job_id_adapter.getData(req);
 		let err = null;
 
@@ -117,8 +117,8 @@ class ServerController extends AbstractController {
 		let stat = null;
 
 		try {
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			stat = (yield connection.stats_jobAsync(data.job_id))[0];
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			stat = (await connection.stats_jobAsync(data.job_id))[0];
 		} catch (e) {
 			err = e.message;
 		}
@@ -138,7 +138,7 @@ class ServerController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* kickJobId(req, res) {
+	async kickJobId(req, res) {
 		let data = this._job_id_adapter.getData(req);
 		let err = null;
 
@@ -149,8 +149,8 @@ class ServerController extends AbstractController {
 		}
 
 		try {
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			yield connection.kick_jobAsync(data.job_id);
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			await connection.kick_jobAsync(data.job_id);
 		} catch (e) {
 			err = e.message;
 		}
@@ -167,16 +167,16 @@ class ServerController extends AbstractController {
 	 * @param {Object} connection - fivebean connection object
 	 * @returns {Object} - tube info, with tube name as key
 	 */
-	* getTubesInfo(connection) {
+	async getTubesInfo(connection) {
 		// get tubes
-		let tubes = yield connection.list_tubesAsync();
+		let tubes = await connection.list_tubesAsync();
 		tubes = tubes[0];
 		tubes.sort();
 
 		let tubes_info = {};
 
 		for (let i = 0; i < tubes.length; i++) {
-			tubes_info[tubes[i]] = (yield connection.stats_tubeAsync(tubes[i]))[0];
+			tubes_info[tubes[i]] = (await connection.stats_tubeAsync(tubes[i]))[0];
 		}
 
 		return tubes_info;

@@ -34,7 +34,7 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* index(req, res) {
+	async index(req, res) {
 		let data = this._host_port_tube_adapter.getData(req);
 
 		try {
@@ -52,7 +52,7 @@ class TubeController extends AbstractController {
 		};
 
 		try {
-			tube_info = yield this.getTubeInfo(data.host, data.port, data.tube);
+			tube_info = await this.getTubeInfo(data.host, data.port, data.tube);
 		} catch (e) {
 			err = e.message;
 		}
@@ -77,7 +77,7 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* refreshTube(req, res) {
+	async refreshTube(req, res) {
 		let data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
@@ -91,7 +91,7 @@ class TubeController extends AbstractController {
 
 		if (!err) {
 			try {
-				tube_info = yield this.getTubeInfo(data.host, data.port, data.tube);
+				tube_info = await this.getTubeInfo(data.host, data.port, data.tube);
 			} catch (e) {
 				err = e.message;
 			}
@@ -108,12 +108,12 @@ class TubeController extends AbstractController {
 	}
 
 
-	* getTubeInfo(host, port, tube) {
-		let configs = yield BeanstalkConfigManager.getConfig();
+	async getTubeInfo(host, port, tube) {
+		let configs = await BeanstalkConfigManager.getConfig();
 		let name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
-		let connection = yield BeanstalkConnectionManager.getConnection(host, port);
+		let connection = await BeanstalkConnectionManager.getConnection(host, port);
 
-		let tube_info = (yield connection.stats_tubeAsync(tube))[0];
+		let tube_info = (await connection.stats_tubeAsync(tube))[0];
 		let stats = {
 			'peek_ready': null,
 			'peek_delayed': null,
@@ -121,7 +121,7 @@ class TubeController extends AbstractController {
 		};
 
 		if (tube_info) {
-			let next_job = yield this.getNextJobs(connection, tube);
+			let next_job = await this.getNextJobs(connection, tube);
 			if (!_.isEmpty(next_job)) {
 				stats = next_job;
 			}
@@ -135,11 +135,11 @@ class TubeController extends AbstractController {
 	}
 
 
-	* getNextJobs(connection, tube) {
+	async getNextJobs(connection, tube) {
 		let actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
 		let output = {};
 
-		yield connection.useAsync(tube);
+		await connection.useAsync(tube);
 
 		for (let i = 0; i < actions.length; i++) {
 			let job = null;
@@ -147,7 +147,7 @@ class TubeController extends AbstractController {
 			let payload = null;
 
 			try {
-				job = yield connection[`${actions[i]}Async`]();
+				job = await connection[`${actions[i]}Async`]();
 				job_id = parseInt(job[0], 10);
 				payload = job[1].toString();
 			} catch (e) {
@@ -161,7 +161,7 @@ class TubeController extends AbstractController {
 				continue;
 			}
 
-			let job_stat = (yield connection.stats_jobAsync(job_id))[0];
+			let job_stat = (await connection.stats_jobAsync(job_id))[0];
 
 			// try to beautify the payload
 			let payload_json = null;
@@ -189,16 +189,16 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* addJob(req, res) {
+	async addJob(req, res) {
 		let data = this._add_job_adapter.getData(req);
 		let err = null;
 		let job_id = null;
 
 		try {
 			this._add_job_validator.validate(data);
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			yield connection.useAsync(data.tube_name);
-			job_id = (yield connection.putAsync(data.priority, data.delay, data.ttr, data.payload))[0];
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			await connection.useAsync(data.tube_name);
+			job_id = (await connection.putAsync(data.priority, data.delay, data.ttr, data.payload))[0];
 		} catch (e) {
 			err = e.message;
 		}
@@ -215,16 +215,16 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* kickJob(req, res) {
+	async kickJob(req, res) {
 		let data = this._repeat_operation_adapter.getData(req);
 		let err = null;
 		let num_kicked = null;
 
 		try {
 			this._repeat_operation_validator.validate(data);
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			yield connection.useAsync(data.tube);
-			num_kicked = (yield connection.kickAsync(data.value))[0];
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			await connection.useAsync(data.tube);
+			num_kicked = (await connection.kickAsync(data.value))[0];
 		} catch (e) {
 			err = e.message;
 		}
@@ -241,18 +241,18 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* deleteJob(req, res) {
+	async deleteJob(req, res) {
 		let data = this._repeat_operation_adapter.getData(req);
 		let err = null;
 
 		try {
 			this._repeat_operation_validator.validate(data);
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			yield connection.useAsync(data.tube);
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			await connection.useAsync(data.tube);
 
 			for (let i = 0; i < data.value; i++) {
-				let job_id = (yield connection.peek_readyAsync())[0];
-				yield connection.destroyAsync(job_id);
+				let job_id = (await connection.peek_readyAsync())[0];
+				await connection.destroyAsync(job_id);
 			}
 		} catch (e) {
 			err = e.message;
@@ -269,14 +269,14 @@ class TubeController extends AbstractController {
 	 * @param req
 	 * @param res
 	 */
-	* togglePause(req, res) {
+	async togglePause(req, res) {
 		let data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
 		try {
 			this._host_port_tube_validator.validate(data);
-			let connection = yield BeanstalkConnectionManager.getConnection(data.host, data.port);
-			let tube_info = (yield connection.stats_tubeAsync(data.tube))[0];
+			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			let tube_info = (await connection.stats_tubeAsync(data.tube))[0];
 
 			let delay = 3600;
 
@@ -284,7 +284,7 @@ class TubeController extends AbstractController {
 				delay = 0;
 			}
 
-			yield connection.pause_tubeAsync(data.tube, delay);
+			await connection.pause_tubeAsync(data.tube, delay);
 		} catch (e) {
 			err = e.message;
 		}
