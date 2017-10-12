@@ -1,3 +1,10 @@
+# 3.0.0
+- restructure the project, removed src folder
+- updated node packages
+- move from generators to async / await
+- changed from `jade` to `pug` for the template engine
+- fix connection stuck issue
+
 # 2.0.2
 - Removed `app-root-path` usage due to incompatibility with `daemonize2` 
 
