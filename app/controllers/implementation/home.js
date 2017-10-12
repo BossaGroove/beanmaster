@@ -56,9 +56,11 @@ class HomeController extends AbstractController {
 
 		try {
 			this._host_port_validator.validate(data);
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			stat = await connection.statsAsync();
 			stat = stat[0];
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			error = e.message;
 			stat = null;
@@ -94,6 +96,8 @@ class HomeController extends AbstractController {
 			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
 			connection_info = await connection.statsAsync();
 			connection_info = connection_info[0];
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			error = e.message;
 		}
@@ -125,8 +129,6 @@ class HomeController extends AbstractController {
 				host: data.host,
 				port: data.port
 			});
-
-			BeanstalkConnectionManager.removeConnection(data.host, data.port);
 		} catch (e) {
 			error = e.message;
 		}

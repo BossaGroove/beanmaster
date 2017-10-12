@@ -35,7 +35,7 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async index(req, res) {
-		let data = this._host_port_tube_adapter.getData(req);
+		const data = this._host_port_tube_adapter.getData(req);
 
 		try {
 			this._host_port_tube_validator.validate(data);
@@ -78,7 +78,7 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async refreshTube(req, res) {
-		let data = this._host_port_tube_adapter.getData(req);
+		const data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
 		try {
@@ -109,9 +109,9 @@ class TubeController extends AbstractController {
 
 
 	async getTubeInfo(host, port, tube) {
-		let configs = await BeanstalkConfigManager.getConfig();
-		let name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
-		let connection = await BeanstalkConnectionManager.getConnection(host, port);
+		const configs = await BeanstalkConfigManager.getConfig();
+		const name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
+		const connection = await BeanstalkConnectionManager.connect(host, port);
 
 		let tube_info = (await connection.stats_tubeAsync(tube))[0];
 		let stats = {
@@ -127,6 +127,7 @@ class TubeController extends AbstractController {
 			}
 		}
 
+		await BeanstalkConnectionManager.closeConnection(connection);
 		return {
 			name: name,
 			tube_info: tube_info || {},
@@ -136,8 +137,8 @@ class TubeController extends AbstractController {
 
 
 	async getNextJobs(connection, tube) {
-		let actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
-		let output = {};
+		const actions = ['peek_ready', 'peek_delayed', 'peek_buried'];
+		const output = {};
 
 		await connection.useAsync(tube);
 
@@ -190,15 +191,17 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async addJob(req, res) {
-		let data = this._add_job_adapter.getData(req);
+		const data = this._add_job_adapter.getData(req);
 		let err = null;
 		let job_id = null;
 
 		try {
 			this._add_job_validator.validate(data);
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			await connection.useAsync(data.tube_name);
 			job_id = (await connection.putAsync(data.priority, data.delay, data.ttr, data.payload))[0];
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			err = e.message;
 		}
@@ -216,15 +219,17 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async kickJob(req, res) {
-		let data = this._repeat_operation_adapter.getData(req);
+		const data = this._repeat_operation_adapter.getData(req);
 		let err = null;
 		let num_kicked = null;
 
 		try {
 			this._repeat_operation_validator.validate(data);
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			await connection.useAsync(data.tube);
 			num_kicked = (await connection.kickAsync(data.value))[0];
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			err = e.message;
 		}
@@ -242,18 +247,20 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async deleteJob(req, res) {
-		let data = this._repeat_operation_adapter.getData(req);
+		const data = this._repeat_operation_adapter.getData(req);
 		let err = null;
 
 		try {
 			this._repeat_operation_validator.validate(data);
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			await connection.useAsync(data.tube);
 
 			for (let i = 0; i < data.value; i++) {
 				let job_id = (await connection.peek_readyAsync())[0];
 				await connection.destroyAsync(job_id);
 			}
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			err = e.message;
 		}
@@ -275,8 +282,8 @@ class TubeController extends AbstractController {
 
 		try {
 			this._host_port_tube_validator.validate(data);
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
-			let tube_info = (await connection.stats_tubeAsync(data.tube))[0];
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
+			const tube_info = (await connection.stats_tubeAsync(data.tube))[0];
 
 			let delay = 3600;
 
@@ -285,6 +292,8 @@ class TubeController extends AbstractController {
 			}
 
 			await connection.pause_tubeAsync(data.tube, delay);
+
+			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			err = e.message;
 		}
