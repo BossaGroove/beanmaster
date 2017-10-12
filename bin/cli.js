@@ -23,7 +23,7 @@ function startServer() {
 }
 
 function serverStatus() {
-	let pid = daemon.status();
+	const pid = daemon.status();
 	if (pid) {
 		console.log('Beanmaster daemon running. PID: ' + pid);
 	} else {
@@ -59,7 +59,7 @@ commander
 	.option('kill', 'Kill server daemon')
 	.parse(process.argv);
 
-let daemon_option = {
+const daemon_option = {
 	main: p.resolve(__dirname, './server.js'),
 	name: 'beanmaster',
 	pidfile: BEANMASTER_PID_PATH,

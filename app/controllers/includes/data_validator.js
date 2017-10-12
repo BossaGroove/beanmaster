@@ -1,13 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-
 class DataValidator {
 	/**
 	 * Validates data
-	 * @param data
 	 */
-	validate(data) {
+	validate() {
 		return true;
 	}
 

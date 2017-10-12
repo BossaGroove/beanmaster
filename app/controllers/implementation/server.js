@@ -4,8 +4,7 @@ const requireAll = require('require-all');
 const _ = require('lodash');
 
 const lib = require('../../../lib');
-const BeanstalkConfigManager = lib.BeanstalkConfigManager;
-const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+const {BeanstalkConfigManager, BeanstalkConnectionManager} = lib;
 
 const AbstractController = require('../includes/abstract_controller');
 
@@ -122,7 +121,7 @@ class ServerController extends AbstractController {
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
-			stat = (await connection.stats_jobAsync(data.job_id))[0];
+			[stat] = await connection.stats_jobAsync(data.job_id);
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -177,14 +176,13 @@ class ServerController extends AbstractController {
 	 */
 	async getTubesInfo(connection) {
 		// get tubes
-		let tubes = await connection.list_tubesAsync();
-		tubes = tubes[0];
+		const [tubes] = await connection.list_tubesAsync();
 		tubes.sort();
 
 		const tubes_info = {};
 
 		for (let i = 0; i < tubes.length; i++) {
-			tubes_info[tubes[i]] = (await connection.stats_tubeAsync(tubes[i]))[0];
+			[tubes_info[tubes[i]]] = await connection.stats_tubeAsync(tubes[i]);
 		}
 
 		return tubes_info;

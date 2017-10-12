@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const DataValidator = require('../data_validator');
 const HostPortValidator = require('../common/host_port_validator');
 const host_port_validator = new HostPortValidator();

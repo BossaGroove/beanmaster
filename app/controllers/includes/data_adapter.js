@@ -5,9 +5,8 @@ const _ = require('lodash');
 class DataAdapter {
 	/**
 	 * Get data from request and return an App object
-	 * @param req
 	 */
-	getData(req) {
+	getData() {
 		return null;
 	}
 

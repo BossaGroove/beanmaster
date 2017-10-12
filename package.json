@@ -24,7 +24,9 @@
     "node": ">=8"
   },
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js ."
+  },
   "preferGlobal": true,
   "dependencies": {
     "bluebird": "^3.4.6",

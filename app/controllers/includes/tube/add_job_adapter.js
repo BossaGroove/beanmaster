@@ -11,7 +11,7 @@ class AddJobAdapter extends DataAdapter {
 	 * @param req
 	 */
 	getData(req) {
-		let data = host_port_tube_adapter.getData(req);
+		const data = host_port_tube_adapter.getData(req);
 
 		this._setValue(data, 'tube_name', _.get(req, 'body.tube_name'));
 		this._setValue(data, 'priority', parseInt(_.get(req, 'body.priority'), 10));

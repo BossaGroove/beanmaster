@@ -4,11 +4,9 @@ const requireAll = require('require-all');
 const _ = require('lodash');
 
 const lib = require('../../../lib');
-const BeanstalkConfigManager = lib.BeanstalkConfigManager;
-const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+const {BeanstalkConfigManager, BeanstalkConnectionManager} = lib;
 
 const AbstractController = require('../includes/abstract_controller');
-
 
 class TubeController extends AbstractController {
 	constructor(request_handlers) {
@@ -113,7 +111,7 @@ class TubeController extends AbstractController {
 		const name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
 		const connection = await BeanstalkConnectionManager.connect(host, port);
 
-		let tube_info = (await connection.stats_tubeAsync(tube))[0];
+		const [tube_info] = await connection.stats_tubeAsync(tube);
 		let stats = {
 			'peek_ready': null,
 			'peek_delayed': null,
@@ -121,7 +119,7 @@ class TubeController extends AbstractController {
 		};
 
 		if (tube_info) {
-			let next_job = await this.getNextJobs(connection, tube);
+			const next_job = await this.getNextJobs(connection, tube);
 			if (!_.isEmpty(next_job)) {
 				stats = next_job;
 			}
@@ -143,14 +141,13 @@ class TubeController extends AbstractController {
 		await connection.useAsync(tube);
 
 		for (let i = 0; i < actions.length; i++) {
-			let job = null;
 			let job_id = null;
 			let payload = null;
 
 			try {
-				job = await connection[`${actions[i]}Async`]();
-				job_id = parseInt(job[0], 10);
-				payload = job[1].toString();
+				[job_id, payload] = await connection[`${actions[i]}Async`]();
+				job_id = parseInt(job_id, 10);
+				payload = payload.toString();
 			} catch (e) {
 				if (e.message !== 'NOT_FOUND') {
 					throw e;
@@ -162,7 +159,7 @@ class TubeController extends AbstractController {
 				continue;
 			}
 
-			let job_stat = (await connection.stats_jobAsync(job_id))[0];
+			const [job_stat] = await connection.stats_jobAsync(job_id);
 
 			// try to beautify the payload
 			let payload_json = null;
@@ -199,7 +196,7 @@ class TubeController extends AbstractController {
 			this._add_job_validator.validate(data);
 			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			await connection.useAsync(data.tube_name);
-			job_id = (await connection.putAsync(data.priority, data.delay, data.ttr, data.payload))[0];
+			[job_id] = await connection.putAsync(data.priority, data.delay, data.ttr, data.payload);
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -227,7 +224,7 @@ class TubeController extends AbstractController {
 			this._repeat_operation_validator.validate(data);
 			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			await connection.useAsync(data.tube);
-			num_kicked = (await connection.kickAsync(data.value))[0];
+			[num_kicked] = await connection.kickAsync(data.value);
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -256,7 +253,7 @@ class TubeController extends AbstractController {
 			await connection.useAsync(data.tube);
 
 			for (let i = 0; i < data.value; i++) {
-				let job_id = (await connection.peek_readyAsync())[0];
+				const [job_id] = await connection.peek_readyAsync();
 				await connection.destroyAsync(job_id);
 			}
 
@@ -277,13 +274,13 @@ class TubeController extends AbstractController {
 	 * @param res
 	 */
 	async togglePause(req, res) {
-		let data = this._host_port_tube_adapter.getData(req);
+		const data = this._host_port_tube_adapter.getData(req);
 		let err = null;
 
 		try {
 			this._host_port_tube_validator.validate(data);
 			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
-			const tube_info = (await connection.stats_tubeAsync(data.tube))[0];
+			const [tube_info] = await connection.stats_tubeAsync(data.tube);
 
 			let delay = 3600;
 

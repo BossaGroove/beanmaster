@@ -9,7 +9,7 @@ class AddServerAdapter extends DataAdapter {
 	 * @param req
 	 */
 	getData(req) {
-		let data = {};
+		const data = {};
 
 		this._setValue(data, 'name', _.get(req, 'body.name'));
 		this._setValue(data, 'host', _.get(req, 'body.host'));

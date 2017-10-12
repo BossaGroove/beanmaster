@@ -9,13 +9,12 @@ class HostPortTubeAdapter extends DataAdapter {
 	 * @param req
 	 */
 	getData(req) {
-		let data = {};
+		const data = {};
 
-		let host_port = _.get(req, 'params.host_port');
-		host_port = host_port.split(':');
+		const host_port = _.get(req, 'params.host_port').split(':');
 		if (host_port.length === 2) {
-			data.host = host_port[0];
-			data.port = parseInt(host_port[1], 10);
+			[data.host, data.port] = host_port;
+			data.port = parseInt(data.port, 10);
 		}
 
 		this._setValue(data, 'tube', _.get(req, 'params.tube'));

@@ -3,8 +3,7 @@
 const requireAll = require('require-all');
 
 const lib = require('../../../lib');
-const BeanstalkConfigManager = lib.BeanstalkConfigManager;
-const BeanstalkConnectionManager = lib.BeanstalkConnectionManager;
+const {BeanstalkConfigManager, BeanstalkConnectionManager} = lib;
 
 const AbstractController = require('../includes/abstract_controller');
 
@@ -34,7 +33,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	async index(req, res) {
-		let configs = await BeanstalkConfigManager.getConfig();
+		const configs = await BeanstalkConfigManager.getConfig();
 
 		res.render('home/servers', {
 			page: 'Servers',
@@ -49,7 +48,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	async getInfo(req, res) {
-		let data = this._host_port_adapter.getData(req);
+		const data = this._host_port_adapter.getData(req);
 
 		let stat;
 		let error = null;
@@ -57,8 +56,7 @@ class HomeController extends AbstractController {
 		try {
 			this._host_port_validator.validate(data);
 			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
-			stat = await connection.statsAsync();
-			stat = stat[0];
+			[stat] = await connection.statsAsync();
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -79,7 +77,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	async addServer(req, res) {
-		let data = this._add_server_adapter.getData(req);
+		const data = this._add_server_adapter.getData(req);
 
 		let connection_info;
 		let error = null;
@@ -93,9 +91,8 @@ class HomeController extends AbstractController {
 				port: data.port
 			});
 
-			let connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
-			connection_info = await connection.statsAsync();
-			connection_info = connection_info[0];
+			const connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			[connection_info] = await connection.statsAsync();
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -120,7 +117,7 @@ class HomeController extends AbstractController {
 	 * @param res
 	 */
 	async deleteServer(req, res) {
-		let data = this._delete_server_adapter.getData(req);
+		const data = this._delete_server_adapter.getData(req);
 		let error = null;
 		try {
 			this._delete_server_validator.validate(data);

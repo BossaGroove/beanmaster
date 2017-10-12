@@ -9,7 +9,7 @@ class DeleteServerAdapter extends DataAdapter {
 	 * @param req
 	 */
 	getData(req) {
-		let data = {};
+		const data = {};
 
 		this._setValue(data, 'host', _.get(req, 'body.host'));
 		this._setValue(data, 'port', parseInt(_.get(req, 'body.port'), 10));

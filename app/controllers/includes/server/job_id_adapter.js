@@ -11,7 +11,7 @@ class JobIdAdapter extends DataAdapter {
 	 * @param req
 	 */
 	getData(req) {
-		let data = host_port_tube_adapter.getData(req);
+		const data = host_port_tube_adapter.getData(req);
 
 		this._setValue(data, 'job_id', parseInt(_.get(req, 'body.job_id'), 10));
 
