@@ -19,7 +19,9 @@ class HostPortValidator extends DataValidator {
 			this.failWith('port is invalid');
 		}
 
-		if (!validator.isURL(data.host) && !validator.isIP(data.host)) {
+		if (!validator.isURL(data.host, {
+				require_tld: false
+			}) && !validator.isIP(data.host)) {
 			this.failWith('host must be an IP');
 		}
 
