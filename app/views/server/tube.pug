@@ -3,19 +3,18 @@ extends ../layouts/default
 block content
 	include ../layouts/includes/header
 	.container-fluid
-		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
-		input#host(type="hidden", name="host", value="#{host}")
-		input#port(type="hidden", name="port", value="#{port}")
-		input#tube(type="hidden", name="tube", value="#{tube}")
-		input#error(type="hidden", name="error", value="#{(err || '')}")
+		input#_csrf(type="hidden", name="_csrf", value=_csrf)
+		input#host(type="hidden", name="host", value=host)
+		input#port(type="hidden", name="port", value=port)
+		input#tube(type="hidden", name="tube", value=tube)
+		input#error(type="hidden", name="error", value=`${(err || '')}`)
 		h1
-			a(href="/#{encodeURIComponent(host)}:#{port}") #{name?name + ' - ':''}#{host}:#{port}
+			a(href=`/${encodeURIComponent(host)}:${port}`)= `${name?name + ' - ':''}${host}:${port}`
 			| &nbsp;/ #{tube}
 		hr
 		#error_container
 			if (err)
-				.alert.alert-warning
-					| #{err}
+				.alert.alert-warning= err
 		.alert.alert-warning#not_found(class=((Object.keys(tube_info).length > 0)?'hide':'')) Tube not found
 		.table-responsive
 			table.table.table-bordered.table-hover.table-striped#tube_table(class=((Object.keys(tube_info).length > 0)?'':'hide'))
@@ -37,20 +36,20 @@ block content
 						th Pause (left)
 				tbody
 					tr
-						td #{tube_info.name}
-						td #{tube_info['current-jobs-urgent']}
-						td #{tube_info['current-jobs-ready']}
-						td #{tube_info['current-jobs-reserved']}
-						td #{tube_info['current-jobs-delayed']}
-						td #{tube_info['current-jobs-buried']}
-						td #{tube_info['total-jobs']}
-						td #{tube_info['current-using']}
-						td #{tube_info['current-watching']}
-						td #{tube_info['current-waiting']}
-						td #{tube_info['cmd-delete']}
-						td #{tube_info['cmd-pause-tube']}
-						td #{tube_info.pause}
-						td #{tube_info['pause-time-left']}
+						td= tube_info.name
+						td= tube_info['current-jobs-urgent']
+						td= tube_info['current-jobs-ready']
+						td= tube_info['current-jobs-reserved']
+						td= tube_info['current-jobs-delayed']
+						td= tube_info['current-jobs-buried']
+						td= tube_info['total-jobs']
+						td= tube_info['current-using']
+						td= tube_info['current-watching']
+						td= tube_info['current-waiting']
+						td= tube_info['cmd-delete']
+						td= tube_info['cmd-pause-tube']
+						td= tube_info.pause
+						td= tube_info['pause-time-left']
 
 		#tube-controls
 			strong Actions:&nbsp;
@@ -76,6 +75,14 @@ block content
 								a(href="javascript:void(0)", data-value="1000")
 									i.glyphicon.glyphicon-forward
 									| &nbsp;Kick 1000
+							li
+								a(href="javascript:void(0)", data-value="1000")
+									i.glyphicon.glyphicon-forward
+									| &nbsp;Kick 10000
+							li
+								a(href="javascript:void(0)", data-value="1000")
+									i.glyphicon.glyphicon-forward
+									| &nbsp;Kick 100000
 							//li
 								a(href="javascript:void(0)", data-value="all")
 									i.glyphicon.glyphicon-fast-forward
@@ -135,13 +142,13 @@ block content
 								if stats[stat_key]
 									each key in Object.keys(stats[stat_key].stat)
 										tr
-											td #{key}
-											td #{stats[stat_key].stat[key]}
+											td= key
+											td= stats[stat_key].stat[key]
 					.span.col-md-10
 						p
 							strong Job data:
 						pre
-							code #{stats[stat_key]?(stats[stat_key].payload_json || stats[stat_key].payload):''}
+							code= `${stats[stat_key]?(stats[stat_key].payload_json || stats[stat_key].payload):''}`
 				.row-fluid
 					.span.col-md-12
 						hr

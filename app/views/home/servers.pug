@@ -3,7 +3,7 @@ extends ../layouts/default
 block content
 	include ../layouts/includes/header
 	.container-fluid
-		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
+		input#_csrf(type="hidden", name="_csrf", value=`${_csrf}`)
 		h1 Servers
 		.table-responsive
 			table#server_list.table.table-bordered.table-striped.table-hover
@@ -21,17 +21,17 @@ block content
 						th Delete
 				tbody
 					each c in configs
-						tr(id="#{c.host}:#{c.port}", data-host="#{c.host}", data-port="#{c.port}")
-							td #{c.name}
-							td #{c.host}
-							td #{c.port}
+						tr(id=`${c.host}:${c.port}`, data-host=`${c.host}`, data-port=`${c.port}`)
+							td= c.name
+							td= c.host
+							td= c.port
 							td -
 							td -
 							td -
 							td -
 							td -
 							td
-								a(href="/#{encodeURIComponent(c.host)}:#{c.port}").btn.btn-primary View
+								a(href=`/${encodeURIComponent(c.host)}:${c.port}`).btn.btn-primary View
 							td
 								button.btn.btn-danger.delete Delete
 		button.btn.btn-primary#btn_add_server Add Server

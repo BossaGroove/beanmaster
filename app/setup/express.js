@@ -28,7 +28,7 @@ app.use(express.static(`${app_root}/public`));
 
 // set views path, template engine and default layout
 app.set('views', `${app_root}/app/views`);
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.set('showStackError', true);
 

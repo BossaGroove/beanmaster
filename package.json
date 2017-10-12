@@ -46,12 +46,12 @@
     "express": "^4.14.0",
     "express-session": "^1.14.1",
     "fivebeans": "^1.5.0",
-    "jade": "^1.11.0",
     "less": "^3.0.0-alpha.3",
     "less-middleware": "^2.2.0",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
     "morgan": "^1.7.0",
+    "pug": "^2.0.0-rc.4",
     "require-all": "^2.0.0",
     "validator": "^9.0.0"
   },

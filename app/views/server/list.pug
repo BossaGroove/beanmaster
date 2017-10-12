@@ -3,16 +3,15 @@ extends ../layouts/default
 block content
 	include ../layouts/includes/header
 	.container-fluid
-		input#_csrf(type="hidden", name="_csrf", value="#{_csrf}")
-		input#host(type="hidden", name="host", value="#{host}")
-		input#port(type="hidden", name="port", value="#{port}")
-		input#error(type="hidden", name="error", value="#{(err || '')}")
-		h1 #{name?name + ' - ':''}#{host}:#{port}
+		input#_csrf(type="hidden", name="_csrf", value=_csrf)
+		input#host(type="hidden", name="host", value=host)
+		input#port(type="hidden", name="port", value=port)
+		input#error(type="hidden", name="error", value=`${(err || '')}`)
+		h1= `${name?name + ' - ':''}${host}:${port}`
 		hr
 		#error_container
 			if (err)
-				.alert.alert-warning
-					| #{err}
+				.alert.alert-warning= err
 
 		.table-responsive
 			table.table.table-bordered.table-hover.table-striped#tube_table
@@ -37,20 +36,20 @@ block content
 						each tube in tubes_info
 							tr
 								td
-									a(href="/#{encodeURIComponent(host) + ':' + port}/#{tube.name}") #{tube.name}
-								td #{tube['current-jobs-urgent']}
-								td #{tube['current-jobs-ready']}
-								td #{tube['current-jobs-reserved']}
-								td #{tube['current-jobs-delayed']}
-								td #{tube['current-jobs-buried']}
-								td #{tube['total-jobs']}
-								td #{tube['current-using']}
-								td #{tube['current-watching']}
-								td #{tube['current-waiting']}
-								td #{tube['cmd-delete']}
-								td #{tube['cmd-pause-tube']}
-								td #{tube.pause}
-								td #{tube['pause-time-left']}
+									a(href=`/${encodeURIComponent(host)}:${port}/${tube.name}`)= tube.name
+								td= tube['current-jobs-urgent']
+								td= tube['current-jobs-ready']
+								td= tube['current-jobs-reserved']
+								td= tube['current-jobs-delayed']
+								td= tube['current-jobs-buried']
+								td= tube['total-jobs']
+								td= tube['current-using']
+								td= tube['current-watching']
+								td= tube['current-waiting']
+								td= tube['cmd-delete']
+								td= tube['cmd-pause-tube']
+								td= tube.pause
+								td= tube['pause-time-left']
 
 		.modal.fade#search_job
 			.modal-dialog
