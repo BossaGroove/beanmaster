@@ -18,9 +18,7 @@ function tabulateTubeInfo(tube_info) {
 				//skip tube name checking
 				var cell = cells.eq(column);
 				if (column > 0) {
-					if (parseInt(tube_info[key]) !== parseInt(cell.text())) {
-						Utility.updateCellValue(cell, tube_info[key]);
-					}
+					Utility.updateCellValue(cell, tube_info[key], parseInt(cell.text()), parseInt(tube_info[key]));
 				} else {
 					cell.text(tube_info[key]);
 				}
@@ -73,9 +71,7 @@ function tabulateStats(stats) {
 							existing_value = parseInt(existing_value);
 						}
 
-						if (new_value !== existing_value) {
-							Utility.updateCellValue(cells.eq(1), stats[key].stat[stat_key]);
-						}
+						Utility.updateCellValue(cells.eq(1), stats[key].stat[stat_key], existing_value, new_value);
 					}
 				}
 

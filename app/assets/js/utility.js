@@ -32,9 +32,12 @@
 			}, 500);
 	};
 
-	Utility.updateCellValue = function(cell, value) {
-		cell.text(value);
-		Utility.highlightElement(cell);
+	Utility.updateCellValue = function(cell, value, old_value, new_value) {
+		if (old_value !== new_value) {
+			cell.text(value);
+			Utility.highlightElement(cell);
+			Utility.showHint(cell, new_value - old_value);
+		}
 	};
 
 	Utility.toggleAutoUpdate = function() {
@@ -55,6 +58,28 @@
 
 	Utility.setAutoUpdateHandler = function(handler) {
 		auto_update_handler = handler;
+	};
+
+	Utility.showHint = function(cell, delta) {
+		var text = delta;
+		if (delta > 0) {
+			text = '+' + text;
+		} else {
+			text = text.toString();
+		}
+
+		var popup = $(document.createElement('div'))
+			.addClass('popup')
+			.html(text);
+
+		cell.append(popup);
+
+		popup.animate({
+			color: '#FFFFFF',
+			top: '-15px'
+		}, 700, 'swing', function() {
+			popup.remove();
+		});
 	};
 
 	$(function() {

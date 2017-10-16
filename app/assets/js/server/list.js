@@ -56,9 +56,7 @@ function tabulateTubeInfo(tubes_info) {
 					if (column > 0) {
 						var cell = cells.eq(column);
 
-						if (parseInt(tubes_info[tube_name][key]) !== parseInt(cell.text())) {
-							Utility.updateCellValue(cell, tubes_info[tube_name][key]);
-						}
+						Utility.updateCellValue(cell, tubes_info[tube_name][key], parseInt(cell.text()), parseInt(tubes_info[tube_name][key]));
 					}
 					column++;
 				}
