@@ -75,7 +75,7 @@
 		cell.append(popup);
 
 		popup.animate({
-			color: '#FFFFFF',
+			opacity: 0,
 			top: '-20px'
 		}, 900, 'swing', function() {
 			popup.remove();
