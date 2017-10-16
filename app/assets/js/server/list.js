@@ -144,15 +144,15 @@ function refreshTubeInfo() {
 			} else {
 				tabulateTubeInfo(data.tubes_info);
 
-				// if (pending_task) {
-				// 	pending_task.callee(pending_task.arguments);
-				// } else {
-				// 	if (Utility.isAutoUpdate()) {
-				// 		setTimeout(function() {
-				// 			refreshTubeInfo();
-				// 		}, 1000);
-				// 	}
-				// }
+				if (pending_task) {
+					pending_task.callee(pending_task.arguments);
+				} else {
+					if (Utility.isAutoUpdate()) {
+						setTimeout(function() {
+							refreshTubeInfo();
+						}, 1000);
+					}
+				}
 			}
 		},
 		error: function(err) {
@@ -328,7 +328,7 @@ var kickJobId = function() {
 
 $(function() {
 	if ($('#error').val() === '') {
-		setInterval(function() {
+		setTimeout(function() {
 			refreshTubeInfo();
 		}, 1000);
 	} else {
