@@ -1,0 +1,73 @@
+{
+  "name": "beanmaster",
+  "description": "nodejs beanstalkd console",
+  "keywords": [
+    "beanstalkd",
+    "admin",
+    "console",
+    "beanstalk",
+    "beanstalk console",
+    "beanstalk admin console",
+    "admin console"
+  ],
+  "bin": {
+    "beanmaster": "bin/cli.js"
+  },
+  "version": "3.0.0",
+  "private": false,
+  "author": "BossaGroove <bossagrooveaware@gmail.com> (http://www.bossa573.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BossaGroove/beanmaster"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js ."
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "bunyan": "^1.8.1",
+    "change-case": "^3.0.0",
+    "clone": "^2.0.0",
+    "co": "^4.6.0",
+    "commander": "^2.9.0",
+    "compression": "^1.6.2",
+    "connect-assets": "^5.4.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-alpha.1",
+    "csurf": "^1.9.0",
+    "daemonize2": "^0.4.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "fivebeans": "^1.5.0",
+    "less": "^3.0.0-alpha.3",
+    "less-middleware": "^2.2.0",
+    "lodash": "^4.16.4",
+    "moment": "^2.15.1",
+    "morgan": "^1.7.0",
+    "pug": "^2.0.0-rc.4",
+    "require-all": "^2.0.0",
+    "validator": "^9.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.8.0",
+    "eslint-config-aftership": "^4.0.2",
+    "grunt": "^1.0.1",
+    "grunt-eslint": "^20.1.0",
+    "load-grunt-config": "^0.19.2",
+    "mocha": "^4.0.1",
+    "should": "^13.1.2"
+  },
+  "bugs": {
+    "url": "https://github.com/BossaGroove/beanmaster/issues"
+  },
+  "homepage": "https://github.com/BossaGroove/beanmaster",
+  "main": "./bin/server.js"
+}

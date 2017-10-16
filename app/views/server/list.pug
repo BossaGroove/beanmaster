@@ -1,0 +1,86 @@
+extends ../layouts/default
+
+block content
+	include ../layouts/includes/header
+	.container-fluid
+		input#_csrf(type="hidden", name="_csrf", value=_csrf)
+		input#host(type="hidden", name="host", value=host)
+		input#port(type="hidden", name="port", value=port)
+		input#error(type="hidden", name="error", value=`${(err || '')}`)
+		h1= `${name?name + ' - ':''}${host}:${port}`
+		hr
+		#error_container
+			if (err)
+				.alert.alert-warning= err
+
+		.table-responsive
+			table.table.table-bordered.table-hover.table-striped#tube_table
+				thead
+					tr
+						th name
+						th Urgent
+						th Ready
+						th Reserved
+						th Delayed
+						th Buried
+						th Total
+						th Using
+						th Watching
+						th Waiting
+						th Delete (cmd)
+						th Pause (cmd)
+						th Pause (sec)
+						th Pause (left)
+				tbody
+					if (tubes_info)
+						each tube in tubes_info
+							tr
+								td
+									a(href=`/${encodeURIComponent(host)}:${port}/${tube.name}`)= tube.name
+								td= tube['current-jobs-urgent']
+								td= tube['current-jobs-ready']
+								td= tube['current-jobs-reserved']
+								td= tube['current-jobs-delayed']
+								td= tube['current-jobs-buried']
+								td= tube['total-jobs']
+								td= tube['current-using']
+								td= tube['current-watching']
+								td= tube['current-waiting']
+								td= tube['cmd-delete']
+								td= tube['cmd-pause-tube']
+								td= tube.pause
+								td= tube['pause-time-left']
+
+		.modal.fade#search_job
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type="button", data-dismiss="modal")
+							span(aria-hidden="true") &times;
+							span.sr-only Close
+						h4.modal-title Search job
+					.modal-body
+						#search_error_container
+
+						form#server_form.form-horizontal(role="form")
+							.form-group
+								label.col-sm-2.control-label(for="job_id") Job ID
+								.col-sm-10
+									input.form-control#job_id.required(type="text", value="")
+
+						#search_result.hide
+							hr
+							p
+								strong Stats
+							table.table.table-condensed
+								tbody
+
+					.modal-footer
+						span.preloader
+							img(src="/assets/images/preloader.gif")
+						button.btn.btn-danger#btn_kick_job.hide(type="button") Kick Job
+						button.btn.btn-default(type="button", data-dismiss="modal") Close
+						button.btn.btn-primary#btn_search_job_confirm(type="button") Search
+	!= js('lib/jquery.color/js/jquery.color.min')
+	!= js('js/utility')
+	!= js('js/server/list')

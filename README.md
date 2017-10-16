@@ -4,7 +4,7 @@ Nodejs [Beanstalkd](http://kr.github.io/beanstalkd/) admin console, inspired by 
 
 Rewritten in Nodejs with ExpressJS, with some improvements
 
-*Start from 2.0.0 the module requires ES6 which only supported from node version 4 and above, please use 1.x (Deprecated) if needed*
+*Start from 3.0.0 the module requires ES2017 which only supported from node version 8 and above, please use 1.x or 2.x (Deprecated) if needed*
 
 ### Installation
 
@@ -60,8 +60,7 @@ beanmaster --help
 
 ### Todo / Known issue
 
-1. Disconnect beanstalkd connection
-2. Multiple viewer may cause unexpected result as several actions require async operation.
+- Linting errors
 
 ### Change Logs
 
