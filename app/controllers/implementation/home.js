@@ -91,7 +91,7 @@ class HomeController extends AbstractController {
 				port: data.port
 			});
 
-			const connection = await BeanstalkConnectionManager.getConnection(data.host, data.port);
+			const connection = await BeanstalkConnectionManager.connect(data.host, data.port);
 			[connection_info] = await connection.statsAsync();
 
 			await BeanstalkConnectionManager.closeConnection(connection);
