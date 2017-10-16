@@ -70,6 +70,7 @@
 
 		var popup = $(document.createElement('div'))
 			.addClass('popup')
+			.addClass(delta > 0?'increase':'decrease')
 			.html(text);
 
 		cell.append(popup);
