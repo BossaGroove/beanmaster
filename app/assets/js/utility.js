@@ -76,8 +76,8 @@
 
 		popup.animate({
 			color: '#FFFFFF',
-			top: '-15px'
-		}, 700, 'swing', function() {
+			top: '-20px'
+		}, 900, 'swing', function() {
 			popup.remove();
 		});
 	};
