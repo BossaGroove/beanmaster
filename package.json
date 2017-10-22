@@ -1,0 +1,31 @@
+{
+  "name": "beanmaster_react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "app-root-path": "^2.0.1",
+    "bluebird": "^3.5.1",
+    "change-case": "^3.0.1",
+    "fivebeans": "^1.5.0",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-csrf": "^3.0.6",
+    "koa-helmet": "^3.2.0",
+    "koa-logger": "^3.1.0",
+    "koa-response-time": "^2.0.0",
+    "koa-router": "^7.2.1",
+    "koa-views": "^6.1.1",
+    "lodash": "^4.17.4",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-scripts": "1.0.14",
+    "require-all": "^2.2.0",
+    "validator": "^9.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
