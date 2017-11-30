@@ -1,0 +1,12 @@
+.preloader.action {
+	margin-left: 10px;
+}
+
+#tube-controls > ul {
+	display: inline-block;
+	list-style-type: none;
+	& > li {
+		display: inline-block;
+		margin-right: 5px;
+	}
+}

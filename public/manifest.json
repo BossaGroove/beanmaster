@@ -1,15 +1,10 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ],
-  "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "app.js": "/app.js",
+  "glyphicons-halflings-regular.eot": "/f4769f9bdb7466be65088239c12046d1.eot",
+  "glyphicons-halflings-regular.ttf": "/e18bbf611f2a2e43afc071aa2f4e1512.ttf",
+  "glyphicons-halflings-regular.woff": "/fa2772327f55d8198301fdb8bcfc8158.woff",
+  "glyphicons-halflings-regular.woff2": "/448c34a56d699c29117adc64c43affeb.woff2",
+  "manifest.js": "/manifest.js",
+  "preloader.gif": "/7d9f79e62ab194c09d17518be02f898b.gif",
+  "vendor.js": "/vendor.js"
 }
