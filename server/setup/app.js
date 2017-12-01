@@ -6,6 +6,8 @@ const bodyParser = require('koa-bodyparser');
 const views = require('koa-views');
 
 const viewMiddleware = require('../middlewares/view');
+const errorHandler = require('../middlewares/error_handler');
+
 const router = require('../route');
 
 const ENV = process.env.NODE_ENV || 'development';
@@ -52,6 +54,7 @@ app.use(views(__dirname + '/../views', {
 
 app.use(viewMiddleware());
 
+app.use(errorHandler);
 app.use(router.routes());
 app.use(router.allowedMethods());
 

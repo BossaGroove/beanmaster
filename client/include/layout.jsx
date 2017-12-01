@@ -1,41 +1,25 @@
 import React, {Component} from 'react';
-import {Modal, Button} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import {Route, matchPath, Switch} from 'react-router-dom';
 import Header from './header';
-import Main from './main';
+import Server from "../home/server";
 
-class Server extends Component {
-	constructor() {
-		super();
-		this.state = {
-			showSearch: false,
-			showPause: false
-		};
-	}
-
-	toggleSearch() {
-		this.setState({
-			showSearch: !this.state.showSearch
-		});
-	}
-
-	togglePause() {
-		this.setState({
-			showPause: !this.state.showPause
-		});
-	}
-
+class Layout extends Component {
 	render() {
-		const {children} = this.props;
+		const showSearch = matchPath(this.props.location.pathname, {
+			path: '/page2'
+		});
+
 		return (
 			<div>
-				<Header showSearch={this.state.showSearch} showPause={this.state.showPause}/>
-				<Main>
-					{children}
-				</Main>
+				<Header showSearch={showSearch} showPause={false}/>
+				<main className='container-fluid'>
+					<Switch>
+						<Route exact path="/" component={Server}/>
+					</Switch>
+				</main>
 			</div>
 		);
 	}
 }
 
-export default Server;
+export default Layout;
