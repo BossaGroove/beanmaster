@@ -16,6 +16,7 @@ class ServerRow extends Component {
 			}
 		};
 	}
+
 	componentWillMount() {
 		this.init();
 	}
