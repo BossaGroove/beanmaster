@@ -40,17 +40,17 @@ class HomeController {
 	 */
 	static async addServer(ctx) {
 		let server;
-
+		let errorMessage = '';
 		try {
 			server = {
 				name: ctx.request.body.name,
 				host: ctx.request.body.host,
-				port: ctx.request.body.port
+				port: parseInt(ctx.request.body.port)
 			};
 
 			await BeanstalkConfigManager.addConfig(server);
 		} catch (e) {
-			console.log(e);
+			errorMessage = e.message;
 			server = null;
 		}
 
@@ -64,7 +64,23 @@ class HomeController {
 	 * @param ctx
 	 */
 	static async deleteServer(ctx) {
-		await ctx.render('index', ctx.locals);
+		let server;
+		let errorMessage = '';
+		try {
+			server = {
+				host: ctx.request.query.host,
+				port: parseInt(ctx.request.query.port)
+			};
+
+			await BeanstalkConfigManager.deleteConfig(server);
+		} catch (e) {
+			errorMessage = e.message;
+			server = null;
+		}
+
+		ctx.body = ResponseManager.response({
+			server: server
+		});
 	}
 }
 

@@ -1,15 +1,23 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {Table, Button} from 'react-bootstrap';
 import ServerRow from './_server_row';
 import AddServerModal from './_add_server_modal';
+import RemoveServerModal from './_remove_server_modal';
 import axios from 'axios';
 
+const initServer = (server) => {
+	return {
+		type: 'INIT_SERVER',
+		payload: server
+	}
+};
+
 class Server extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
-			busy: false,
-			servers: []
+			busy: false
 		};
 	}
 
@@ -19,33 +27,13 @@ class Server extends Component {
 
 	init() {
 		this.getServers().then((servers) => {
-			this.setState({
-				servers: servers
-			});
+			this.props.initServer(servers);
 		});
 	}
 
 	async getServers() {
 		const result = await axios.get('/api/servers');
 		return result.data.body.servers;
-	}
-
-	pushServer(server) {
-		const servers = this.state.servers;
-
-		servers.push({
-			name: server.name,
-			host: server.host,
-			port: server.port
-		});
-
-		this.setState({
-			servers: servers
-		});
-	}
-
-	onAddServer(server) {
-		this.pushServer(server);
 	}
 
 	render() {
@@ -68,17 +56,23 @@ class Server extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{this.state.servers.map((server, i) => {
+						{this.props.servers.map((server, i) => {
 							return (
 								<ServerRow key={i} name={server.name} host={server.host} port={server.port} />
 							);
 						})}
 					</tbody>
 				</Table>
-				<AddServerModal onAddServer={this.onAddServer.bind(this)} />
+				<AddServerModal />
+				<RemoveServerModal />
 			</div>
 		);
 	}
 }
 
-export default Server;
+
+export default connect((state, ownProps) => ({
+	servers: state.servers
+}), {
+	initServer
+})(Server);

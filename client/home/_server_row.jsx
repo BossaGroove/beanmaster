@@ -1,7 +1,16 @@
 import React, {Component} from 'react';
-import {Button} from 'react-bootstrap';
+import {connect} from 'react-redux';
+
+import {Button, Modal} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+
+const showRemoveServerModal = (server) => {
+	return {
+		type: 'SHOW_REMOVE_SERVER_MODAL',
+		payload: server
+	}
+};
 
 class ServerRow extends Component {
 	constructor(props) {
@@ -60,11 +69,19 @@ class ServerRow extends Component {
 					</Link>
 				</td>
 				<td>
-					<Button bsStyle="danger">Delete</Button>
+					<Button bsStyle="danger" onClick={() => this.props.showRemoveServerModal({
+						name: this.props.name,
+						host: this.props.host,
+						port: this.props.port
+					})}>Delete</Button>
 				</td>
 			</tr>
 		);
 	}
 }
 
-export default ServerRow;
+export default connect((state, ownProps) => ({
+	removeServerModal: state.removeServerModal
+}), {
+	showRemoveServerModal
+})(ServerRow);

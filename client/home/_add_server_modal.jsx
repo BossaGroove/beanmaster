@@ -1,15 +1,39 @@
 import React, {Component} from 'react';
-import {Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
+import {connect} from 'react-redux';
+
+import {Alert, Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
 import Preloader from '../include/preloader';
 import validator from 'validator';
 import _ from 'lodash';
 import axios from 'axios';
+const fields = ['name', 'host', 'port'];
+
+const isBusy = () => {
+	return {
+		type: 'IS_BUSY'
+	}
+};
+
+const notBusy = () => {
+	return {
+		type: 'NOT_BUSY'
+	}
+};
+
+const addServer = (server) => {
+	return {
+		type: 'ADD_SERVER',
+		payload: server
+	}
+};
 
 class AddServerModal extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
-			show: false
+			show: false,
+			errorMessage: ''
 		};
 	}
 
@@ -24,9 +48,10 @@ class AddServerModal extends Component {
 		return this.getError(id);
 	}
 
-	getError(id) {
+	getError(id, validateEmpty) {
 		const value = this.state[`form_${id}`];
-		if (_.isUndefined(value)) {
+
+		if (!validateEmpty && _.isUndefined(value)) {
 			return null;
 		}
 
@@ -37,7 +62,7 @@ class AddServerModal extends Component {
 				}
 				break;
 			case 'host':
-				if (!validator.isURL(value) && !validator.isIP(value) && value !== 'localhost') {
+				if (!validator.isURL(value || '') && !validator.isIP(value || '') && value !== 'localhost') {
 					return 'error';
 				}
 				break;
@@ -53,26 +78,26 @@ class AddServerModal extends Component {
 	}
 
 	addServer() {
-		const error = this.getError('name') || this.getError('host') || this.getError('port');
+		const error = this.getError('name', true) || this.getError('host', true) || this.getError('port', true);
 		if (error) {
+			this.setError('Form invalid');
 			return;
 		}
 
 		this.setState({
-			busy: true
+			errorMessage: ''
 		});
+
+		this.props.isBusy();
 
 		AddServerModal
 			.postServer(this.state.form_name, this.state.form_host, this.state.form_port)
 			.then((server) => {
-				this.props.onAddServer(server);
-				this.setState({
-					busy: false
-				});
+				this.props.addServer(server);
 				this.close();
 			})
-			.catch(() => {
-
+			.catch((e) => {
+				console.log(e);
 			});
 	}
 
@@ -82,6 +107,7 @@ class AddServerModal extends Component {
 			host,
 			port,
 		});
+
 		return result.data.body.server;
 	}
 
@@ -92,12 +118,43 @@ class AddServerModal extends Component {
 	}
 
 	close() {
+		this.props.notBusy();
+
 		this.setState({
 			show: false
 		});
 	}
 
+	setError(errorMessage) {
+		this.setState({
+			errorMessage: errorMessage
+		});
+
+		this.errorTimeout();
+	}
+
+	errorTimeout() {
+		setTimeout(() => {
+			this.setState({
+				errorMessage: ''
+			});
+		}, 5000);
+	}
+
+	static isErrorMessageValid(message) {
+		return (_.isString(message) && !_.isEmpty(message));
+	}
+
 	render() {
+		let alertBox = '';
+		if (AddServerModal.isErrorMessageValid(this.state.errorMessage)) {
+			alertBox = (
+				<Alert bsStyle="warning">
+					{this.state.errorMessage}
+				</Alert>
+			);
+		}
+
 		return (
 			<span>
 				<Button bsStyle="primary" onClick={()=>this.show()}>Add Server</Button>
@@ -106,6 +163,7 @@ class AddServerModal extends Component {
 						<Modal.Title>Add Server</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
+						{alertBox}
 						<Form horizontal>
 							<FormGroup controlId="name" validationState={this.getValidationState('name')}>
 								<Col componentClass={ControlLabel} sm={2}>
@@ -134,7 +192,7 @@ class AddServerModal extends Component {
 						</Form>
 					</Modal.Body>
 					<Modal.Footer>
-						<Preloader show={this.state.busy} />
+						<Preloader show={this.props.busy} />
 						<Button onClick={()=>this.close()}>Close</Button>
 						<Button bsStyle="primary" onClick={()=>this.addServer()}>Add</Button>
 					</Modal.Footer>
@@ -144,4 +202,10 @@ class AddServerModal extends Component {
 	}
 }
 
-export default AddServerModal;
+export default connect((state, ownProps) => ({
+	servers: state.servers
+}), {
+	addServer,
+	isBusy,
+	notBusy
+})(AddServerModal);
