@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {initServer} from '../actions/servers';
 import {Table, Button} from 'react-bootstrap';
 import ServerRow from './_server_row';
 import AddServerModal from './_add_server_modal';
 import RemoveServerModal from './_remove_server_modal';
 import axios from 'axios';
-
-const initServer = (server) => {
-	return {
-		type: 'INIT_SERVER',
-		payload: server
-	}
-};
 
 class Server extends Component {
 	constructor(props) {

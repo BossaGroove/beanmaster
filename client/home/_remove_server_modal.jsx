@@ -1,34 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import {isBusy, notBusy} from '../actions/busy';
+import {hideRemoveServerModal} from '../actions/removeServerModal';
+import {removeServer} from '../actions/servers';
 import {Button, Modal} from 'react-bootstrap';
 import Preloader from '../include/preloader';
 import axios from 'axios';
-
-const isBusy = () => {
-	return {
-		type: 'IS_BUSY'
-	}
-};
-
-const notBusy = () => {
-	return {
-		type: 'NOT_BUSY'
-	}
-};
-
-const hideRemoveServerModal = () => {
-	return {
-		type: 'HIDE_REMOVE_SERVER_MODAL'
-	}
-};
-
-const removeServer = (server) => {
-	return {
-		type: 'REMOVE_SERVER',
-		payload: server
-	}
-};
 
 class RemoveServerModal extends Component {
 	constructor(props) {

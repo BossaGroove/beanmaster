@@ -1,0 +1,9 @@
+export const INIT_SERVER = 'INIT_SERVER';
+export const ADD_SERVER = 'ADD_SERVER';
+export const REMOVE_SERVER = 'REMOVE_SERVER';
+
+export const SHOW_REMOVE_SERVER_MODAL = 'SHOW_REMOVE_SERVER_MODAL';
+export const HIDE_REMOVE_SERVER_MODAL = 'HIDE_REMOVE_SERVER_MODAL';
+
+export const IS_BUSY = 'IS_BUSY';
+export const NOT_BUSY = 'NOT_BUSY';

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import {isBusy, notBusy} from '../actions/busy';
+import {addServer} from '../actions/servers';
 import {Alert, Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
 import Preloader from '../include/preloader';
 import validator from 'validator';
@@ -8,24 +9,6 @@ import _ from 'lodash';
 import axios from 'axios';
 const fields = ['name', 'host', 'port'];
 
-const isBusy = () => {
-	return {
-		type: 'IS_BUSY'
-	}
-};
-
-const notBusy = () => {
-	return {
-		type: 'NOT_BUSY'
-	}
-};
-
-const addServer = (server) => {
-	return {
-		type: 'ADD_SERVER',
-		payload: server
-	}
-};
 
 class AddServerModal extends Component {
 	constructor(props) {
