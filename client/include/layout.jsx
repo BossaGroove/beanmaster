@@ -11,10 +11,10 @@ class Layout extends Component {
 
 		return (
 			<div>
-				<Header showSearch={showSearch} showPause={false}/>
+				<Header showSearch={showSearch} showPause={false} />
 				<main className='container-fluid'>
 					<Switch>
-						<Route exact path="/" component={Server}/>
+						<Route exact path="/" component={Server} />
 					</Switch>
 				</main>
 			</div>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {initServer} from '../actions/servers';
+import {showAddServerModal} from '../actions/addServerModal';
 import {Table, Button} from 'react-bootstrap';
 import ServerRow from './_server_row';
 import AddServerModal from './_add_server_modal';
@@ -13,6 +14,7 @@ class Server extends Component {
 		this.state = {
 			busy: false
 		};
+		// props.history.push('/?abc=1');
 	}
 
 	componentWillMount() {
@@ -57,6 +59,7 @@ class Server extends Component {
 						})}
 					</tbody>
 				</Table>
+				<Button bsStyle="primary" onClick={()=>this.props.showAddServerModal()}>Add Server</Button>
 				<AddServerModal />
 				<RemoveServerModal />
 			</div>
@@ -68,5 +71,6 @@ class Server extends Component {
 export default connect((state, ownProps) => ({
 	servers: state.servers
 }), {
-	initServer
+	initServer,
+	showAddServerModal
 })(Server);

@@ -1,10 +1,12 @@
 import {combineReducers} from 'redux';
 import busy from './busy';
 import servers from './servers';
-import removeServerModal from './remove_server_modal';
+import addServerModal from './addServerModal';
+import removeServerModal from './removeServerModal';
 
 export default combineReducers({
 	servers,
+	addServerModal,
 	removeServerModal,
 	busy
 });

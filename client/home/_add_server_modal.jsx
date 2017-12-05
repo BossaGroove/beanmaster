@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {isBusy, notBusy} from '../actions/busy';
 import {addServer} from '../actions/servers';
+import {hideAddServerModal} from '../actions/addServerModal';
 import {Alert, Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
 import Preloader from '../include/preloader';
 import validator from 'validator';
@@ -94,18 +95,9 @@ class AddServerModal extends Component {
 		return result.data.body.server;
 	}
 
-	show() {
-		this.setState({
-			show: true
-		});
-	}
-
 	close() {
 		this.props.notBusy();
-
-		this.setState({
-			show: false
-		});
+		this.props.hideAddServerModal();
 	}
 
 	setError(errorMessage) {
@@ -140,8 +132,7 @@ class AddServerModal extends Component {
 
 		return (
 			<span>
-				<Button bsStyle="primary" onClick={()=>this.show()}>Add Server</Button>
-				<Modal show={this.state.show} onHide={()=>this.close()}>
+				<Modal show={this.props.addServerModal.show} onHide={()=>this.close()}>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Server</Modal.Title>
 					</Modal.Header>
@@ -186,9 +177,11 @@ class AddServerModal extends Component {
 }
 
 export default connect((state, ownProps) => ({
-	servers: state.servers
+	servers: state.servers,
+	addServerModal: state.addServerModal
 }), {
 	addServer,
+	hideAddServerModal,
 	isBusy,
 	notBusy
 })(AddServerModal);
