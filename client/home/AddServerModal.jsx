@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {isBusy, notBusy} from '../actions/busy';
-import {addServer} from '../actions/servers';
-import {hideAddServerModal} from '../actions/addServerModal';
-import {Alert, Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
-import Preloader from '../include/preloader';
 import validator from 'validator';
 import _ from 'lodash';
 import axios from 'axios';
-const fields = ['name', 'host', 'port'];
+import {Alert, Button, FormControl, ControlLabel, Modal, FormGroup, Form, Col} from 'react-bootstrap';
+import {withRouter} from 'react-router-dom';
 
+import {isBusy, notBusy} from '../actions/busy';
+import {addServer} from '../actions/servers';
+import {hideAddServerModal} from '../actions/addServerModal';
+
+import AddServerForm from './AddServerForm';
+
+import Preloader from '../include/Preloader';
+
+const fields = ['name', 'host', 'port'];
 
 class AddServerModal extends Component {
 	constructor(props) {
@@ -120,6 +125,10 @@ class AddServerModal extends Component {
 		return (_.isString(message) && !_.isEmpty(message));
 	}
 
+	onSubmit(values) {
+
+	}
+
 	render() {
 		let alertBox = '';
 		if (AddServerModal.isErrorMessageValid(this.state.errorMessage)) {
@@ -138,6 +147,7 @@ class AddServerModal extends Component {
 					</Modal.Header>
 					<Modal.Body>
 						{alertBox}
+						<AddServerForm onSubmit={this.submit} />
 						<Form horizontal>
 							<FormGroup controlId="name" validationState={this.getValidationState('name')}>
 								<Col componentClass={ControlLabel} sm={2}>
@@ -184,4 +194,4 @@ export default connect((state, ownProps) => ({
 	hideAddServerModal,
 	isBusy,
 	notBusy
-})(AddServerModal);
+})(withRouter(AddServerModal));

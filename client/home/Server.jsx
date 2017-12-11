@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Table, Button} from 'react-bootstrap';
+import axios from 'axios';
+
 import {initServer} from '../actions/servers';
 import {showAddServerModal} from '../actions/addServerModal';
-import {Table, Button} from 'react-bootstrap';
-import ServerRow from './_server_row';
-import AddServerModal from './_add_server_modal';
-import RemoveServerModal from './_remove_server_modal';
-import axios from 'axios';
+
+import ServerRow from './ServerRow';
+import AddServerModal from './AddServerModal';
+import RemoveServerModal from './RemoveServerModal';
+
 
 class Server extends Component {
 	constructor(props) {
@@ -14,7 +17,6 @@ class Server extends Component {
 		this.state = {
 			busy: false
 		};
-		// props.history.push('/?abc=1');
 	}
 
 	componentWillMount() {
@@ -30,6 +32,10 @@ class Server extends Component {
 	async getServers() {
 		const result = await axios.get('/api/servers');
 		return result.data.body.servers;
+	}
+
+	showAddServerModal() {
+		this.props.showAddServerModal();
 	}
 
 	render() {
@@ -59,7 +65,7 @@ class Server extends Component {
 						})}
 					</tbody>
 				</Table>
-				<Button bsStyle="primary" onClick={()=>this.props.showAddServerModal()}>Add Server</Button>
+				<Button bsStyle="primary" onClick={()=>this.showAddServerModal()}>Add Server</Button>
 				<AddServerModal />
 				<RemoveServerModal />
 			</div>

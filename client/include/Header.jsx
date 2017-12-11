@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Nav, Navbar, NavItem, Button, Glyphicon} from 'react-bootstrap';
+import {Navbar, Button, Glyphicon} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 class Header extends Component {

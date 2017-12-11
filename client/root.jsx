@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Layout from './include/layout';
+import Layout from './include/Layout';
 
 import {BrowserRouter, Route} from 'react-router-dom';
 

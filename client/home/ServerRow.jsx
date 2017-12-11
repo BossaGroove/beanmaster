@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {showRemoveServerModal} from '../actions/removeServerModal';
-import {Button, Modal} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+
+import {showRemoveServerModal} from '../actions/removeServerModal';
 
 class ServerRow extends Component {
 	constructor(props) {

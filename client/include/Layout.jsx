@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route, matchPath, Switch} from 'react-router-dom';
-import Header from './header';
-import Server from "../home/server";
+import Header from './Header';
+import Server from "../home/Server";
 
 class Layout extends Component {
 	render() {
