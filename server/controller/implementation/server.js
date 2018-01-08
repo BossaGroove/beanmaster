@@ -51,7 +51,9 @@ class HomeController {
 			await BeanstalkConfigManager.addConfig(server);
 		} catch (e) {
 			errorMessage = e.message;
-			server = null;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
 		}
 
 		ctx.body = ResponseManager.response({
@@ -75,7 +77,8 @@ class HomeController {
 			await BeanstalkConfigManager.deleteConfig(server);
 		} catch (e) {
 			errorMessage = e.message;
-			server = null;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
 		}
 
 		ctx.body = ResponseManager.response({

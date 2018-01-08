@@ -23,11 +23,11 @@ const validate = (values) => {
 	return errors;
 };
 
-const renderInput = ({input, className, type, placeholder, meta}) => {
+const renderInput = ({input, className, type, placeholder, meta, label}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched?'error':null}>
 			<Col componentClass={ControlLabel} sm={2}>
-				Name {meta.error && meta.touched?`* ${meta.error}`:''}
+				{label} {meta.error && meta.touched?`* ${meta.error}`:''}
 			</Col>
 			<Col sm={10}>
 			<input {...input} className={className} type={type} placeholder={placeholder} />
@@ -38,9 +38,9 @@ const renderInput = ({input, className, type, placeholder, meta}) => {
 
 let AddServerForm = (props) => (
 	<Form horizontal onSubmit={props.handleSubmit}>
-		<Field className="form-control" name="name" component={renderInput} type="text" placeholder="My cool beanstalk server" />
-		<Field className="form-control" name="host" component={renderInput} type="text" placeholder="127.0.0.1 / localhost / my-cool-beanstalk-server.com" />
-		<Field className="form-control" name="port" component={renderInput} type="number" placeholder="11300, port should be > 1 and < 65536" />
+		<Field className="form-control" name="name" component={renderInput} type="text" placeholder="My cool beanstalk server" label="Name" />
+		<Field className="form-control" name="host" component={renderInput} type="text" placeholder="127.0.0.1 / localhost / my-cool-beanstalk-server.com" label="Host" />
+		<Field className="form-control" name="port" component={renderInput} type="number" placeholder="11300, port should be > 1 and < 65536" label="Port" />
 	</Form>
 );
 

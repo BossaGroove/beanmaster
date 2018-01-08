@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import {Button, Modal} from 'react-bootstrap';
+import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
 import {isBusy, notBusy} from '../actions/busy';
@@ -18,22 +18,13 @@ class AddServerModal extends Component {
 		super(props);
 
 		this.state = {
-			show: false
+			alert: null
 		};
 	}
 
-	addServer() {
-		this.props.isBusy();
-
-		AddServerModal
-			.postServer(this.state.form_name, this.state.form_host, this.state.form_port)
-			.then((server) => {
-				this.props.addServer(server);
-				this.close();
-			})
-			.catch((e) => {
-				console.log(e);
-			});
+	async addServer({name, host, port}) {
+		const server = await AddServerModal.postServer(name, host, port);
+		this.props.addServer(server);
 	}
 
 	static async postServer(name, host, port) {
@@ -49,14 +40,40 @@ class AddServerModal extends Component {
 	close() {
 		this.props.notBusy();
 		this.props.hideAddServerModal();
+		this.hideAlert();
 	}
 
 	onSubmit(values) {
-		console.log('onSubmit');
-		console.log(values);
+		this.props.isBusy();
+
+		this.addServer(values)
+			.then(() => {
+				this.close();
+			})
+			.catch((e) => {
+				this.setState({
+					alert: e.response.data.meta.error
+				});
+			});
+	}
+
+	hideAlert() {
+		this.setState({
+			alert: null
+		});
 	}
 
 	render() {
+		let alert = null;
+
+		if (this.state.alert) {
+			alert = (
+				<Alert bsStyle="danger" onDismiss={this.hideAlert.bind(this)}>
+					{this.state.alert}
+				</Alert>
+			);
+		}
+
 		return (
 			<span>
 				<Modal show={this.props.addServerModal.show} onHide={()=>this.close()}>
@@ -64,7 +81,8 @@ class AddServerModal extends Component {
 						<Modal.Title>Add Server</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<AddServerForm onSubmit={this.onSubmit} />
+						{alert}
+						<AddServerForm onSubmit={this.onSubmit.bind(this)} />
 					</Modal.Body>
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />
