@@ -1,8 +1,8 @@
-import {INIT_SERVER, ADD_SERVER, REMOVE_SERVER} from '../constants/ActionTypes';
+import {INIT_SERVERS, ADD_SERVER, REMOVE_SERVER} from '../constants/ActionTypes';
 
-export const initServer = (server) => {
+export const initServers = (server) => {
 	return {
-		type: INIT_SERVER,
+		type: INIT_SERVERS,
 		payload: server
 	}
 };

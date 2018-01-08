@@ -34,6 +34,10 @@ class HomeController {
 		});
 	}
 
+	static async getTubes(ctx) {
+
+	}
+
 	/**
 	 * POST /servers
 	 * @param ctx

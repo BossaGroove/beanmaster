@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Table, Button} from 'react-bootstrap';
 import axios from 'axios';
 
-import {initServer} from '../actions/servers';
+import {initServers} from '../actions/servers';
 import {showAddServerModal} from '../actions/addServerModal';
 
 import ServerRow from './ServerRow';
@@ -14,9 +14,6 @@ import RemoveServerModal from './RemoveServerModal';
 class Server extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			busy: false
-		};
 	}
 
 	componentWillMount() {
@@ -25,7 +22,7 @@ class Server extends Component {
 
 	init() {
 		this.getServers().then((servers) => {
-			this.props.initServer(servers);
+			this.props.initServers(servers);
 		});
 	}
 
@@ -77,6 +74,6 @@ class Server extends Component {
 export default connect((state, ownProps) => ({
 	servers: state.servers
 }), {
-	initServer,
+	initServers,
 	showAddServerModal
 })(Server);

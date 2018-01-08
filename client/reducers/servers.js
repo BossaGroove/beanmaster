@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import {INIT_SERVER, ADD_SERVER, REMOVE_SERVER} from '../constants/ActionTypes';
+import {INIT_SERVERS, ADD_SERVER, REMOVE_SERVER} from '../constants/ActionTypes';
 
 export default function servers(state = [], action) {
 	switch (action.type) {
-		case INIT_SERVER:
+		case INIT_SERVERS:
 			return action.payload;
 		case ADD_SERVER:
 			return state.concat(action.payload);
