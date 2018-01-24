@@ -7,7 +7,11 @@ import axios from 'axios';
 class Tube extends Component {
 	constructor(props) {
 		super(props);
-
+		const serverInfo = this.props.match.params.server.split(':');
+		this.state = {
+			host: serverInfo[0],
+			port: serverInfo[1]
+		};
 	}
 
 	componentWillMount() {
@@ -15,7 +19,8 @@ class Tube extends Component {
 	}
 
 	init() {
-		this.getServer().then((servers) => {
+		this.getServer(this.state.host, this.state.port).then((servers) => {
+
 		});
 	}
 
@@ -28,7 +33,7 @@ class Tube extends Component {
 	render() {
 		return (
 			<div>
-				<h1>Servers</h1>
+				<h1>{this.state.host}:{this.state.port}</h1>
 			</div>
 		);
 	}
