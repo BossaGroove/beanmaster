@@ -20,6 +20,26 @@ class ServerController {
 	 * @param ctx
 	 */
 	static async getInfo(ctx) {
+		let stat;
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(ctx.request.query.host, ctx.request.query.port);
+			[stat] = await connection.statsAsync();
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			stat = null;
+		}
+
+		ctx.body = ResponseManager.response({
+			stat: stat
+		});
+	}
+
+	/**
+	 * GET /servers/tubes
+	 * @param ctx
+	 */
+	static async getTubes(ctx) {
 		let name;
 		let tubesInfo;
 
@@ -34,7 +54,6 @@ class ServerController {
 			tubesInfo = await ServerController.getTubesInfo(connection);
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			console.log(e);
 			name = null;
 			tubesInfo = null;
 		}
@@ -43,14 +62,6 @@ class ServerController {
 			name,
 			tubesInfo
 		});
-	}
-
-	/**
-	 * GET /servers/tube
-	 * @param ctx
-	 */
-	static async getTubes(ctx) {
-
 	}
 
 	/**
