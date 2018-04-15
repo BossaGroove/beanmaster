@@ -59,12 +59,13 @@
     "koa-views": "^6.1.2",
     "lodash": "^4.17.4",
     "pug": "^2.0.0-rc.4",
+    "react-transition-group": "^2.2.1",
     "require-all": "^2.2.0",
     "validator": "^9.1.2"
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server --port 4003 --progress --host 0.0.0.0",
-    "start": "node scripts/start.js",
+    "start": "NODE_ENV=development node ./server/bin/server.js",
     "build": "npm run clean && webpack --hide-modules",
     "clean": "find ./public -type f | grep -v manifest.json | grep -v .gitignore | xargs rm -rf",
     "test": "node scripts/test.js --env=jsdom"

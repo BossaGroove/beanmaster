@@ -1,0 +1,37 @@
+td.update-cell {
+	position: relative;
+	padding: 0 !important;
+}
+
+div.highlight {
+	position: absolute;
+	background-color: #AFA;
+	opacity: 0;
+	height: 100%;
+	width: 100%;
+}
+
+div.container {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	padding: 8px;
+	z-index: 100;
+}
+
+.fade-enter {
+	opacity: 0.01;
+}
+
+.fade-enter.fade-enter-active {
+	opacity: 1;
+}
+
+.fade-exit {
+	opacity: 1;
+}
+
+.fade-exit.fade-exit-active {
+	opacity: 0.01;
+	transition: opacity 500ms ease-out;
+}

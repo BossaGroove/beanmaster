@@ -46,7 +46,6 @@ class Tube extends Component {
 			tubes: this.parseTubes(server.tubesInfo)
 		});
 
-		console.log(this.state.tubes);
 		return server;
 	}
 
