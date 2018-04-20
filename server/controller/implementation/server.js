@@ -60,6 +60,7 @@ class ServerController {
 
 		ctx.body = ResponseManager.response({
 			name,
+			tubesInfo
 		});
 	}
 
@@ -114,6 +115,33 @@ class ServerController {
 			server: server
 		});
 	}
+
+	/**
+	 * POST /servers/search
+	 * @param ctx
+	 */
+	static async search(ctx) {
+		let stat;
+
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port);
+		const job_id = parseInt(ctx.request.body.job_id);
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			[stat] = await connection.stats_jobAsync(job_id);
+
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			stat = null;
+		}
+
+		ctx.body = ResponseManager.response({
+			stat
+		});
+	}
+
+
 
 	/**
 	 * get tubes info for a connection
