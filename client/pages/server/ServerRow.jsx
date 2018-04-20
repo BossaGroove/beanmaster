@@ -4,7 +4,7 @@ import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
-import {showRemoveServerModal} from '../actions/removeServerModal';
+import {showRemoveServerModal} from '../../actions/removeServerModal';
 
 class ServerRow extends Component {
 	constructor(props) {
@@ -21,12 +21,20 @@ class ServerRow extends Component {
 	}
 
 	componentWillMount() {
+		this.isMount = true;
 		this.init();
+	}
+
+	componentWillUnmount() {
+		this.isMount = false;
 	}
 
 	init() {
 		this.getServerInfo().then((serverInfo) => {
 			if (!serverInfo) {
+				return;
+			}
+			if (!this.isMount) {
 				return;
 			}
 			this.setState({

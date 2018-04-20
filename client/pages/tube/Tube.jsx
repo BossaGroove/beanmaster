@@ -18,11 +18,21 @@ class Tube extends Component {
 	}
 
 	componentWillMount() {
+		this.isMount = true;
 		this.init();
+	}
+
+	componentWillUnmount() {
+		this.isMount = false;
+		clearInterval(this.updateTubeHandler);
 	}
 
 	init() {
 		this.updateTubes().then((server) => {
+			if (!this.isMount) {
+				return;
+			}
+
 			if (server.name) {
 				this.setState({
 					title: `${server.name} - ${this.state.host}:${this.state.port}`
@@ -34,16 +44,22 @@ class Tube extends Component {
 			}
 		});
 
-		setInterval(() => {
+		this.updateTubeHandler = setInterval(() => {
 			this.updateTubes().then(() => {});
 		}, 1000);
 	}
 
 	async updateTubes() {
+		if (!this.isMount) {
+			return;
+		}
+
 		const server = await this.getTubes(this.state.host, this.state.port);
 
+		const tubes = this.parseTubes(server.tubesInfo);
+
 		this.setState({
-			tubes: this.parseTubes(server.tubesInfo)
+			tubes: tubes
 		});
 
 		return server;
@@ -62,26 +78,24 @@ class Tube extends Component {
 			const oldTube = _.find(oldTubes, (oldTube) => {
 				return (oldTube.current.name === currentTube.name);
 			});
-			if (oldTube) {
-				return {
-					current: currentTube,
-					delta: Tube.getDelta(oldTube.current, currentTube)
-				}
-			} else {
-				return {
-					current: currentTube,
-					delta: {}
-				}
-			}
+
+			return {
+				current: currentTube,
+				delta: Tube.getDelta(_.get(oldTube, 'current', {}), currentTube)
+			};
 		});
 	}
 
 	static getDelta(oldTube, currentTube) {
-		const output = {};
+		const delta = {};
 		for (let key of Object.keys(currentTube)) {
-			output[key] = currentTube[key] - oldTube[key];
+			if (!_.isUndefined(oldTube[key])) {
+				delta[key] = currentTube[key] - oldTube[key];
+			} else {
+				delta[key] = 0;
+			}
 		}
-		return output;
+		return delta;
 	}
 
 	render() {
@@ -116,6 +130,7 @@ class Tube extends Component {
 						})}
 					</tbody>
 				</Table>
+				<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>
 			</div>
 		);
 	}

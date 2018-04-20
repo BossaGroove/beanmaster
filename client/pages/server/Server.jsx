@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {Table, Button} from 'react-bootstrap';
 import axios from 'axios';
 
-import {initServers} from '../actions/servers';
-import {showAddServerModal} from '../actions/addServerModal';
+import {initServers} from '../../actions/servers';
+import {showAddServerModal} from '../../actions/addServerModal';
 
 import ServerRow from './ServerRow';
 import AddServerModal from './AddServerModal';

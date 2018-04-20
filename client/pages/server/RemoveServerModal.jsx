@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import {Button, Modal} from 'react-bootstrap';
 import axios from 'axios';
 
-import {isBusy, notBusy} from '../actions/busy';
-import {hideRemoveServerModal} from '../actions/removeServerModal';
-import {removeServer} from '../actions/servers';
+import {isBusy, notBusy} from '../../actions/busy';
+import {hideRemoveServerModal} from '../../actions/removeServerModal';
+import {removeServer} from '../../actions/servers';
 
-import Preloader from '../include/Preloader';
+import Preloader from '../../include/Preloader';
 
 class RemoveServerModal extends Component {
 	constructor(props) {

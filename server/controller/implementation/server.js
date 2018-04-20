@@ -60,7 +60,6 @@ class ServerController {
 
 		ctx.body = ResponseManager.response({
 			name,
-			tubesInfo
 		});
 	}
 

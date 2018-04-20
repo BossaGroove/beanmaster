@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Route, matchPath, Switch} from 'react-router-dom';
 import Header from './Header';
-import Server from "../home/Server";
-import Tube from "../tube/Tube";
+import Server from "../pages/server/Server";
+import Tube from "../pages/tube/Tube";
 
 class Layout extends Component {
 	render() {

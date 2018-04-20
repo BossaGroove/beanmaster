@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import UpdateCell from '../common/UpdateCell';
+import UpdateCell from '../../common/UpdateCell';
 
 class TubeRow extends Component {
 	constructor(props) {

@@ -4,14 +4,14 @@ import axios from 'axios';
 import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
-import {isBusy, notBusy} from '../actions/busy';
-import {addServer} from '../actions/servers';
-import {hideAddServerModal} from '../actions/addServerModal';
+import {isBusy, notBusy} from '../../actions/busy';
+import {addServer} from '../../actions/servers';
+import {hideAddServerModal} from '../../actions/addServerModal';
 
 import AddServerForm from './AddServerForm';
 import AddServerFormSubmitButton from './AddServerFormSubmitButton';
 
-import Preloader from '../include/Preloader';
+import Preloader from '../../include/Preloader';
 
 class AddServerModal extends Component {
 	constructor(props) {
