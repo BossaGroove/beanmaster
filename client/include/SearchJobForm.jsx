@@ -7,6 +7,8 @@ const validate = (values) => {
 
 	if (!values.job_id || values.job_id === '') {
 		errors.job_id = 'Required';
+	} else if (isNaN(values.job_id)) {
+		errors.job_id = 'Number only';
 	}
 
 	return errors;
