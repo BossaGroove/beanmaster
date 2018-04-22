@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Button, Grid, Row, Col} from 'react-bootstrap';
+import {Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import _ from 'lodash';
@@ -30,7 +30,7 @@ class TubeDetail extends Component {
 
 	componentWillUpdate(nextProps) {
 		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
-			// this.performUpdate(nextProps.autoUpdate);
+			this.performUpdate(nextProps.autoUpdate);
 		}
 	}
 
@@ -53,6 +53,16 @@ class TubeDetail extends Component {
 		return result.data.body.stat;
 	}
 
+	performUpdate(autoUpdateOverride) {
+		if (this.props.autoUpdate || autoUpdateOverride) {
+			setTimeout(() => {
+				this.updateTube().then(() => {
+					this.performUpdate();
+				});
+			}, 1000);
+		}
+	}
+
 	init() {
 		this.getServerInfo(this.state).then((info) => {
 			if (info.name) {
@@ -69,6 +79,8 @@ class TubeDetail extends Component {
 		});
 
 		this.updateTube().then(() => {});
+
+		this.performUpdate();
 	}
 
 	async updateTube() {
@@ -88,8 +100,6 @@ class TubeDetail extends Component {
 
 	parseStat(currentStat) {
 		const oldStat = this.state.stat;
-
-		// console.log(currentStat);
 
 		return {
 			current: currentStat,
@@ -240,9 +250,67 @@ class TubeDetail extends Component {
 						{tubeStat}
 					</tbody>
 				</Table>
-				<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {
-					console.log(e);
-				})}}>Update</Button>
+				<div id="tube-controls">
+					<strong>Actions:</strong>
+					&nbsp;
+					<ul>
+						<li>
+							<ButtonGroup>
+								<Button bsStyle="warning">
+									<i className="glyphicon glyphicon-play" />
+									&nbsp;Kick 1
+								</Button>
+								<DropdownButton bsStyle="warning">
+									{
+										[10, 100, 1000, 10000, 100000].map((val) => {
+											return (
+												<MenuItem>
+													<i className="glyphicon glyphicon-forward" />
+													&nbsp;Kick {val}
+												</MenuItem>
+											);
+										})
+									}
+								</DropdownButton>
+							</ButtonGroup>
+						</li>
+						<li>
+							<ButtonGroup>
+								<Button bsStyle="danger">
+									<i className="glyphicon glyphicon-trash" />
+									&nbsp;Delete 1
+								</Button>
+								<DropdownButton bsStyle="danger">
+									{
+										[10, 100, 1000, 10000, 100000].map((val) => {
+											return (
+												<MenuItem>
+													<i className="glyphicon glyphicon-trash" />
+													&nbsp;Delete {val}
+												</MenuItem>
+											);
+										})
+									}
+								</DropdownButton>
+							</ButtonGroup>
+						</li>
+						<li>
+							<Button>
+								<i className="glyphicon glyphicon-pause" />
+								&nbsp;Pause
+							</Button>
+						</li>
+						<li>
+							<Button bsStyle="success">
+								<i className="glyphicon glyphicon-plus" />
+								&nbsp;Add Job
+							</Button>
+						</li>
+						<li>
+							<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}}>Update</Button>
+						</li>
+					</ul>
+				</div>
 				<hr />
 				{jobStateStat}
 			</div>
