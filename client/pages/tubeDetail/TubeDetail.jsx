@@ -5,8 +5,10 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import _ from 'lodash';
 import UpdateCell from '../../common/UpdateCell';
+import Preloader from "../../include/Preloader";
 
 import {setServer} from "../../actions/currentServer";
+import {isBusy, notBusy} from "../../actions/busy";
 
 class TubeDetail extends Component {
 	constructor(props) {
@@ -19,7 +21,8 @@ class TubeDetail extends Component {
 			port: serverInfo[1],
 			tube,
 			title: '',
-			stat: null
+			stat: null,
+			paused: false
 		};
 
 		props.setServer({
@@ -51,6 +54,14 @@ class TubeDetail extends Component {
 	async getTubeStat({host, port, tube}) {
 		const result = await axios.get(`/api/tubes/stat?host=${host}&port=${port}&tube=${tube}`);
 		return result.data.body.stat;
+	}
+
+	async togglePause({host, port, tube}) {
+		await axios.post('/api/tubes/toggle-pause', {
+			host,
+			port,
+			tube
+		});
 	}
 
 	performUpdate(autoUpdateOverride) {
@@ -92,10 +103,23 @@ class TubeDetail extends Component {
 
 		const statWithDelta = this.parseStat(stat);
 
-		console.log(statWithDelta);
 		this.setState({
 			stat: statWithDelta
 		});
+
+		this.setPauseState(stat.tubeInfo['pause-time-left']);
+	}
+
+	setPauseState(pauseTimeLeft) {
+		if (pauseTimeLeft > 0 && !this.state.paused) {
+			this.setState({
+				paused: true
+			});
+		} else if (pauseTimeLeft === 0 && this.state.paused) {
+			this.setState({
+				paused: false
+			});
+		}
 	}
 
 	parseStat(currentStat) {
@@ -139,6 +163,18 @@ class TubeDetail extends Component {
 			tubeInfo: tubeInfoDelta,
 			stats: statsDelta
 		}
+	}
+
+	togglePauseButton() {
+		this.props.isBusy();
+
+		this.togglePause(this.state).then(() => {
+
+		}).catch((e) => {
+
+		}).finally(() => {
+			this.props.notBusy();
+		});
 	}
 
 	render() {
@@ -256,11 +292,11 @@ class TubeDetail extends Component {
 					<ul>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="warning">
+								<Button bsStyle="warning" disabled={this.props.busy}>
 									<i className="glyphicon glyphicon-play" />
 									&nbsp;Kick 1
 								</Button>
-								<DropdownButton bsStyle="warning">
+								<DropdownButton bsStyle="warning" disabled={this.props.busy}>
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
@@ -276,11 +312,11 @@ class TubeDetail extends Component {
 						</li>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="danger">
+								<Button bsStyle="danger" disabled={this.props.busy}>
 									<i className="glyphicon glyphicon-trash" />
 									&nbsp;Delete 1
 								</Button>
-								<DropdownButton bsStyle="danger">
+								<DropdownButton bsStyle="danger" disabled={this.props.busy}>
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
@@ -295,19 +331,22 @@ class TubeDetail extends Component {
 							</ButtonGroup>
 						</li>
 						<li>
-							<Button>
-								<i className="glyphicon glyphicon-pause" />
-								&nbsp;Pause
+							<Button onClick={() => {this.togglePauseButton()}} disabled={this.props.busy}>
+								<i className={`glyphicon ${this.state.paused?'glyphicon-play':'glyphicon-pause'}`} />
+								&nbsp;{this.state.paused?'Unpause':'Pause'}
 							</Button>
 						</li>
 						<li>
-							<Button bsStyle="success">
+							<Button bsStyle="success" disabled={this.props.busy}>
 								<i className="glyphicon glyphicon-plus" />
 								&nbsp;Add Job
 							</Button>
 						</li>
 						<li>
-							<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}}>Update</Button>
+							<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button>
+						</li>
+						<li>
+							<Preloader show={this.props.busy} />
 						</li>
 					</ul>
 				</div>
@@ -320,7 +359,10 @@ class TubeDetail extends Component {
 
 
 export default connect((state, ownProps) => ({
+	busy: state.busy,
 	autoUpdate: state.autoUpdate
 }), {
-	setServer
+	setServer,
+	isBusy,
+	notBusy
 })(TubeDetail);
