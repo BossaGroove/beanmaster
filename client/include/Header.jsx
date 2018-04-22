@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {Navbar, Button, Glyphicon} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {showSearchJobModal} from '../actions/searchJobModal';
+import {toggleAutoUpdate} from '../actions/autoUpdate';
 import SearchJobModal from './SearchJobModal';
 
 class Header extends Component {
@@ -10,7 +11,16 @@ class Header extends Component {
 		super(props);
 	}
 
+	pause() {
+		this.props.toggleAutoUpdate();
+	}
+
 	render() {
+		let pauseStyle = 'default';
+		if (!this.props.autoUpdate) {
+			pauseStyle = 'danger'
+		}
+
 		return (
 			<div>
 				<Navbar inverse fluid={true}>
@@ -26,7 +36,7 @@ class Header extends Component {
 								<Glyphicon glyph="search" />
 							</Button>
 							{' '}
-							<Button className={this.props.showPause?'':'hidden'}>
+							<Button bsStyle={pauseStyle} onClick={() => {this.pause()}} className={this.props.showPause?'':'hidden'}>
 								<Glyphicon glyph="pause" />
 							</Button>
 						</Navbar.Form>
@@ -39,7 +49,8 @@ class Header extends Component {
 }
 
 export default connect((state, ownProps) => ({
-
+	autoUpdate: state.autoUpdate
 }), {
-	showSearchJobModal
+	showSearchJobModal,
+	toggleAutoUpdate
 })(Header);

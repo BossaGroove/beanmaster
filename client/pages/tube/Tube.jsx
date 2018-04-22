@@ -23,6 +23,12 @@ class Tube extends Component {
 		})
 	}
 
+	componentWillUpdate(nextProps) {
+		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
+			this.performUpdate(nextProps.autoUpdate);
+		}
+	}
+
 	componentWillMount() {
 		this.isMount = true;
 		this.init();
@@ -30,7 +36,16 @@ class Tube extends Component {
 
 	componentWillUnmount() {
 		this.isMount = false;
-		clearInterval(this.updateTubeHandler);
+	}
+
+	performUpdate(autoUpdateOverride) {
+		if (this.props.autoUpdate || autoUpdateOverride) {
+			setTimeout(() => {
+				this.updateTubes().then(() => {
+					this.performUpdate();
+				});
+			}, 1000);
+		}
 	}
 
 	init() {
@@ -50,9 +65,7 @@ class Tube extends Component {
 			}
 		});
 
-		this.updateTubeHandler = setInterval(() => {
-			this.updateTubes().then(() => {});
-		}, 1000);
+		this.performUpdate();
 	}
 
 	async updateTubes() {
@@ -144,6 +157,7 @@ class Tube extends Component {
 
 
 export default connect((state, ownProps) => ({
+	autoUpdate: state.autoUpdate
 }), {
 	setServer
 })(Tube);

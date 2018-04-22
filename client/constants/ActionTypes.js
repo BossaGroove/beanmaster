@@ -16,3 +16,7 @@ export const NOT_BUSY = 'NOT_BUSY';
 
 export const SET_SERVER = 'SET_SERVER';
 export const UNSET_SERVER = 'UNSET_SERVER';
+
+export const START_AUTO_UPDATE = 'START_AUTO_UPDATE';
+export const STOP_AUTO_UPDATE = 'STOP_AUTO_UPDATE';
+export const TOGGLE_AUTO_UPDATE = 'TOGGLE_AUTO_UPDATE';

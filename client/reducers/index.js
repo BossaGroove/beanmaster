@@ -4,6 +4,7 @@ import addServerModal from './addServerModal';
 import removeServerModal from './removeServerModal';
 import searchJobModal from './searchJobModal';
 import currentServer from './currentServer';
+import autoUpdate from './autoUpdate';
 import busy from './busy';
 import {reducer as form} from 'redux-form';
 
@@ -13,6 +14,7 @@ export default combineReducers({
 	removeServerModal,
 	searchJobModal,
 	currentServer,
+	autoUpdate,
 	busy,
 	form
 });
