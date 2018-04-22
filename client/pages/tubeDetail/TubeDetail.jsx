@@ -10,6 +10,9 @@ import Preloader from "../../include/Preloader";
 import {setServer} from "../../actions/currentServer";
 import {isBusy, notBusy} from "../../actions/busy";
 
+import {showAddJobModal} from "../../actions/addJobModal";
+import AddJobModal from "./AddJobModal";
+
 class TubeDetail extends Component {
 	constructor(props) {
 		super(props);
@@ -229,6 +232,10 @@ class TubeDetail extends Component {
 		});
 	}
 
+	addJobButton() {
+		this.props.showAddJobModal();
+	}
+
 	render() {
 		let tubeStat = null;
 		let jobStateStat = null;
@@ -389,7 +396,7 @@ class TubeDetail extends Component {
 							</Button>
 						</li>
 						<li>
-							<Button bsStyle="success" disabled={this.props.busy}>
+							<Button bsStyle="success" disabled={this.props.busy} onClick={() => {this.addJobButton()}}>
 								<i className="glyphicon glyphicon-plus" />
 								&nbsp;Add Job
 							</Button>
@@ -404,6 +411,7 @@ class TubeDetail extends Component {
 				</div>
 				<hr />
 				{jobStateStat}
+				<AddJobModal defaultTube={this.state.tube} />
 			</div>
 		);
 	}
@@ -414,6 +422,7 @@ export default connect((state, ownProps) => ({
 	busy: state.busy,
 	autoUpdate: state.autoUpdate
 }), {
+	showAddJobModal,
 	setServer,
 	isBusy,
 	notBusy
