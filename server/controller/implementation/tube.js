@@ -21,7 +21,6 @@ class TubeController {
 				tube
 			});
 		} catch (e) {
-			console.log(e);
 			stat = null;
 		}
 
@@ -103,7 +102,61 @@ class TubeController {
 		return output;
 	}
 
+	/**
+	 * POST /tubes/add-job
+	 * @param ctx
+	 */
+	static async addJob(ctx) {
 
+	}
+	/**
+	 * POST /tubes/kick-job
+	 * @param ctx
+	 */
+	static async kickJob(ctx) {
+
+	}
+	/**
+	 * POST /tubes/delete-job
+	 * @param ctx
+	 */
+	static async deleteJob(ctx) {
+
+	}
+
+	/**
+	 * POST /tubes/toggle-pause
+	 * @param ctx
+	 */
+	static async togglePause(ctx) {
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port, 10);
+		const tube = ctx.request.body.tube;
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			const [tube_info] = await connection.stats_tubeAsync(tube);
+
+			let delay = 3600;
+
+			if (tube_info['pause-time-left'] > 0) {
+				delay = 0;
+			}
+
+			await connection.pause_tubeAsync(tube, delay);
+
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			let errorMessage = e.message;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
+		}
+
+		ctx.body = ResponseManager.response({
+
+		});
+	}
 }
 
 module.exports = TubeController;
