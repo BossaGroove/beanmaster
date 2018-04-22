@@ -30,7 +30,7 @@ class ServerRow extends Component {
 	}
 
 	init() {
-		this.getServerInfo().then((serverInfo) => {
+		this.getServerStat().then((serverInfo) => {
 			if (!serverInfo) {
 				return;
 			}
@@ -49,8 +49,8 @@ class ServerRow extends Component {
 		});
 	}
 
-	async getServerInfo() {
-		const result = await axios.get(`/api/servers/info?host=${this.props.host}&port=${this.props.port}`);
+	async getServerStat() {
+		const result = await axios.get(`/api/servers/stat?host=${this.props.host}&port=${this.props.port}`);
 		return result.data.body.stat;
 	}
 

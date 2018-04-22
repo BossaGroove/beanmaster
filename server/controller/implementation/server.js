@@ -20,6 +20,32 @@ class ServerController {
 	 * @param ctx
 	 */
 	static async getInfo(ctx) {
+		let name;
+
+		const host = ctx.request.query.host;
+		const port = parseInt(ctx.request.query.port);
+
+		try {
+			const configs = await BeanstalkConfigManager.getConfig();
+			name = _.get(_.find(configs, {host, port}), 'name', null);
+		} catch (e) {
+			name = null;
+		}
+
+		ctx.body = ResponseManager.response({
+			info: {
+				name,
+				host,
+				port
+			}
+		});
+	}
+
+	/**
+	 * GET /servers/stat
+	 * @param ctx
+	 */
+	static async getStat(ctx) {
 		let stat;
 
 		try {

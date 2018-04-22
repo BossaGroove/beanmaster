@@ -49,21 +49,19 @@ class Tube extends Component {
 	}
 
 	init() {
-		this.updateTubes().then((server) => {
-			if (!this.isMount) {
-				return;
-			}
-
-			if (server.name) {
+		this.getServerInfo(this.state.host, this.state.port).then((info) => {
+			if (info.name) {
 				this.setState({
-					title: `${server.name} - ${this.state.host}:${this.state.port}`
+					title: `${info.name} - ${info.host}:${info.port}`
 				});
 			} else {
 				this.setState({
-					title: `${this.state.host}:${this.state.port}`
+					title: `${info.host}:${info.port}`
 				});
 			}
 		});
+
+		this.updateTubes().then(() => {});
 
 		this.performUpdate();
 	}
@@ -84,6 +82,11 @@ class Tube extends Component {
 		return server;
 	}
 
+	async getServerInfo(host, port) {
+		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
+		console.log(result.data.body);
+		return result.data.body.info;
+	}
 
 	async getTubes(host, port) {
 		const result = await axios.get(`/api/servers/tubes?host=${host}&port=${port}`);
