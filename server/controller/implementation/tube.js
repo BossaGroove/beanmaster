@@ -144,7 +144,31 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async deleteJob(ctx) {
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port, 10);
+		const tube = ctx.request.body.tube;
+		const value = ctx.request.body.value;
 
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			await connection.useAsync(tube);
+
+			for (let i = 0; i < value; i++) {
+				const [jobId] = await connection.peek_readyAsync();
+				await connection.destroyAsync(jobId);
+			}
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			let errorMessage = e.message;
+			if (errorMessage !== 'NOT_FOUND') {
+				ctx.status = 400;
+				ctx.body = ResponseManager.error(null, 400, errorMessage);
+				return;
+			}
+		}
+
+		ctx.body = ResponseManager.response({
+		});
 	}
 
 	/**

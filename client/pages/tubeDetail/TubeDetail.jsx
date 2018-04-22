@@ -65,6 +65,15 @@ class TubeDetail extends Component {
 		});
 	}
 
+	async deleteJob({host, port, tube, value}) {
+		await axios.post('/api/tubes/delete-job', {
+			host,
+			port,
+			tube,
+			value
+		});
+	}
+
 	async togglePause({host, port, tube}) {
 		await axios.post('/api/tubes/toggle-pause', {
 			host,
@@ -178,6 +187,23 @@ class TubeDetail extends Component {
 		this.props.isBusy();
 
 		this.kickJob({
+			host: this.state.host,
+			port: this.state.port,
+			tube: this.state.tube,
+			value
+		}).then(() => {
+
+		}).catch((e) => {
+
+		}).finally(() => {
+			this.props.notBusy();
+		});
+	}
+
+	deleteJobButton(value) {
+		this.props.isBusy();
+
+		this.deleteJob({
 			host: this.state.host,
 			port: this.state.port,
 			tube: this.state.tube,
@@ -338,7 +364,7 @@ class TubeDetail extends Component {
 						</li>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="danger" disabled={this.props.busy}>
+								<Button bsStyle="danger" disabled={this.props.busy} onClick={() => {this.deleteJobButton(1)}}>
 									<i className="glyphicon glyphicon-trash" />
 									&nbsp;Delete 1
 								</Button>
@@ -346,7 +372,7 @@ class TubeDetail extends Component {
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
-												<MenuItem key={`delete${val}`}>
+												<MenuItem key={`delete${val}`} onClick={() => {this.deleteJobButton(val)}}>
 													<i className="glyphicon glyphicon-trash" />
 													&nbsp;Delete {val}
 												</MenuItem>
