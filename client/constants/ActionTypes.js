@@ -13,3 +13,6 @@ export const HIDE_SEARCH_JOB_MODAL = 'HIDE_SEARCH_JOB_MODAL';
 
 export const IS_BUSY = 'IS_BUSY';
 export const NOT_BUSY = 'NOT_BUSY';
+
+export const SET_SERVER = 'SET_SERVER';
+export const UNSET_SERVER = 'UNSET_SERVER';

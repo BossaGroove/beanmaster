@@ -5,6 +5,8 @@ import axios from 'axios';
 import _ from 'lodash';
 import TubeRow from './TubeRow';
 
+import {setServer} from "../../actions/currentServer";
+
 class Tube extends Component {
 	constructor(props) {
 		super(props);
@@ -15,6 +17,10 @@ class Tube extends Component {
 			title: '',
 			tubes: []
 		};
+		props.setServer({
+			host: serverInfo[0],
+			port: serverInfo[1]
+		})
 	}
 
 	componentWillMount() {
@@ -139,4 +145,5 @@ class Tube extends Component {
 
 export default connect((state, ownProps) => ({
 }), {
+	setServer
 })(Tube);

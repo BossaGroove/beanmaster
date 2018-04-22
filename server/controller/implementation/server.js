@@ -70,7 +70,7 @@ class ServerController {
 	 */
 	static async addServer(ctx) {
 		let server;
-		let errorMessage = '';
+
 		try {
 			server = {
 				name: ctx.request.body.name,
@@ -80,7 +80,7 @@ class ServerController {
 
 			await BeanstalkConfigManager.addConfig(server);
 		} catch (e) {
-			errorMessage = e.message;
+			let errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;
@@ -97,7 +97,7 @@ class ServerController {
 	 */
 	static async deleteServer(ctx) {
 		let server;
-		let errorMessage = '';
+
 		try {
 			server = {
 				host: ctx.request.query.host,
@@ -106,9 +106,10 @@ class ServerController {
 
 			await BeanstalkConfigManager.deleteConfig(server);
 		} catch (e) {
-			errorMessage = e.message;
+			let errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
 		}
 
 		ctx.body = ResponseManager.response({
@@ -141,6 +142,30 @@ class ServerController {
 		});
 	}
 
+	/**
+	 * POST /servers/kick
+	 * @param ctx
+	 */
+	static async kick(ctx) {
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port);
+		const job_id = parseInt(ctx.request.body.job_id);
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			await connection.kick_jobAsync(job_id);
+
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			let errorMessage = e.message;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
+		}
+
+		ctx.body = ResponseManager.response({
+		});
+	}
 
 
 	/**
