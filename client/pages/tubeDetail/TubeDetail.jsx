@@ -56,6 +56,15 @@ class TubeDetail extends Component {
 		return result.data.body.stat;
 	}
 
+	async kickJob({host, port, tube, value}) {
+		await axios.post('/api/tubes/kick-job', {
+			host,
+			port,
+			tube,
+			value
+		});
+	}
+
 	async togglePause({host, port, tube}) {
 		await axios.post('/api/tubes/toggle-pause', {
 			host,
@@ -163,6 +172,23 @@ class TubeDetail extends Component {
 			tubeInfo: tubeInfoDelta,
 			stats: statsDelta
 		}
+	}
+
+	kickJobButton(value) {
+		this.props.isBusy();
+
+		this.kickJob({
+			host: this.state.host,
+			port: this.state.port,
+			tube: this.state.tube,
+			value
+		}).then(() => {
+
+		}).catch((e) => {
+
+		}).finally(() => {
+			this.props.notBusy();
+		});
 	}
 
 	togglePauseButton() {
@@ -292,15 +318,15 @@ class TubeDetail extends Component {
 					<ul>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="warning" disabled={this.props.busy}>
+								<Button bsStyle="warning" disabled={this.props.busy} onClick={() => {this.kickJobButton(1)}}>
 									<i className="glyphicon glyphicon-play" />
 									&nbsp;Kick 1
 								</Button>
-								<DropdownButton bsStyle="warning" disabled={this.props.busy}>
+								<DropdownButton title="" id="kick_job" bsStyle="warning" disabled={this.props.busy}>
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
-												<MenuItem>
+												<MenuItem key={`kick${val}`} onClick={() => {this.kickJobButton(val)}}>
 													<i className="glyphicon glyphicon-forward" />
 													&nbsp;Kick {val}
 												</MenuItem>
@@ -316,11 +342,11 @@ class TubeDetail extends Component {
 									<i className="glyphicon glyphicon-trash" />
 									&nbsp;Delete 1
 								</Button>
-								<DropdownButton bsStyle="danger" disabled={this.props.busy}>
+								<DropdownButton title="" id="delete_job" bsStyle="danger" disabled={this.props.busy}>
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
-												<MenuItem>
+												<MenuItem key={`delete${val}`}>
 													<i className="glyphicon glyphicon-trash" />
 													&nbsp;Delete {val}
 												</MenuItem>

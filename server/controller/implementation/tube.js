@@ -114,7 +114,30 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async kickJob(ctx) {
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port, 10);
+		const tube = ctx.request.body.tube;
+		const value = ctx.request.body.value;
+		let kicked = 0;
 
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			await connection.useAsync(tube);
+			[kicked] = await connection.kickAsync(value);
+
+			kicked = parseInt(kicked, 10);
+
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			let errorMessage = e.message;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
+		}
+
+		ctx.body = ResponseManager.response({
+			kicked
+		});
 	}
 	/**
 	 * POST /tubes/delete-job
