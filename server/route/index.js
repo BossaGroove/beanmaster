@@ -10,6 +10,8 @@ router.post('/api/servers/kick', Controller.Server.kick);
 router.post('/api/servers', Controller.Server.addServer);
 router.del('/api/servers', Controller.Server.deleteServer);
 
+router.get('/api/tubes/stat', Controller.Tube.getStat);
+
 router.get('*', Controller.Home.index);
 
 module.exports = router;

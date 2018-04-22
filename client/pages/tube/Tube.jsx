@@ -78,13 +78,10 @@ class Tube extends Component {
 		this.setState({
 			tubes: tubes
 		});
-
-		return server;
 	}
 
 	async getServerInfo(host, port) {
 		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
-		console.log(result.data.body);
 		return result.data.body.info;
 	}
 

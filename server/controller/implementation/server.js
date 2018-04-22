@@ -90,6 +90,27 @@ class ServerController {
 		});
 	}
 
+
+	/**
+	 * GET /servers/tubes/stat
+	 * @param ctx
+	 */
+	static async getTubeStat(ctx) {
+		let stat;
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(ctx.request.query.host, ctx.request.query.port);
+			[stat] = await connection.statsAsync();
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			stat = null;
+		}
+
+		ctx.body = ResponseManager.response({
+			stat: stat
+		});
+	}
+
 	/**
 	 * POST /servers
 	 * @param ctx
