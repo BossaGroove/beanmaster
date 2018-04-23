@@ -6,6 +6,7 @@ import axios from 'axios';
 import {initServers} from '../../actions/servers';
 import {showAddServerModal} from '../../actions/addServerModal';
 import {unsetServer} from "../../actions/currentServer";
+import {destroyServerRow} from '../../actions/serverRow';
 
 import ServerRow from './ServerRow';
 import AddServerModal from './AddServerModal';
@@ -20,6 +21,10 @@ class Server extends Component {
 
 	componentWillMount() {
 		this.init();
+	}
+
+	componentWillUnmount() {
+		this.props.destroyServerRow();
 	}
 
 	init() {
@@ -78,5 +83,6 @@ export default connect((state, ownProps) => ({
 }), {
 	initServers,
 	unsetServer,
+	destroyServerRow,
 	showAddServerModal
 })(Server);

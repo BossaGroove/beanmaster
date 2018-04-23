@@ -11,6 +11,7 @@ import {setServer} from "../../actions/currentServer";
 import {isBusy, notBusy} from "../../actions/busy";
 
 import {showAddJobModal} from "../../actions/addJobModal";
+import {dispatchTubeDetail, destroyTubeDetail} from "../../actions/tubeDetail";
 import AddJobModal from "./AddJobModal";
 
 class TubeDetail extends Component {
@@ -27,11 +28,6 @@ class TubeDetail extends Component {
 			stat: null,
 			paused: false
 		};
-
-		props.setServer({
-			host: serverInfo[0],
-			port: serverInfo[1]
-		})
 	}
 
 	componentWillUpdate(nextProps) {
@@ -47,6 +43,8 @@ class TubeDetail extends Component {
 
 	componentWillUnmount() {
 		this.isMount = false;
+		this.props.destroyTubeDetail();
+		clearTimeout(this.timeoutHandler);
 	}
 
 	async getServerInfo({host, port}) {
@@ -86,8 +84,8 @@ class TubeDetail extends Component {
 	}
 
 	performUpdate(autoUpdateOverride) {
-		if (this.props.autoUpdate || autoUpdateOverride) {
-			setTimeout(() => {
+		if ((this.props.autoUpdate || autoUpdateOverride) && this.isMount) {
+			this.timeoutHandler = setTimeout(() => {
 				this.updateTube().then(() => {
 					this.performUpdate();
 				});
@@ -97,17 +95,13 @@ class TubeDetail extends Component {
 
 	init() {
 		this.getServerInfo(this.state).then((info) => {
-			if (info.name) {
-				this.setState({
-					title: `${info.name} - ${info.host}:${info.port}`
-				});
-			} else {
-				this.setState({
-					title: `${info.host}:${info.port}`
-				});
-			}
-		}).catch((e) => {
+			const serverInfo = {
+				name: info.name || null,
+				host: this.state.host,
+				port: this.state.port
+			};
 
+			this.props.setServer(serverInfo);
 		});
 
 		this.updateTube().then(() => {});
@@ -124,9 +118,7 @@ class TubeDetail extends Component {
 
 		const statWithDelta = this.parseStat(stat);
 
-		this.setState({
-			stat: statWithDelta
-		});
+		this.props.dispatchTubeDetail(statWithDelta);
 
 		this.setPauseState(stat.tubeInfo['pause-time-left']);
 	}
@@ -144,7 +136,7 @@ class TubeDetail extends Component {
 	}
 
 	parseStat(currentStat) {
-		const oldStat = this.state.stat;
+		const oldStat = this.props.tubeDetail;
 
 		return {
 			current: currentStat,
@@ -240,31 +232,31 @@ class TubeDetail extends Component {
 		let tubeStat = null;
 		let jobStateStat = null;
 
-		if (this.state.stat) {
+		if (this.props.tubeDetail.current) {
 			tubeStat = (
 				<tr>
 					<td>
-						{this.state.stat.current.tubeInfo.name}
+						{this.props.tubeDetail.current.tubeInfo.name}
 					</td>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-jobs-urgent']} delta={this.state.stat.delta.tubeInfo['current-jobs-urgent']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-jobs-ready']} delta={this.state.stat.delta.tubeInfo['current-jobs-ready']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-jobs-reserved']} delta={this.state.stat.delta.tubeInfo['current-jobs-reserved']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-jobs-delayed']} delta={this.state.stat.delta.tubeInfo['current-jobs-delayed']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-jobs-buried']} delta={this.state.stat.delta.tubeInfo['current-jobs-buried']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['total-jobs']} delta={this.state.stat.delta.tubeInfo['total-jobs']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-using']} delta={this.state.stat.delta.tubeInfo['current-using']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-watching']} delta={this.state.stat.delta.tubeInfo['current-watching']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['current-waiting']} delta={this.state.stat.delta.tubeInfo['current-waiting']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['cmd-delete']} delta={this.state.stat.delta.tubeInfo['cmd-delete']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['cmd-pause-tube']} delta={this.state.stat.delta.tubeInfo['cmd-pause-tube']}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo.pause} delta={this.state.stat.delta.tubeInfo.pause}/>
-					<UpdateCell value={this.state.stat.current.tubeInfo['pause-time-left']} delta={this.state.stat.delta.tubeInfo['pause-time-left']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-urgent']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-urgent']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-ready']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-ready']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-reserved']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-reserved']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-delayed']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-delayed']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-buried']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-buried']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['total-jobs']} delta={this.props.tubeDetail.delta.tubeInfo['total-jobs']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-using']} delta={this.props.tubeDetail.delta.tubeInfo['current-using']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-watching']} delta={this.props.tubeDetail.delta.tubeInfo['current-watching']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-waiting']} delta={this.props.tubeDetail.delta.tubeInfo['current-waiting']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-delete']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-delete']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-pause-tube']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-pause-tube']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo.pause} delta={this.props.tubeDetail.delta.tubeInfo.pause}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['pause-time-left']} delta={this.props.tubeDetail.delta.tubeInfo['pause-time-left']}/>
 				</tr>
 			);
 
 			jobStateStat = (
 				<div>
-					{Object.keys(this.state.stat.current.stats).map((state) => {
+					{Object.keys(this.props.tubeDetail.current.stats).map((state) => {
 						return (
 							<div key={state} >
 								<Row>
@@ -272,7 +264,7 @@ class TubeDetail extends Component {
 										<h4>Next job in "{state.split('_')[1]}" state</h4>
 									</Col>
 								</Row>
-								{this.state.stat.current.stats[state]?
+								{this.props.tubeDetail.current.stats[state]?
 								(
 									<Row>
 										<Col md={2}>
@@ -281,11 +273,11 @@ class TubeDetail extends Component {
 											</p>
 											<Table condensed>
 												<tbody>
-												{Object.keys(this.state.stat.current.stats[state].stat).map((key) => {
+												{Object.keys(this.props.tubeDetail.current.stats[state].stat).map((key) => {
 													return (
 														<tr key={key}>
 															<td>{key}</td>
-															<UpdateCell value={this.state.stat.current.stats[state].stat[key]} delta={this.state.stat.delta.stats[state].stat[key]}/>
+															<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]}/>
 														</tr>
 													);
 												})}
@@ -298,7 +290,7 @@ class TubeDetail extends Component {
 											</p>
 											<pre>
 												<code>
-													{this.state.stat.current.stats[state].payloadJson || this.state.stat.current.stats[state].payload}
+													{this.props.tubeDetail.current.stats[state].payloadJson || this.props.tubeDetail.current.stats[state].payload}
 												</code>
 											</pre>
 										</Col>
@@ -318,9 +310,14 @@ class TubeDetail extends Component {
 
 		}
 
+		let title = `${this.props.currentServer.host}:${this.props.currentServer.port}`;
+		if (this.props.currentServer.name) {
+			title = `${this.props.currentServer.name} - ${title}`;
+		}
+
 		return (
 			<div>
-				<h1><Link to={`/${this.state.host}:${this.state.port}`}>{this.state.title}</Link> / {this.state.tube}</h1>
+				<h1><Link to={`/${this.state.host}:${this.state.port}`}>{title}</Link> / {this.state.tube}</h1>
 				<hr />
 				<Table responsive striped bordered hover>
 					<thead>
@@ -420,10 +417,14 @@ class TubeDetail extends Component {
 
 export default connect((state, ownProps) => ({
 	busy: state.busy,
-	autoUpdate: state.autoUpdate
+	autoUpdate: state.autoUpdate,
+	currentServer: state.currentServer,
+	tubeDetail: state.tubeDetail
 }), {
 	showAddJobModal,
 	setServer,
 	isBusy,
-	notBusy
+	notBusy,
+	dispatchTubeDetail,
+	destroyTubeDetail
 })(TubeDetail);

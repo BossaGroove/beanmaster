@@ -6,6 +6,9 @@ import removeServerModal from './removeServerModal';
 import searchJobModal from './searchJobModal';
 import currentServer from './currentServer';
 import autoUpdate from './autoUpdate';
+import serverRow from './serverRow';
+import tubes from './tubes';
+import tubeDetail from './tubeDetail';
 import busy from './busy';
 import {reducer as form} from 'redux-form';
 
@@ -17,6 +20,9 @@ export default combineReducers({
 	addJobModal,
 	currentServer,
 	autoUpdate,
+	serverRow,
+	tubes,
+	tubeDetail,
 	busy,
 	form
 });

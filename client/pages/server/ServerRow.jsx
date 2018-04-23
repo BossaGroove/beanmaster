@@ -3,8 +3,10 @@ import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import _ from 'lodash';
 
 import {showRemoveServerModal} from '../../actions/removeServerModal';
+import {dispatchServerRow} from '../../actions/serverRow';
 
 class ServerRow extends Component {
 	constructor(props) {
@@ -21,12 +23,7 @@ class ServerRow extends Component {
 	}
 
 	componentWillMount() {
-		this.isMount = true;
 		this.init();
-	}
-
-	componentWillUnmount() {
-		this.isMount = false;
 	}
 
 	init() {
@@ -34,17 +31,13 @@ class ServerRow extends Component {
 			if (!serverInfo) {
 				return;
 			}
-			if (!this.isMount) {
-				return;
-			}
-			this.setState({
-				info: {
-					connections: serverInfo['current-connections'],
-					version: serverInfo.version,
-					totalJobs: serverInfo['total-jobs'],
-					pid: serverInfo.pid,
-					uptime: serverInfo.uptime
-				}
+
+			this.props.dispatchServerRow(this.props.host, this.props.port, {
+				connections: serverInfo['current-connections'],
+				version: serverInfo.version,
+				totalJobs: serverInfo['total-jobs'],
+				pid: serverInfo.pid,
+				uptime: serverInfo.uptime
 			});
 		});
 	}
@@ -60,11 +53,11 @@ class ServerRow extends Component {
 				<td>{this.props.name}</td>
 				<td>{this.props.host}</td>
 				<td>{this.props.port}</td>
-				<td>{this.state.info.connections}</td>
-				<td>{this.state.info.version}</td>
-				<td>{this.state.info.totalJobs}</td>
-				<td>{this.state.info.pid}</td>
-				<td>{this.state.info.uptime}</td>
+				<td>{_.get(this.props.serverRow, 'connections', '-')}</td>
+				<td>{_.get(this.props.serverRow, 'version', '-')}</td>
+				<td>{_.get(this.props.serverRow, 'totalJobs', '-')}</td>
+				<td>{_.get(this.props.serverRow, 'pid', '-')}</td>
+				<td>{_.get(this.props.serverRow, 'uptime', '-')}</td>
 				<td>
 					<Link to={`/${this.props.host}:${this.props.port}`}>
 						<Button bsStyle="primary">View</Button>
@@ -83,7 +76,9 @@ class ServerRow extends Component {
 }
 
 export default connect((state, ownProps) => ({
-	removeServerModal: state.removeServerModal
+	removeServerModal: state.removeServerModal,
+	serverRow: state.serverRow[`${ownProps.host}:${ownProps.port}`]
 }), {
+	dispatchServerRow,
 	showRemoveServerModal
 })(ServerRow);

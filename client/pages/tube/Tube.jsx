@@ -6,6 +6,7 @@ import _ from 'lodash';
 import TubeRow from './TubeRow';
 
 import {setServer} from "../../actions/currentServer";
+import {dispatchTubes, destroyTubes} from "../../actions/tubes";
 
 class Tube extends Component {
 	constructor(props) {
@@ -14,13 +15,13 @@ class Tube extends Component {
 		this.state = {
 			host: serverInfo[0],
 			port: serverInfo[1],
-			title: '',
 			tubes: []
 		};
+
 		props.setServer({
 			host: serverInfo[0],
 			port: serverInfo[1]
-		})
+		});
 	}
 
 	componentWillUpdate(nextProps) {
@@ -36,11 +37,13 @@ class Tube extends Component {
 
 	componentWillUnmount() {
 		this.isMount = false;
+		this.props.destroyTubes();
+		clearTimeout(this.timeoutHandler);
 	}
 
 	performUpdate(autoUpdateOverride) {
-		if (this.props.autoUpdate || autoUpdateOverride) {
-			setTimeout(() => {
+		if ((this.props.autoUpdate || autoUpdateOverride) && this.isMount) {
+			this.timeoutHandler = setTimeout(() => {
 				this.updateTubes().then(() => {
 					this.performUpdate();
 				});
@@ -50,15 +53,13 @@ class Tube extends Component {
 
 	init() {
 		this.getServerInfo(this.state.host, this.state.port).then((info) => {
-			if (info.name) {
-				this.setState({
-					title: `${info.name} - ${info.host}:${info.port}`
-				});
-			} else {
-				this.setState({
-					title: `${info.host}:${info.port}`
-				});
-			}
+			const serverInfo = {
+				name: info.name || null,
+				host: this.state.host,
+				port: this.state.port
+			};
+
+			this.props.setServer(serverInfo);
 		});
 
 		this.updateTubes().then(() => {});
@@ -67,17 +68,11 @@ class Tube extends Component {
 	}
 
 	async updateTubes() {
-		if (!this.isMount) {
-			return;
-		}
-
 		const server = await this.getTubes(this.state.host, this.state.port);
 
 		const tubes = this.parseTubes(server.tubesInfo);
 
-		this.setState({
-			tubes: tubes
-		});
+		this.props.dispatchTubes(tubes);
 	}
 
 	async getServerInfo(host, port) {
@@ -91,7 +86,7 @@ class Tube extends Component {
 	}
 
 	parseTubes(currentTubes) {
-		const oldTubes = this.state.tubes;
+		const oldTubes = this.props.tubes;
 
 		return currentTubes.map((currentTube) => {
 			const oldTube = _.find(oldTubes, (oldTube) => {
@@ -118,9 +113,14 @@ class Tube extends Component {
 	}
 
 	render() {
+		let title = `${this.props.currentServer.host}:${this.props.currentServer.port}`;
+		if (this.props.currentServer.name) {
+			title = `${this.props.currentServer.name} - ${title}`;
+		}
+
 		return (
 			<div>
-				<h1>{this.state.title}</h1>
+				<h1>{title}</h1>
 				<hr />
 				<Table responsive striped bordered hover>
 					<thead>
@@ -142,9 +142,9 @@ class Tube extends Component {
 					</tr>
 					</thead>
 					<tbody>
-						{this.state.tubes.map((tube, i) => {
+						{this.props.tubes.map((tube, i) => {
 							return (
-								<TubeRow key={i} host={this.state.host} port={this.state.port} tube={tube.current} delta={tube.delta}/>
+								<TubeRow key={i} host={this.props.currentServer.host} port={this.props.currentServer.port} tube={tube.current} delta={tube.delta}/>
 							);
 						})}
 					</tbody>
@@ -157,7 +157,11 @@ class Tube extends Component {
 
 
 export default connect((state, ownProps) => ({
-	autoUpdate: state.autoUpdate
+	autoUpdate: state.autoUpdate,
+	currentServer: state.currentServer,
+	tubes: state.tubes
 }), {
-	setServer
+	setServer,
+	dispatchTubes,
+	destroyTubes
 })(Tube);
