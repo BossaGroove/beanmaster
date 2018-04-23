@@ -22,19 +22,12 @@ class AddJobModal extends Component {
 		};
 	}
 
-	// async addServer({name, host, port}) {
-	// 	const server = await AddServerModal.postServer(name, host, port);
-	// 	this.props.addServer(server);
-	// }
-
-	static async postServer(name, host, port) {
-		const result = await axios.post('/api/servers', {
-			name,
-			host,
-			port,
+	static async addJob({host, port, tube, priority, delay, ttr, payload}) {
+		const result = await axios.post('/api/tubes/add-job', {
+			host, port, tube, priority, delay, ttr, payload
 		});
 
-		return result.data.body.server;
+		return result.data.body.jobId;
 	}
 
 	close() {
@@ -46,15 +39,23 @@ class AddJobModal extends Component {
 	onSubmit(values) {
 		this.props.isBusy();
 
-		// this.addServer(values)
-		// 	.then(() => {
-		// 		this.close();
-		// 	})
-		// 	.catch((e) => {
-		// 		this.setState({
-		// 			alert: e.response.data.meta.error
-		// 		});
-		// 	});
+		AddJobModal.addJob({
+			host: this.props.currentServer.host,
+			port: this.props.currentServer.port,
+			tube: values.tube,
+			priority: values.priority,
+			delay: values.delay,
+			ttr: values.ttr,
+			payload: values.payload
+		})
+		.then(() => {
+			this.close();
+		})
+		.catch((e) => {
+			this.setState({
+				alert: e.response.data.meta.error
+			});
+		});
 	}
 
 	hideAlert() {
@@ -97,6 +98,7 @@ class AddJobModal extends Component {
 
 export default connect((state, ownProps) => ({
 	busy: state.busy,
+	currentServer: state.currentServer,
 	addJobModal: state.addJobModal
 }), {
 	// addServer,

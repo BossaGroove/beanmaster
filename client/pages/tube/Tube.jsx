@@ -149,7 +149,7 @@ class Tube extends Component {
 						})}
 					</tbody>
 				</Table>
-				<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>
+				{/*<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>*/}
 			</div>
 		);
 	}

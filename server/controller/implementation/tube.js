@@ -107,7 +107,31 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async addJob(ctx) {
+		const host = ctx.request.body.host;
+		const port = parseInt(ctx.request.body.port, 10);
+		const tube = ctx.request.body.tube;
+		const priority = ctx.request.body.priority || 0;
+		const delay = ctx.request.body.delay || 0;
+		const ttr = ctx.request.body.ttr || 1;
+		const payload = ctx.request.body.payload;
 
+		let jobId;
+
+		try {
+			const connection = await BeanstalkConnectionManager.connect(host, port);
+			await connection.useAsync(tube);
+			[jobId] = await connection.putAsync(priority, delay, ttr, payload);
+			jobId = parseInt(jobId);
+			await BeanstalkConnectionManager.closeConnection(connection);
+		} catch (e) {
+			let errorMessage = e.message;
+			ctx.status = 400;
+			ctx.body = ResponseManager.error(null, 400, errorMessage);
+			return;
+		}
+		ctx.body = ResponseManager.response({
+			jobId
+		});
 	}
 	/**
 	 * POST /tubes/kick-job

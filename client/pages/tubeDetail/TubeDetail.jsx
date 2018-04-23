@@ -398,9 +398,9 @@ class TubeDetail extends Component {
 								&nbsp;Add Job
 							</Button>
 						</li>
-						<li>
-							<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button>
-						</li>
+						{/*<li>*/}
+							{/*<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button>*/}
+						{/*</li>*/}
 						<li>
 							<Preloader show={this.props.busy} />
 						</li>
