@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 config.output.filename = '[name]-[chunkhash].js';
 config.output.chunkFilename = '[name]-[chunkhash].js';
@@ -84,7 +85,8 @@ config.plugins.push(
 		fileName: 'manifest.json',
 		writeToFileEmit: true,
 		publicPath: config.output.publicPath
-	})
+	}),
+	new BundleAnalyzerPlugin()
 );
 
 module.exports = config;

@@ -3,7 +3,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const resourceFolder = path.resolve(__dirname, '../client');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
 	context: resourceFolder,
@@ -26,8 +25,7 @@ const config = {
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'manifest',
 			minChunks: Infinity
-		}),
-		new BundleAnalyzerPlugin()
+		})
 	],
 	module: {
 		rules: [
