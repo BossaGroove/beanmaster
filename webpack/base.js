@@ -8,29 +8,14 @@ const config = {
 	context: resourceFolder,
 	entry: {
 		vendor: [
-			// 'brace',
-			// 'brace/mode/json',
-			// 'brace/theme/twilight',
-			// 'brace/theme/chrome',
-			// 'immutable',
 			'lodash',
-			// 'moment',
-			// 'moment-timezone',
-			// 'omit-empty',
 			'react',
 			'react-dom',
-			// 'react-ace',
-			// 'react-redux',
-			// 'redux',
-			// 'react-dates',
-			// 'react-select-plus',
+			'redux',
+			'react-redux',
 			'react-router',
-			'react-bootstrap',
-			// 'redux-saga',
-			// 'react-immutable-proptypes'
+			'react-bootstrap'
 		],
-		// polyfill: './polyfill.js',
-		// ga: './ga.js',
 		app: './index.jsx'
 	},
 	output: {
@@ -39,19 +24,14 @@ const config = {
 		filename: '[name].js',
 		chunkFilename: '[name].js' // Template based on keys in entry above
 	},
-	// externals: {
-	// 	stripe: 'Stripe'
-	// },
 	plugins: [
-		new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: function (m) {
 				if (m.context && [
 						'core-js',
 						'babel-runtime',
-						'regenerator-runtime',
-						'whatwg-fetch'
+						'regenerator-runtime'
 					].some(moduleName => m.context.includes(moduleName))) {
 					return false;
 				}
