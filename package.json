@@ -1,6 +1,6 @@
 {
-  "name": "beanmaster_react",
-  "version": "0.1.0",
+  "name": "beanmaster-react",
+  "version": "1.0.0",
   "private": true,
   "devDependencies": {
     "autoprefixer": "^8.3.0",
