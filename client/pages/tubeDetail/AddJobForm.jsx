@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Field, reduxForm } from 'redux-form';
 import { ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
-import _ from 'lodash';
+import _isNaN from 'lodash/isNaN';
 
 const validate = (values) => {
 	const errors = {};
@@ -14,15 +14,15 @@ const validate = (values) => {
 		errors.payload = 'Required';
 	}
 
-	if (values.priority !== '' && _.isNaN(values.priority)) {
+	if (values.priority !== '' && _isNaN(values.priority)) {
 		errors.priority = 'Invalid';
 	}
 
-	if (values.delay !== '' && _.isNaN(values.delay)) {
+	if (values.delay !== '' && _isNaN(values.delay)) {
 		errors.delay = 'Invalid';
 	}
 
-	if (values.ttr !== '' && _.isNaN(values.ttr)) {
+	if (values.ttr !== '' && _isNaN(values.ttr)) {
 		errors.ttr = 'Invalid';
 	}
 

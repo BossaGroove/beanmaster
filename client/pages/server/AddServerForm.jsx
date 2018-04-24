@@ -2,7 +2,7 @@ import React from 'react'
 import { Field, reduxForm } from 'redux-form';
 import { ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
 import validator from 'validator';
-import _ from 'lodash';
+import isFinite from 'lodash/isFinite';
 
 const validate = (values) => {
 	const errors = {};
@@ -16,7 +16,7 @@ const validate = (values) => {
 	}
 
 	const port = parseInt(values.port);
-	if (!values.port || !_.isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
+	if (!values.port || !isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
 		errors.port = 'Port invalid';
 	}
 

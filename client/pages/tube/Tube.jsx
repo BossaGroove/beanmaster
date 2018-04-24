@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Button} from 'react-bootstrap';
 import axios from 'axios';
-import _ from 'lodash';
+import get from 'lodash/get';
+import isUndefined from 'lodash/isUndefined';
+import find from 'lodash/find';
 import TubeRow from './TubeRow';
 
 import {setServer} from "../../actions/currentServer";
@@ -89,13 +91,13 @@ class Tube extends Component {
 		const oldTubes = this.props.tubes;
 
 		return currentTubes.map((currentTube) => {
-			const oldTube = _.find(oldTubes, (oldTube) => {
+			const oldTube = find(oldTubes, (oldTube) => {
 				return (oldTube.current.name === currentTube.name);
 			});
 
 			return {
 				current: currentTube,
-				delta: Tube.getDelta(_.get(oldTube, 'current', {}), currentTube)
+				delta: Tube.getDelta(get(oldTube, 'current', {}), currentTube)
 			};
 		});
 	}
@@ -103,7 +105,7 @@ class Tube extends Component {
 	static getDelta(oldTube, currentTube) {
 		const delta = {};
 		for (let key of Object.keys(currentTube)) {
-			if (!_.isUndefined(oldTube[key])) {
+			if (!isUndefined(oldTube[key])) {
 				delta[key] = currentTube[key] - oldTube[key];
 			} else {
 				delta[key] = 0;

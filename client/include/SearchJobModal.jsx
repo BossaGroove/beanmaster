@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import _ from 'lodash';
+import get from 'lodash/get';
 import {Button, Modal, Alert, Table} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
@@ -111,7 +111,7 @@ class SearchJobModal extends Component {
 			});
 		})
 		.catch((e) => {
-			if (_.get(e, 'response.data.meta.error') === 'NOT_FOUND') {
+			if (get(e, 'response.data.meta.error') === 'NOT_FOUND') {
 				this.setAlert({
 					status: 'warning',
 					message: 'Unable to kick job - job not found or not in delayed state'

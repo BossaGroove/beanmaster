@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {START_AUTO_UPDATE, STOP_AUTO_UPDATE, TOGGLE_AUTO_UPDATE} from '../constants/ActionTypes';
 
 export default function servers(state = true, action) {

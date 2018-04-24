@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import _ from 'lodash';
+import get from 'lodash/get';
+import isUndefined from 'lodash/isUndefined';
 import UpdateCell from '../../common/UpdateCell';
 import Preloader from "../../include/Preloader";
 
@@ -140,7 +141,7 @@ class TubeDetail extends Component {
 
 		return {
 			current: currentStat,
-			delta: TubeDetail.getDelta(_.get(oldStat, 'current', {}), currentStat)
+			delta: TubeDetail.getDelta(get(oldStat, 'current', {}), currentStat)
 		}
 	}
 
@@ -149,7 +150,7 @@ class TubeDetail extends Component {
 		const statsDelta = {};
 
 		for (let key of Object.keys(currentStat.tubeInfo)) {
-			if (!_.isUndefined(oldStat.tubeInfo) && !_.isUndefined(oldStat.tubeInfo[key])) {
+			if (!isUndefined(oldStat.tubeInfo) && !isUndefined(oldStat.tubeInfo[key])) {
 				tubeInfoDelta[key] = currentStat.tubeInfo[key] - oldStat.tubeInfo[key];
 			} else {
 				tubeInfoDelta[key] = 0;
@@ -163,7 +164,7 @@ class TubeDetail extends Component {
 
 			if (currentStat.stats[action]) {
 				for (let key of Object.keys(currentStat.stats[action].stat)) {
-					if (!_.isUndefined(_.get(oldStat, `stats[${action}].stat[${key}]`, undefined))) {
+					if (!isUndefined(get(oldStat, `stats[${action}].stat[${key}]`, undefined))) {
 						statsDelta[action].stat[key] = currentStat.stats[action].stat[key] - oldStat.stats[action].stat[key];
 					} else {
 						statsDelta[action].stat[key] = 0;

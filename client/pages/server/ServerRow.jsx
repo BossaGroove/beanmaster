@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import _ from 'lodash';
+import get from 'lodash/get';
 
 import {showRemoveServerModal} from '../../actions/removeServerModal';
 import {dispatchServerRow} from '../../actions/serverRow';
@@ -53,11 +53,11 @@ class ServerRow extends Component {
 				<td>{this.props.name}</td>
 				<td>{this.props.host}</td>
 				<td>{this.props.port}</td>
-				<td>{_.get(this.props.serverRow, 'connections', '-')}</td>
-				<td>{_.get(this.props.serverRow, 'version', '-')}</td>
-				<td>{_.get(this.props.serverRow, 'totalJobs', '-')}</td>
-				<td>{_.get(this.props.serverRow, 'pid', '-')}</td>
-				<td>{_.get(this.props.serverRow, 'uptime', '-')}</td>
+				<td>{get(this.props.serverRow, 'connections', '-')}</td>
+				<td>{get(this.props.serverRow, 'version', '-')}</td>
+				<td>{get(this.props.serverRow, 'totalJobs', '-')}</td>
+				<td>{get(this.props.serverRow, 'pid', '-')}</td>
+				<td>{get(this.props.serverRow, 'uptime', '-')}</td>
 				<td>
 					<Link to={`/${this.props.host}:${this.props.port}`}>
 						<Button bsStyle="primary">View</Button>
