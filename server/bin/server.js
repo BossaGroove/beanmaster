@@ -1,7 +1,5 @@
 const app_root = `${__dirname}/..`;
 
-const config = require('config');
-
 const lib = require(`${app_root}/lib`);
 
 const port = 3000;

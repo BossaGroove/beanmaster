@@ -13,7 +13,7 @@ const config = {
 			// 'brace/theme/twilight',
 			// 'brace/theme/chrome',
 			// 'immutable',
-			// 'lodash',
+			'lodash',
 			// 'moment',
 			// 'moment-timezone',
 			// 'omit-empty',
@@ -69,13 +69,6 @@ const config = {
 				test: /\.jsx*?$/,
 				use: [
 					'babel-loader'
-				]
-			},
-			{
-				test: /\.svg$/,
-				use: [
-					'babel-loader',
-					'react-svg-loader?jsx=true'
 				]
 			}
 		]

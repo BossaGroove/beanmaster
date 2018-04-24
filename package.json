@@ -31,7 +31,6 @@
     "react-redux": "^5.0.7",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.2.2",
-    "react-svg-loader": "^2.1.0",
     "redux": "^4.0.0",
     "redux-form": "^7.3.0",
     "sass-loader": "^7.0.1",
@@ -60,7 +59,6 @@
     "koa-views": "^6.1.4",
     "lodash": "^4.17.5",
     "pug": "^2.0.3",
-    "react-transition-group": "^2.3.1",
     "require-all": "^2.2.0",
     "validator": "^9.4.1"
   },
