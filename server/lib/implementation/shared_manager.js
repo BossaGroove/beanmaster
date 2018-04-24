@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Created by Bossa on 27/1/15.
- */
-
 class SharedManager {
 	constructor() {
 		const fakeLogger = function (msg) {

@@ -1,7 +1,3 @@
-/**
- * Created by Bossa on 2014/10/05.
- */
-
 'use strict';
 
 const fs = require('fs');
