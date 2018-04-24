@@ -2,6 +2,7 @@
 
 const Fivebeans = require('fivebeans');
 const bluebird = require('bluebird');
+const debug = require('debug')('bs');
 
 class BeanstalkConnectionManager {
 	static async connect(host, port) {
@@ -11,7 +12,7 @@ class BeanstalkConnectionManager {
 
 		const port_int = parseInt(port, 10);
 
-		// console.log(`Try to initiate a new beanstalk connection: ${host} / ${port_int}`);
+		debug(`Try to initiate a new beanstalk connection: ${host} / ${port_int}`);
 
 		const client = new Fivebeans.client(host, port_int);
 
@@ -23,7 +24,7 @@ class BeanstalkConnectionManager {
 
 		await (new Promise((resolve, reject) => {
 			client.on('connect', () => {
-				// console.log(`Connected: ${host} / ${port_int}`);
+				debug(`Connected: ${host} / ${port_int}`);
 				resolve();
 			});
 			client.on('error', (err) => {
@@ -39,7 +40,7 @@ class BeanstalkConnectionManager {
 	}
 
 	static async closeConnection(connection) {
-		// console.log(`Try to end a connection: ${connection.host} / ${connection.port}`);
+		debug(`Try to end a connection: ${connection.host} / ${connection.port}`);
 		connection.end();
 	}
 }
