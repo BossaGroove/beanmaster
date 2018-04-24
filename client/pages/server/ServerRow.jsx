@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button} from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import get from 'lodash/get';

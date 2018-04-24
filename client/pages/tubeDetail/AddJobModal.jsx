@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import {Button, Modal, Alert} from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
+import Modal from 'react-bootstrap/lib/Modal';
+import Alert from 'react-bootstrap/lib/Alert';
 import {withRouter} from 'react-router-dom';
 
 import {isBusy, notBusy} from '../../actions/busy';
@@ -77,9 +79,9 @@ class AddJobModal extends Component {
 		return (
 			<span>
 				<Modal show={this.props.addJobModal.show} onHide={()=>this.close()}>
-					<Modal.Header closeButton>
+					<Modal.Headder closeButton>
 						<Modal.Title>Add New Job</Modal.Title>
-					</Modal.Header>
+					</Modal.Headder>
 					<Modal.Body>
 						{alert}
 						<AddJobForm onSubmit={this.onSubmit.bind(this)} defaultTube={this.props.defaultTube} />

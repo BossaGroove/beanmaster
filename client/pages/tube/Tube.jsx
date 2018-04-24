@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Button} from 'react-bootstrap';
+import Table from 'react-bootstrap/lib/Table';
 import axios from 'axios';
 import get from 'lodash/get';
 import isUndefined from 'lodash/isUndefined';

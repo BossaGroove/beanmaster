@@ -1,7 +1,11 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form';
-import { ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
-import validator from 'validator';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Form from 'react-bootstrap/lib/Form';
+import Col from 'react-bootstrap/lib/Col';
+import isURL from 'validator/lib/isURL';
+import isIP from 'validator/lib/isIP';
 import isFinite from 'lodash/isFinite';
 
 const validate = (values) => {
@@ -11,7 +15,7 @@ const validate = (values) => {
 		errors.name = 'Required';
 	}
 
-	if (!values.host || !validator.isURL(values.host || '') && !validator.isIP(values.host || '') && values.host !== 'localhost') {
+	if (!values.host || !isURL(values.host || '') && !isIP(values.host || '') && values.host !== 'localhost') {
 		errors.host = 'Host invalid';
 	}
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Button} from 'react-bootstrap';
+import Table from 'react-bootstrap/lib/Table';
+import Button from 'react-bootstrap/lib/Button';
 import axios from 'axios';
 
 import {initServers} from '../../actions/servers';
