@@ -79,9 +79,9 @@ class AddJobModal extends Component {
 		return (
 			<span>
 				<Modal show={this.props.addJobModal.show} onHide={()=>this.close()}>
-					<Modal.Headder closeButton>
+					<Modal.Header closeButton>
 						<Modal.Title>Add New Job</Modal.Title>
-					</Modal.Headder>
+					</Modal.Header>
 					<Modal.Body>
 						{alert}
 						<AddJobForm onSubmit={this.onSubmit.bind(this)} defaultTube={this.props.defaultTube} />
