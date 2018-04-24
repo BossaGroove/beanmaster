@@ -3,7 +3,6 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import rootReducer from './reducers';
 import {render} from 'react-dom';
-import 'react-bootstrap'
 import 'bootstrap-sass/assets/stylesheets/_bootstrap.scss'
 import './styles/style.scss';
 import Root from './root';
