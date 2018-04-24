@@ -5,7 +5,6 @@ import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
 import {isBusy, notBusy} from '../../actions/busy';
-// import {addServer} from '../../actions/servers';
 import {hideAddJobModal} from '../../actions/addJobModal';
 
 import AddJobForm from './AddJobForm';
@@ -101,7 +100,6 @@ export default connect((state, ownProps) => ({
 	currentServer: state.currentServer,
 	addJobModal: state.addJobModal
 }), {
-	// addServer,
 	hideAddJobModal,
 	isBusy,
 	notBusy

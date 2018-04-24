@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 
 class UpdateCell extends Component {
 	constructor(props) {
@@ -11,8 +10,6 @@ class UpdateCell extends Component {
 			updated: false,
 			delta: 0
 		};
-
-		this.oldValue = this.props.value;
 	}
 
 	setBackgroundAnimation(delta) {
@@ -42,8 +39,6 @@ class UpdateCell extends Component {
 		if (delta !== 0) {
 			this.setBackgroundAnimation(nextProps.delta);
 		}
-
-		this.oldValue = nextProps.value;
 	}
 
 	render() {
@@ -76,6 +71,4 @@ class UpdateCell extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
-}), {
-})(UpdateCell);
+export default UpdateCell;
