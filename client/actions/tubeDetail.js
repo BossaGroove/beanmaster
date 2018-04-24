@@ -4,11 +4,11 @@ export const dispatchTubeDetail = (payload) => {
 	return {
 		type: DISPATCH_TUBE_DETAIL,
 		payload
-	}
+	};
 };
 
 export const destroyTubeDetail = () => {
 	return {
 		type: DESTROY_TUBE_DETAIL
-	}
+	};
 };

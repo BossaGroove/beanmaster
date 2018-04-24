@@ -4,7 +4,7 @@ import preloader from '../assets/images/preloader.gif';
 class Preloader extends Component {
 	render() {
 		return (
-			<span className={`preloader ${this.props.show?'':'hidden'}`}>
+			<span className={`preloader ${this.props.show ? '' : 'hidden'}`}>
 				<img src={preloader} />
 			</span>
 		);

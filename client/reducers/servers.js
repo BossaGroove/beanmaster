@@ -9,9 +9,9 @@ export default function servers(state = [], action) {
 			return state.concat(action.payload);
 		case REMOVE_SERVER:
 			return filter(state, (server) => {
-				return (server.host !== action.payload.host || server.port !== action.payload.port)
+				return (server.host !== action.payload.host || server.port !== action.payload.port);
 			});
 		default:
 			return state;
 	}
-};
+}

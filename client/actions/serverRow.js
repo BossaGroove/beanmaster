@@ -6,11 +6,11 @@ export const dispatchServerRow = (host, port, payload) => {
 		payload,
 		host,
 		port
-	}
+	};
 };
 
 export const destroyServerRow = () => {
 	return {
 		type: DESTROY_SERVER_ROW
-	}
+	};
 };

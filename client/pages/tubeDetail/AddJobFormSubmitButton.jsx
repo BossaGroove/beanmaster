@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { submit } from 'redux-form';
+import {connect} from 'react-redux';
+import {submit} from 'redux-form';
 import Button from 'react-bootstrap/lib/Button';
 
-const AddJobFormSubmitButton = ({ dispatch }) => (
+const AddJobFormSubmitButton = ({dispatch}) => (
 	<Button bsStyle="primary" onClick={() => dispatch(submit('add_job'))}>Add</Button>
 );
 

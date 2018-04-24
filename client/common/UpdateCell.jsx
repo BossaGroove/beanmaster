@@ -24,14 +24,14 @@ class UpdateCell extends Component {
 		this.setState({
 			cellStyle: 'update-cell'
 		});
-	};
+	}
 
 	removePopup() {
 		this.setState({
 			updated: false,
 			delta: 0
 		});
-	};
+	}
 
 	componentWillReceiveProps(nextProps) {
 		const delta = nextProps.delta || 0;
@@ -54,14 +54,14 @@ class UpdateCell extends Component {
 			}
 
 			popup = (
-				<div className={'popup ' + colorClass} onAnimationEnd={() => {this.removePopup()}}>
+				<div className={'popup ' + colorClass} onAnimationEnd={() => { this.removePopup(); }}>
 					{prefix}{this.state.delta}
 				</div>
 			);
 		}
 
 		return (
-			<td className={this.state.cellStyle} onAnimationEnd={() => {this.removeBackgroundAnimation()}}>
+			<td className={this.state.cellStyle} onAnimationEnd={() => { this.removeBackgroundAnimation(); }}>
 				{popup}
 				<div className="container">
 					{this.props.value}

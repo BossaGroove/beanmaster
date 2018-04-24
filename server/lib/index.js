@@ -1,4 +1,4 @@
-'use strict';
+
 
 const changeCase = require('change-case');
 const requireAll = require('require-all');

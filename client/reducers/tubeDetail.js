@@ -9,4 +9,4 @@ export default function tubes(state = {}, action) {
 		default:
 			return state;
 	}
-};
+}

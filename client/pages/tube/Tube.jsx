@@ -7,8 +7,8 @@ import isUndefined from 'lodash/isUndefined';
 import find from 'lodash/find';
 import TubeRow from './TubeRow';
 
-import {setServer} from "../../actions/currentServer";
-import {dispatchTubes, destroyTubes} from "../../actions/tubes";
+import {setServer} from '../../actions/currentServer';
+import {dispatchTubes, destroyTubes} from '../../actions/tubes';
 
 class Tube extends Component {
 	constructor(props) {
@@ -104,7 +104,7 @@ class Tube extends Component {
 
 	static getDelta(oldTube, currentTube) {
 		const delta = {};
-		for (let key of Object.keys(currentTube)) {
+		for (const key of Object.keys(currentTube)) {
 			if (!isUndefined(oldTube[key])) {
 				delta[key] = currentTube[key] - oldTube[key];
 			} else {
@@ -126,32 +126,32 @@ class Tube extends Component {
 				<hr />
 				<Table responsive striped bordered hover>
 					<thead>
-					<tr>
-						<th>Name</th>
-						<th>Urgent</th>
-						<th>Ready</th>
-						<th>Reserved</th>
-						<th>Delayed</th>
-						<th>Buried</th>
-						<th>Total</th>
-						<th>Using</th>
-						<th>Watching</th>
-						<th>Waiting</th>
-						<th>Delete (cmd)</th>
-						<th>Pause (cmd)</th>
-						<th>Pause (sec)</th>
-						<th>Pause (left)</th>
-					</tr>
+						<tr>
+							<th>Name</th>
+							<th>Urgent</th>
+							<th>Ready</th>
+							<th>Reserved</th>
+							<th>Delayed</th>
+							<th>Buried</th>
+							<th>Total</th>
+							<th>Using</th>
+							<th>Watching</th>
+							<th>Waiting</th>
+							<th>Delete (cmd)</th>
+							<th>Pause (cmd)</th>
+							<th>Pause (sec)</th>
+							<th>Pause (left)</th>
+						</tr>
 					</thead>
 					<tbody>
 						{this.props.tubes.map((tube, i) => {
 							return (
-								<TubeRow key={i} host={this.props.currentServer.host} port={this.props.currentServer.port} tube={tube.current} delta={tube.delta}/>
+								<TubeRow key={i} host={this.props.currentServer.host} port={this.props.currentServer.port} tube={tube.current} delta={tube.delta} />
 							);
 						})}
 					</tbody>
 				</Table>
-				{/*<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>*/}
+				{/* <Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button> */}
 			</div>
 		);
 	}

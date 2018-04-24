@@ -12,4 +12,4 @@ export default function serverRow(state = {}, action) {
 		default:
 			return state;
 	}
-};
+}

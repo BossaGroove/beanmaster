@@ -15,4 +15,4 @@ export default function addServerModal(state, action) {
 				show: false
 			};
 	}
-};
+}

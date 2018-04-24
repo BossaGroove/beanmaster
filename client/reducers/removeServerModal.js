@@ -18,4 +18,4 @@ export default function removeServerModal(state, action) {
 				server: {}
 			};
 	}
-};
+}

@@ -64,11 +64,14 @@ class ServerRow extends Component {
 					</Link>
 				</td>
 				<td>
-					<Button bsStyle="danger" onClick={() => this.props.showRemoveServerModal({
-						name: this.props.name,
-						host: this.props.host,
-						port: this.props.port
-					})}>Delete</Button>
+					<Button
+						bsStyle="danger"
+						onClick={() => this.props.showRemoveServerModal({
+							name: this.props.name,
+							host: this.props.host,
+							port: this.props.port
+						})}
+					>Delete</Button>
 				</td>
 			</tr>
 		);

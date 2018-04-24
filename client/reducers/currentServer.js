@@ -9,4 +9,4 @@ export default function currentServer(state = {}, action) {
 		default:
 			return state;
 	}
-};
+}

@@ -14,7 +14,7 @@ import SearchJobForm from './SearchJobForm';
 import SearchJobFormSubmitButton from './SearchJobFormSubmitButton';
 
 import Preloader from '../include/Preloader';
-import {hideSearchJobModal} from "../actions/searchJobModal";
+import {hideSearchJobModal} from '../actions/searchJobModal';
 
 class SearchJobModal extends Component {
 	constructor(props) {
@@ -79,24 +79,24 @@ class SearchJobModal extends Component {
 			port: this.props.currentServer.port,
 			jobId: values.job_id
 		})
-		.then((data) => {
-			if (!data.stat) {
-				this.setAlert({
-					status: 'warning',
-					message: 'Job not found'
-				});
-			} else {
-				this.setState({
-					jobStat: data.stat
-				});
-			}
-		})
-		.catch((e) => {
+			.then((data) => {
+				if (!data.stat) {
+					this.setAlert({
+						status: 'warning',
+						message: 'Job not found'
+					});
+				} else {
+					this.setState({
+						jobStat: data.stat
+					});
+				}
+			})
+			.catch((e) => {
 
-		})
-		.finally(() => {
-			this.props.notBusy();
-		});
+			})
+			.finally(() => {
+				this.props.notBusy();
+			});
 	}
 
 	kick(jobId) {
@@ -107,28 +107,28 @@ class SearchJobModal extends Component {
 			port: this.props.currentServer.port,
 			jobId: jobId
 		})
-		.then((data) => {
-			this.setAlert({
-				status: 'success',
-				message: 'Job kicked'
+			.then((data) => {
+				this.setAlert({
+					status: 'success',
+					message: 'Job kicked'
+				});
+			})
+			.catch((e) => {
+				if (get(e, 'response.data.meta.error') === 'NOT_FOUND') {
+					this.setAlert({
+						status: 'warning',
+						message: 'Unable to kick job - job not found or not in delayed state'
+					});
+				} else {
+					this.setAlert({
+						status: 'warning',
+						message: e.message
+					});
+				}
+			})
+			.finally(() => {
+				this.props.notBusy();
 			});
-		})
-		.catch((e) => {
-			if (get(e, 'response.data.meta.error') === 'NOT_FOUND') {
-				this.setAlert({
-					status: 'warning',
-					message: 'Unable to kick job - job not found or not in delayed state'
-				});
-			} else {
-				this.setAlert({
-					status: 'warning',
-					message: e.message
-				});
-			}
-		})
-		.finally(() => {
-			this.props.notBusy();
-		});
 	}
 
 	render() {
@@ -173,7 +173,7 @@ class SearchJobModal extends Component {
 
 		return (
 			<span>
-				<Modal show={this.props.searchJobModal.show} onHide={()=>this.close()}>
+				<Modal show={this.props.searchJobModal.show} onHide={() => this.close()}>
 					<Modal.Header closeButton>
 						<Modal.Title>Search job</Modal.Title>
 					</Modal.Header>
@@ -185,7 +185,7 @@ class SearchJobModal extends Component {
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />
 						{kickJobButton}
-						<Button onClick={()=>this.close()}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 						<SearchJobFormSubmitButton />
 					</Modal.Footer>
 				</Modal>

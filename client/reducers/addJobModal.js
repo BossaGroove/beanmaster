@@ -15,4 +15,4 @@ export default function addJobModal(state, action) {
 				show: false
 			};
 	}
-};
+}

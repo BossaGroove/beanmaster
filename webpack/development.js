@@ -1,4 +1,4 @@
-'use strict';
+
 
 const config = require('./base');
 const webpack = require('webpack');

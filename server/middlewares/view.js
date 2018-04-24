@@ -4,7 +4,7 @@ function view() {
 			manifest: require('../../public/manifest.json')
 		};
 		return next();
-	}
+	};
 }
 
 module.exports = view;

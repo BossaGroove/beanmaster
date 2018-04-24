@@ -49,14 +49,14 @@ class AddJobModal extends Component {
 			ttr: values.ttr,
 			payload: values.payload
 		})
-		.then(() => {
-			this.close();
-		})
-		.catch((e) => {
-			this.setState({
-				alert: e.response.data.meta.error
+			.then(() => {
+				this.close();
+			})
+			.catch((e) => {
+				this.setState({
+					alert: e.response.data.meta.error
+				});
 			});
-		});
 	}
 
 	hideAlert() {
@@ -78,7 +78,7 @@ class AddJobModal extends Component {
 
 		return (
 			<span>
-				<Modal show={this.props.addJobModal.show} onHide={()=>this.close()}>
+				<Modal show={this.props.addJobModal.show} onHide={() => this.close()}>
 					<Modal.Header closeButton>
 						<Modal.Title>Add New Job</Modal.Title>
 					</Modal.Header>
@@ -88,7 +88,7 @@ class AddJobModal extends Component {
 					</Modal.Body>
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />
-						<Button onClick={()=>this.close()}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 						<AddJobFormSubmitButton />
 					</Modal.Footer>
 				</Modal>

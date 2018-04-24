@@ -124,7 +124,7 @@ class TubeController {
 			jobId = parseInt(jobId);
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;
@@ -153,7 +153,7 @@ class TubeController {
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;
@@ -183,7 +183,7 @@ class TubeController {
 			}
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			if (errorMessage !== 'NOT_FOUND') {
 				ctx.status = 400;
 				ctx.body = ResponseManager.error(null, 400, errorMessage);
@@ -218,7 +218,7 @@ class TubeController {
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;

@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import {initServers} from '../../actions/servers';
 import {showAddServerModal} from '../../actions/addServerModal';
-import {unsetServer} from "../../actions/currentServer";
+import {unsetServer} from '../../actions/currentServer';
 import {destroyServerRow} from '../../actions/serverRow';
 
 import ServerRow from './ServerRow';
@@ -70,7 +70,7 @@ class Server extends Component {
 						})}
 					</tbody>
 				</Table>
-				<Button bsStyle="primary" onClick={()=>this.showAddServerModal()}>Add Server</Button>
+				<Button bsStyle="primary" onClick={() => this.showAddServerModal()}>Add Server</Button>
 				<AddServerModal />
 				<RemoveServerModal />
 			</div>

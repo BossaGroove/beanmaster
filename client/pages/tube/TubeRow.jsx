@@ -21,7 +21,7 @@ class TubeRow extends Component {
 			<UpdateCell value={this.props.tube['current-waiting']} delta={this.props.delta['current-waiting']} />
 			<UpdateCell value={this.props.tube['cmd-delete']} delta={this.props.delta['cmd-delete']} />
 			<UpdateCell value={this.props.tube['cmd-pause-tube']} delta={this.props.delta['cmd-pause-tube']} />
-			<UpdateCell value={this.props.tube['pause']} delta={this.props.delta['pause']} />
+			<UpdateCell value={this.props.tube.pause} delta={this.props.delta.pause} />
 			<UpdateCell value={this.props.tube['pause-time-left']} delta={this.props.delta['pause-time-left']} />
 		</tr>
 	);

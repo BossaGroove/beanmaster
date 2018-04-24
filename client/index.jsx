@@ -3,7 +3,7 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import rootReducer from './reducers';
 import {render} from 'react-dom';
-import 'bootstrap-sass/assets/stylesheets/_bootstrap.scss'
+import 'bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 import './styles/style.scss';
 import Root from './root';
 
@@ -17,7 +17,7 @@ if (module.hot) {
 			<Provider store={store}>
 				<Root />
 			</Provider>
-		,document.getElementById('app_main'));
+			, document.getElementById('app_main'));
 	});
 }
 

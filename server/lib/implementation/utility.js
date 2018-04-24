@@ -2,7 +2,6 @@
  * Created by Bossa on 10/12/14.
  */
 
-'use strict';
 
 const path = require('path');
 

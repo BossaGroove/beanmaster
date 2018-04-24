@@ -1,4 +1,4 @@
-'use strict';
+
 
 const Fivebeans = require('fivebeans');
 const bluebird = require('bluebird');

@@ -12,14 +12,14 @@ import axios from 'axios';
 import get from 'lodash/get';
 import isUndefined from 'lodash/isUndefined';
 import UpdateCell from '../../common/UpdateCell';
-import Preloader from "../../include/Preloader";
+import Preloader from '../../include/Preloader';
 
-import {setServer} from "../../actions/currentServer";
-import {isBusy, notBusy} from "../../actions/busy";
+import {setServer} from '../../actions/currentServer';
+import {isBusy, notBusy} from '../../actions/busy';
 
-import {showAddJobModal} from "../../actions/addJobModal";
-import {dispatchTubeDetail, destroyTubeDetail} from "../../actions/tubeDetail";
-import AddJobModal from "./AddJobModal";
+import {showAddJobModal} from '../../actions/addJobModal';
+import {dispatchTubeDetail, destroyTubeDetail} from '../../actions/tubeDetail';
+import AddJobModal from './AddJobModal';
 
 class TubeDetail extends Component {
 	constructor(props) {
@@ -148,14 +148,14 @@ class TubeDetail extends Component {
 		return {
 			current: currentStat,
 			delta: TubeDetail.getDelta(get(oldStat, 'current', {}), currentStat)
-		}
+		};
 	}
 
 	static getDelta(oldStat, currentStat) {
 		const tubeInfoDelta = {};
 		const statsDelta = {};
 
-		for (let key of Object.keys(currentStat.tubeInfo)) {
+		for (const key of Object.keys(currentStat.tubeInfo)) {
 			if (!isUndefined(oldStat.tubeInfo) && !isUndefined(oldStat.tubeInfo[key])) {
 				tubeInfoDelta[key] = currentStat.tubeInfo[key] - oldStat.tubeInfo[key];
 			} else {
@@ -163,13 +163,13 @@ class TubeDetail extends Component {
 			}
 		}
 
-		for (let action of Object.keys(currentStat.stats)) {
+		for (const action of Object.keys(currentStat.stats)) {
 			statsDelta[action] = {
 				stat: {}
 			};
 
 			if (currentStat.stats[action]) {
-				for (let key of Object.keys(currentStat.stats[action].stat)) {
+				for (const key of Object.keys(currentStat.stats[action].stat)) {
 					if (!isUndefined(get(oldStat, `stats[${action}].stat[${key}]`, undefined))) {
 						statsDelta[action].stat[key] = currentStat.stats[action].stat[key] - oldStat.stats[action].stat[key];
 					} else {
@@ -182,7 +182,7 @@ class TubeDetail extends Component {
 		return {
 			tubeInfo: tubeInfoDelta,
 			stats: statsDelta
-		}
+		};
 	}
 
 	kickJobButton(value) {
@@ -245,19 +245,19 @@ class TubeDetail extends Component {
 					<td>
 						{this.props.tubeDetail.current.tubeInfo.name}
 					</td>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-urgent']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-urgent']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-ready']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-ready']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-reserved']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-reserved']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-delayed']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-delayed']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-buried']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-buried']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['total-jobs']} delta={this.props.tubeDetail.delta.tubeInfo['total-jobs']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-using']} delta={this.props.tubeDetail.delta.tubeInfo['current-using']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-watching']} delta={this.props.tubeDetail.delta.tubeInfo['current-watching']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-waiting']} delta={this.props.tubeDetail.delta.tubeInfo['current-waiting']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-delete']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-delete']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-pause-tube']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-pause-tube']}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo.pause} delta={this.props.tubeDetail.delta.tubeInfo.pause}/>
-					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['pause-time-left']} delta={this.props.tubeDetail.delta.tubeInfo['pause-time-left']}/>
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-urgent']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-urgent']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-ready']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-ready']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-reserved']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-reserved']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-delayed']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-delayed']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-buried']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-buried']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['total-jobs']} delta={this.props.tubeDetail.delta.tubeInfo['total-jobs']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-using']} delta={this.props.tubeDetail.delta.tubeInfo['current-using']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-watching']} delta={this.props.tubeDetail.delta.tubeInfo['current-watching']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-waiting']} delta={this.props.tubeDetail.delta.tubeInfo['current-waiting']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-delete']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-delete']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['cmd-pause-tube']} delta={this.props.tubeDetail.delta.tubeInfo['cmd-pause-tube']} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo.pause} delta={this.props.tubeDetail.delta.tubeInfo.pause} />
+					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['pause-time-left']} delta={this.props.tubeDetail.delta.tubeInfo['pause-time-left']} />
 				</tr>
 			);
 
@@ -271,39 +271,39 @@ class TubeDetail extends Component {
 										<h4>Next job in "{state.split('_')[1]}" state</h4>
 									</Col>
 								</Row>
-								{this.props.tubeDetail.current.stats[state]?
-								(
-									<Row>
-										<Col md={2}>
-											<p>
-												<strong>Stats</strong>
-											</p>
-											<Table condensed>
-												<tbody>
-												{Object.keys(this.props.tubeDetail.current.stats[state].stat).map((key) => {
-													return (
-														<tr key={key}>
-															<td>{key}</td>
-															<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]}/>
-														</tr>
-													);
-												})}
-												</tbody>
-											</Table>
-										</Col>
-										<Col md={10}>
-											<p>
-												<strong>Job data:</strong>
-											</p>
-											<pre>
-												<code>
-													{this.props.tubeDetail.current.stats[state].payloadJson || this.props.tubeDetail.current.stats[state].payload}
-												</code>
-											</pre>
-										</Col>
-									</Row>
-								)
-								:null}
+								{this.props.tubeDetail.current.stats[state] ?
+									(
+										<Row>
+											<Col md={2}>
+												<p>
+													<strong>Stats</strong>
+												</p>
+												<Table condensed>
+													<tbody>
+														{Object.keys(this.props.tubeDetail.current.stats[state].stat).map((key) => {
+															return (
+																<tr key={key}>
+																	<td>{key}</td>
+																	<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]} />
+																</tr>
+															);
+														})}
+													</tbody>
+												</Table>
+											</Col>
+											<Col md={10}>
+												<p>
+													<strong>Job data:</strong>
+												</p>
+												<pre>
+													<code>
+														{this.props.tubeDetail.current.stats[state].payloadJson || this.props.tubeDetail.current.stats[state].payload}
+													</code>
+												</pre>
+											</Col>
+										</Row>
+									)
+									: null}
 								<Row>
 									<Col md={12}>
 										<hr />
@@ -314,7 +314,6 @@ class TubeDetail extends Component {
 					})}
 				</div>
 			);
-
 		}
 
 		let title = `${this.props.currentServer.host}:${this.props.currentServer.port}`;
@@ -328,22 +327,22 @@ class TubeDetail extends Component {
 				<hr />
 				<Table responsive striped bordered hover>
 					<thead>
-					<tr>
-						<th>Name</th>
-						<th>Urgent</th>
-						<th>Ready</th>
-						<th>Reserved</th>
-						<th>Delayed</th>
-						<th>Buried</th>
-						<th>Total</th>
-						<th>Using</th>
-						<th>Watching</th>
-						<th>Waiting</th>
-						<th>Delete (cmd)</th>
-						<th>Pause (cmd)</th>
-						<th>Pause (sec)</th>
-						<th>Pause (left)</th>
-					</tr>
+						<tr>
+							<th>Name</th>
+							<th>Urgent</th>
+							<th>Ready</th>
+							<th>Reserved</th>
+							<th>Delayed</th>
+							<th>Buried</th>
+							<th>Total</th>
+							<th>Using</th>
+							<th>Watching</th>
+							<th>Waiting</th>
+							<th>Delete (cmd)</th>
+							<th>Pause (cmd)</th>
+							<th>Pause (sec)</th>
+							<th>Pause (left)</th>
+						</tr>
 					</thead>
 					<tbody>
 						{tubeStat}
@@ -355,7 +354,7 @@ class TubeDetail extends Component {
 					<ul>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="warning" disabled={this.props.busy} onClick={() => {this.kickJobButton(1)}}>
+								<Button bsStyle="warning" disabled={this.props.busy} onClick={() => { this.kickJobButton(1); }}>
 									<i className="glyphicon glyphicon-play" />
 									&nbsp;Kick 1
 								</Button>
@@ -363,7 +362,7 @@ class TubeDetail extends Component {
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
-												<MenuItem key={`kick${val}`} onClick={() => {this.kickJobButton(val)}}>
+												<MenuItem key={`kick${val}`} onClick={() => { this.kickJobButton(val); }}>
 													<i className="glyphicon glyphicon-forward" />
 													&nbsp;Kick {val}
 												</MenuItem>
@@ -375,7 +374,7 @@ class TubeDetail extends Component {
 						</li>
 						<li>
 							<ButtonGroup>
-								<Button bsStyle="danger" disabled={this.props.busy} onClick={() => {this.deleteJobButton(1)}}>
+								<Button bsStyle="danger" disabled={this.props.busy} onClick={() => { this.deleteJobButton(1); }}>
 									<i className="glyphicon glyphicon-trash" />
 									&nbsp;Delete 1
 								</Button>
@@ -383,7 +382,7 @@ class TubeDetail extends Component {
 									{
 										[10, 100, 1000, 10000, 100000].map((val) => {
 											return (
-												<MenuItem key={`delete${val}`} onClick={() => {this.deleteJobButton(val)}}>
+												<MenuItem key={`delete${val}`} onClick={() => { this.deleteJobButton(val); }}>
 													<i className="glyphicon glyphicon-trash" />
 													&nbsp;Delete {val}
 												</MenuItem>
@@ -394,20 +393,20 @@ class TubeDetail extends Component {
 							</ButtonGroup>
 						</li>
 						<li>
-							<Button onClick={() => {this.togglePauseButton()}} disabled={this.props.busy}>
-								<i className={`glyphicon ${this.state.paused?'glyphicon-play':'glyphicon-pause'}`} />
-								&nbsp;{this.state.paused?'Unpause':'Pause'}
+							<Button onClick={() => { this.togglePauseButton(); }} disabled={this.props.busy}>
+								<i className={`glyphicon ${this.state.paused ? 'glyphicon-play' : 'glyphicon-pause'}`} />
+								&nbsp;{this.state.paused ? 'Unpause' : 'Pause'}
 							</Button>
 						</li>
 						<li>
-							<Button bsStyle="success" disabled={this.props.busy} onClick={() => {this.addJobButton()}}>
+							<Button bsStyle="success" disabled={this.props.busy} onClick={() => { this.addJobButton(); }}>
 								<i className="glyphicon glyphicon-plus" />
 								&nbsp;Add Job
 							</Button>
 						</li>
-						{/*<li>*/}
-							{/*<Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button>*/}
-						{/*</li>*/}
+						{/* <li> */}
+						{/* <Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button> */}
+						{/* </li> */}
 						<li>
 							<Preloader show={this.props.busy} />
 						</li>

@@ -127,7 +127,7 @@ class ServerController {
 
 			await BeanstalkConfigManager.addConfig(server);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;
@@ -153,7 +153,7 @@ class ServerController {
 
 			await BeanstalkConfigManager.deleteConfig(server);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;
@@ -204,7 +204,7 @@ class ServerController {
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
-			let errorMessage = e.message;
+			const errorMessage = e.message;
 			ctx.status = 400;
 			ctx.body = ResponseManager.error(null, 400, errorMessage);
 			return;

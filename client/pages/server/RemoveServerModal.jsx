@@ -46,7 +46,7 @@ class RemoveServerModal extends Component {
 
 	render() {
 		return (
-			<Modal show={this.props.removeServerModal.show} onHide={()=>this.hideRemoveServerModal()}>
+			<Modal show={this.props.removeServerModal.show} onHide={() => this.hideRemoveServerModal()}>
 				<Modal.Header closeButton>
 					<Modal.Title>Delete Server</Modal.Title>
 				</Modal.Header>
@@ -55,8 +55,8 @@ class RemoveServerModal extends Component {
 				</Modal.Body>
 				<Modal.Footer>
 					<Preloader show={this.props.busy} />
-					<Button onClick={()=>this.hideRemoveServerModal()}>Close</Button>
-					<Button bsStyle="danger" onClick={()=>this.removeServer()}>Delete</Button>
+					<Button onClick={() => this.hideRemoveServerModal()}>Close</Button>
+					<Button bsStyle="danger" onClick={() => this.removeServer()}>Delete</Button>
 				</Modal.Footer>
 			</Modal>
 		);

@@ -9,4 +9,4 @@ export default function busy(state = false, action) {
 		default:
 			return state;
 	}
-};
+}

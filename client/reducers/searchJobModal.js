@@ -15,4 +15,4 @@ export default function searchJobModal(state, action) {
 				show: false
 			};
 	}
-};
+}

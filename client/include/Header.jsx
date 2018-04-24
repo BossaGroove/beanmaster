@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
@@ -20,7 +20,7 @@ class Header extends Component {
 	render() {
 		let pauseStyle = 'default';
 		if (!this.props.autoUpdate) {
-			pauseStyle = 'danger'
+			pauseStyle = 'danger';
 		}
 
 		return (
@@ -34,11 +34,11 @@ class Header extends Component {
 					</Navbar.Header>
 					<Navbar.Collapse>
 						<Navbar.Form pullRight>
-							<Button onClick={() => {this.props.showSearchJobModal()}} className={this.props.showSearch?'':'hidden'}>
+							<Button onClick={() => { this.props.showSearchJobModal(); }} className={this.props.showSearch ? '' : 'hidden'}>
 								<Glyphicon glyph="search" />
 							</Button>
 							{' '}
-							<Button bsStyle={pauseStyle} onClick={() => {this.pause()}} className={this.props.showPause?'':'hidden'}>
+							<Button bsStyle={pauseStyle} onClick={() => { this.pause(); }} className={this.props.showPause ? '' : 'hidden'}>
 								<Glyphicon glyph="pause" />
 							</Button>
 						</Navbar.Form>

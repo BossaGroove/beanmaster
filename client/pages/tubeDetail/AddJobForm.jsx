@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import { Field, reduxForm } from 'redux-form';
+import React, {Component} from 'react';
+import {Field, reduxForm} from 'redux-form';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import Form from 'react-bootstrap/lib/Form';
@@ -34,12 +34,12 @@ const validate = (values) => {
 
 const renderInput = ({input, className, type, placeholder, meta, label}) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched?'error':null}>
+		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched?`* ${meta.error}`:''}
+				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
 			</Col>
 			<Col sm={10}>
-			<input {...input} className={className} type={type} placeholder={placeholder} />
+				<input {...input} className={className} type={type} placeholder={placeholder} />
 			</Col>
 		</FormGroup>
 	);
@@ -47,12 +47,12 @@ const renderInput = ({input, className, type, placeholder, meta, label}) => {
 
 const renderTextArea = ({input, className, type, placeholder, meta, label}) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched?'error':null}>
+		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched?`* ${meta.error}`:''}
+				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
 			</Col>
 			<Col sm={10}>
-			<textarea {...input} className={className} placeholder={placeholder} />
+				<textarea {...input} className={className} placeholder={placeholder} />
 			</Col>
 		</FormGroup>
 	);
@@ -63,7 +63,7 @@ class AddJobForm extends Component {
 		super(props);
 		this.props.initialize({
 			tube: this.props.defaultTube
-		})
+		});
 	}
 
 	render() {

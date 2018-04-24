@@ -78,7 +78,7 @@ class AddServerModal extends Component {
 
 		return (
 			<span>
-				<Modal show={this.props.addServerModal.show} onHide={()=>this.close()}>
+				<Modal show={this.props.addServerModal.show} onHide={() => this.close()}>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Server</Modal.Title>
 					</Modal.Header>
@@ -88,7 +88,7 @@ class AddServerModal extends Component {
 					</Modal.Body>
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />
-						<Button onClick={()=>this.close()}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 						<AddServerFormSubmitButton />
 					</Modal.Footer>
 				</Modal>

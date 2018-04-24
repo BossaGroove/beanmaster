@@ -11,4 +11,4 @@ export default function servers(state = true, action) {
 		default:
 			return state;
 	}
-};
+}
