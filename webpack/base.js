@@ -3,19 +3,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const resourceFolder = path.resolve(__dirname, '../client');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
 	context: resourceFolder,
 	entry: {
-		vendor: [
-			'lodash',
-			'react',
-			'react-dom',
-			'redux',
-			'react-redux',
-			'react-router',
-			'react-bootstrap'
-		],
 		app: './index.jsx'
 	},
 	output: {
@@ -28,20 +20,14 @@ const config = {
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: function (m) {
-				if (m.context && [
-						'core-js',
-						'babel-runtime',
-						'regenerator-runtime'
-					].some(moduleName => m.context.includes(moduleName))) {
-					return false;
-				}
 				return m.context && m.context.includes('node_modules');
 			}
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'manifest',
 			minChunks: Infinity
-		})
+		}),
+		new BundleAnalyzerPlugin()
 	],
 	module: {
 		rules: [
