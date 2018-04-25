@@ -32,6 +32,40 @@ class TubeDetail extends Component {
 		};
 	}
 
+	static getDelta(oldStat, currentStat) {
+		const tubeInfoDelta = {};
+		const statsDelta = {};
+
+		for (const key of Object.keys(currentStat.tubeInfo)) {
+			if (!isUndefined(oldStat.tubeInfo) && !isUndefined(oldStat.tubeInfo[key])) {
+				tubeInfoDelta[key] = currentStat.tubeInfo[key] - oldStat.tubeInfo[key];
+			} else {
+				tubeInfoDelta[key] = 0;
+			}
+		}
+
+		for (const action of Object.keys(currentStat.stats)) {
+			statsDelta[action] = {
+				stat: {}
+			};
+
+			if (currentStat.stats[action]) {
+				for (const key of Object.keys(currentStat.stats[action].stat)) {
+					if (!isUndefined(get(oldStat, `stats[${action}].stat[${key}]`, undefined))) {
+						statsDelta[action].stat[key] = currentStat.stats[action].stat[key] - oldStat.stats[action].stat[key];
+					} else {
+						statsDelta[action].stat[key] = 0;
+					}
+				}
+			}
+		}
+
+		return {
+			tubeInfo: tubeInfoDelta,
+			stats: statsDelta
+		};
+	}
+
 	componentWillMount() {
 		this.isMount = true;
 		this.init();
@@ -143,40 +177,6 @@ class TubeDetail extends Component {
 		return {
 			current: currentStat,
 			delta: TubeDetail.getDelta(get(oldStat, 'current', {}), currentStat)
-		};
-	}
-
-	static getDelta(oldStat, currentStat) {
-		const tubeInfoDelta = {};
-		const statsDelta = {};
-
-		for (const key of Object.keys(currentStat.tubeInfo)) {
-			if (!isUndefined(oldStat.tubeInfo) && !isUndefined(oldStat.tubeInfo[key])) {
-				tubeInfoDelta[key] = currentStat.tubeInfo[key] - oldStat.tubeInfo[key];
-			} else {
-				tubeInfoDelta[key] = 0;
-			}
-		}
-
-		for (const action of Object.keys(currentStat.stats)) {
-			statsDelta[action] = {
-				stat: {}
-			};
-
-			if (currentStat.stats[action]) {
-				for (const key of Object.keys(currentStat.stats[action].stat)) {
-					if (!isUndefined(get(oldStat, `stats[${action}].stat[${key}]`, undefined))) {
-						statsDelta[action].stat[key] = currentStat.stats[action].stat[key] - oldStat.stats[action].stat[key];
-					} else {
-						statsDelta[action].stat[key] = 0;
-					}
-				}
-			}
-		}
-
-		return {
-			tubeInfo: tubeInfoDelta,
-			stats: statsDelta
 		};
 	}
 
