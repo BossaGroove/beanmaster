@@ -63,7 +63,7 @@ class RemoveServerModal extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	removeServerModal: state.removeServerModal,
 	busy: state.busy
 }), {

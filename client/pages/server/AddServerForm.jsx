@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/lib/Form';
 import Col from 'react-bootstrap/lib/Col';
 import isURL from 'validator/lib/isURL';
 import isIP from 'validator/lib/isIP';
-import isFinite from 'lodash/isFinite';
+import _isFinite from 'lodash/isFinite';
 
 const validate = (values) => {
 	const errors = {};
@@ -19,8 +19,8 @@ const validate = (values) => {
 		errors.host = 'Host invalid';
 	}
 
-	const port = parseInt(values.port);
-	if (!values.port || !isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
+	const port = parseInt(values.port, 10);
+	if (!values.port || !_isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
 		errors.port = 'Port invalid';
 	}
 

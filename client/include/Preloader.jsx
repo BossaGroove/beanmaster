@@ -5,7 +5,7 @@ class Preloader extends Component {
 	render() {
 		return (
 			<span className={`preloader ${this.props.show ? '' : 'hidden'}`}>
-				<img src={preloader} />
+				<img alt="preloader" src={preloader} />
 			</span>
 		);
 	}

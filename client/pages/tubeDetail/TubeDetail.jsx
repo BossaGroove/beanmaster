@@ -421,7 +421,7 @@ class TubeDetail extends Component {
 }
 
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	busy: state.busy,
 	autoUpdate: state.autoUpdate,
 	currentServer: state.currentServer,

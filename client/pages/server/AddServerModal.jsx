@@ -97,7 +97,7 @@ class AddServerModal extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	busy: state.busy,
 	servers: state.servers,
 	addServerModal: state.addServerModal

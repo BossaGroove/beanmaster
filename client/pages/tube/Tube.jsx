@@ -158,7 +158,7 @@ class Tube extends Component {
 }
 
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	autoUpdate: state.autoUpdate,
 	currentServer: state.currentServer,
 	tubes: state.tubes

@@ -1,5 +1,3 @@
-
-
 const Fivebeans = require('fivebeans');
 const bluebird = require('bluebird');
 const debug = require('debug')('bs');
@@ -10,11 +8,11 @@ class BeanstalkConnectionManager {
 			throw new Error('Host or port invalid');
 		}
 
-		const port_int = parseInt(port, 10);
+		const portInt = parseInt(port, 10);
 
-		debug(`Try to initiate a new beanstalk connection: ${host} / ${port_int}`);
+		debug(`Try to initiate a new beanstalk connection: ${host} / ${portInt}`);
 
-		const client = new Fivebeans.client(host, port_int);
+		const client = new Fivebeans.client(host, portInt);
 
 		bluebird.promisifyAll(client, {
 			multiArgs: true
@@ -24,7 +22,7 @@ class BeanstalkConnectionManager {
 
 		await (new Promise((resolve, reject) => {
 			client.on('connect', () => {
-				debug(`Connected: ${host} / ${port_int}`);
+				debug(`Connected: ${host} / ${portInt}`);
 				resolve();
 			});
 			client.on('error', (err) => {

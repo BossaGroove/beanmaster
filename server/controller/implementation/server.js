@@ -173,11 +173,11 @@ class ServerController {
 
 		const host = ctx.request.body.host;
 		const port = parseInt(ctx.request.body.port);
-		const job_id = parseInt(ctx.request.body.job_id);
+		const jobId = parseInt(ctx.request.body.job_id);
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
-			[stat] = await connection.stats_jobAsync(job_id);
+			[stat] = await connection.stats_jobAsync(jobId);
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -196,11 +196,11 @@ class ServerController {
 	static async kick(ctx) {
 		const host = ctx.request.body.host;
 		const port = parseInt(ctx.request.body.port);
-		const job_id = parseInt(ctx.request.body.job_id);
+		const jobId = parseInt(ctx.request.body.job_id);
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
-			await connection.kick_jobAsync(job_id);
+			await connection.kick_jobAsync(jobId);
 
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {

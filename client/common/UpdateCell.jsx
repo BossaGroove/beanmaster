@@ -5,11 +5,18 @@ class UpdateCell extends Component {
 		super(props);
 
 		this.state = {
-			show: false,
 			cellStyle: 'update-cell',
 			updated: false,
 			delta: 0
 		};
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const delta = nextProps.delta || 0;
+
+		if (delta !== 0) {
+			this.setBackgroundAnimation(nextProps.delta);
+		}
 	}
 
 	setBackgroundAnimation(delta) {
@@ -31,14 +38,6 @@ class UpdateCell extends Component {
 			updated: false,
 			delta: 0
 		});
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const delta = nextProps.delta || 0;
-
-		if (delta !== 0) {
-			this.setBackgroundAnimation(nextProps.delta);
-		}
 	}
 
 	render() {

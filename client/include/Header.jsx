@@ -9,10 +9,6 @@ import {toggleAutoUpdate} from '../actions/autoUpdate';
 import SearchJobModal from './SearchJobModal';
 
 class Header extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	pause() {
 		this.props.toggleAutoUpdate();
 	}
@@ -50,7 +46,7 @@ class Header extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	autoUpdate: state.autoUpdate
 }), {
 	showSearchJobModal,

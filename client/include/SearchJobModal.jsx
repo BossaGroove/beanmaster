@@ -26,21 +26,21 @@ class SearchJobModal extends Component {
 		};
 	}
 
-	close() {
-		this.props.notBusy();
-		this.props.hideSearchJobModal();
-		this.hideAlert();
-		this.setState({
-			jobStat: null
-		});
-	}
-
 	setAlert({status, message}) {
 		this.setState({
 			alert: {
 				status,
 				message
 			}
+		});
+	}
+
+	close() {
+		this.props.notBusy();
+		this.props.hideSearchJobModal();
+		this.hideAlert();
+		this.setState({
+			jobStat: null
 		});
 	}
 
@@ -194,7 +194,7 @@ class SearchJobModal extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	busy: state.busy,
 	searchJobModal: state.searchJobModal,
 	currentServer: state.currentServer

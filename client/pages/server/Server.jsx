@@ -79,7 +79,7 @@ class Server extends Component {
 }
 
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	servers: state.servers
 }), {
 	initServers,

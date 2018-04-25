@@ -97,7 +97,7 @@ class AddJobModal extends Component {
 	}
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
 	busy: state.busy,
 	currentServer: state.currentServer,
 	addJobModal: state.addJobModal

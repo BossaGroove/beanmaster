@@ -17,15 +17,15 @@ class BeanstalkConfigManager {
 			fs.writeFileSync(BEANMASTER_CONFIG_PATH);
 		}
 
-		this._cached_config = null;
+		this._cachedConfig = null;
 	}
 
 	async getConfig() {
-		if (this._cached_config) {
-			return this._cached_config;
+		if (this._cachedConfig) {
+			return this._cachedConfig;
 		}
 
-		const path_exists = await (new Promise(function (resolve, reject) {
+		const pathExists = await (new Promise(function (resolve, reject) {
 			fs.stat(BEANMASTER_CONFIG_PATH, function (err, stat) {
 				if (err || !stat) {
 					reject(err);
@@ -35,12 +35,12 @@ class BeanstalkConfigManager {
 			});
 		}));
 
-		if (!path_exists) {
-			this._cached_config = [];
-			return this._cached_config;
+		if (!pathExists) {
+			this._cachedConfig = [];
+			return this._cachedConfig;
 		}
 
-		let config_data = await (new Promise(function (resolve) {
+		let configData = await (new Promise(function (resolve) {
 			fs.readFile(BEANMASTER_CONFIG_PATH, function (err, data) {
 				if (err) {
 					resolve([]);
@@ -50,19 +50,19 @@ class BeanstalkConfigManager {
 			});
 		}));
 
-		config_data = config_data.toString();
+		configData = configData.toString();
 
 		try {
-			this._cached_config = JSON.parse(config_data);
+			this._cachedConfig = JSON.parse(configData);
 		} catch (e) {
-			this._cached_config = [];
+			this._cachedConfig = [];
 		}
 
-		return this._cached_config;
+		return this._cachedConfig;
 	}
 
-	async saveConfig(new_config) {
-		const data = JSON.stringify(new_config, null, '\t');
+	async saveConfig(newConfig) {
+		const data = JSON.stringify(newConfig, null, '\t');
 
 		await (new Promise((resolve, reject) => {
 			fs.writeFile(BEANMASTER_CONFIG_PATH, data, function (err) {
@@ -74,35 +74,35 @@ class BeanstalkConfigManager {
 			});
 		}));
 
-		this._cached_config = new_config;
+		this._cachedConfig = newConfig;
 
-		return this._cached_config;
+		return this._cachedConfig;
 	}
 
-	async addConfig(input_config) {
+	async addConfig(inputConfig) {
 		const configs = await this.getConfig();
 
 		// find if same config exists
-		if (_.find(configs, {host: input_config.host, port: input_config.port})) {
+		if (_.find(configs, {host: inputConfig.host, port: inputConfig.port})) {
 			throw new Error('Connection already exists');
 		}
 
 		configs.push({
-			name: input_config.name,
-			host: input_config.host,
-			port: input_config.port
+			name: inputConfig.name,
+			host: inputConfig.host,
+			port: inputConfig.port
 		});
 
 		return await this.saveConfig(configs);
 	}
 
-	async deleteConfig(input_config) {
+	async deleteConfig(inputConfig) {
 		let configs = await this.getConfig();
 
-		const config_to_be_deleted = _.find(configs, {host: input_config.host, port: input_config.port});
+		const configToBeDeleted = _.find(configs, {host: inputConfig.host, port: inputConfig.port});
 
-		if (config_to_be_deleted) {
-			configs = _.without(configs, config_to_be_deleted);
+		if (configToBeDeleted) {
+			configs = _.without(configs, configToBeDeleted);
 		}
 
 		return await this.saveConfig(configs);
