@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import actions from "redux-form/es/actions";
+import actions from 'redux-form/es/actions';
 import {Button} from 'react-bootstrap';
 const submit = actions.submit;
 

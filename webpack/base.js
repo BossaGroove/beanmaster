@@ -42,25 +42,25 @@ const config = {
 									BabelPluginTransformImports,
 									{
 										'react-bootstrap': {
-											'transform': function(importName) {
+											'transform': function (importName) {
 												return `react-bootstrap/es/${importName}`;
 											},
 											preventFullImport: true
 										},
 										'lodash-es': {
-											'transform': function(importName) {
+											'transform': function (importName) {
 												return `lodash-es/${importName}`;
 											},
 											preventFullImport: true
 										},
 										'validator': {
-											'transform': function(importName) {
+											'transform': function (importName) {
 												return `validator/lib/${importName}`;
 											},
 											preventFullImport: true
 										},
 										'redux-form': {
-											'transform': function(importName) {
+											'transform': function (importName) {
 												return `redux-form/es/${importName}`;
 											},
 											preventFullImport: true

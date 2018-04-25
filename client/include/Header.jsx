@@ -19,7 +19,7 @@ class Header extends Component {
 
 		return (
 			<div>
-				<Navbar inverse fluid={true}>
+				<Navbar inverse fluid>
 					<Navbar.Header>
 						<Navbar.Brand>
 							<Link to="/">Beanmaster</Link>
