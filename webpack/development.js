@@ -1,5 +1,3 @@
-
-
 const config = require('./base');
 const webpack = require('webpack');
 const path = require('path');
@@ -30,13 +28,7 @@ Object.assign(config, {
 });
 
 config.plugins.push(
-	new webpack.DefinePlugin({
-		'process.env': {
-			'NODE_ENV': JSON.stringify('development')
-		}
-	}),
 	new webpack.HotModuleReplacementPlugin(),
-	new webpack.NamedModulesPlugin(),
 	new ManifestPlugin({
 		fileName: 'manifest.json',
 		writeToFileEmit: true,
@@ -102,9 +94,6 @@ config.module.rules.push(
 
 config.entry.app = [
 	'webpack-dev-server/client?http://localhost:4003',
-	// 'webpack/hot/only-dev-server',
-	// 'webpack-hot-middleware/client',
-	'react-hot-loader/patch',
 	'./index.jsx'
 ];
 

@@ -1,9 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
 const resourceFolder = path.resolve(__dirname, '../client');
 const BabelPluginTransformImports = require('babel-plugin-transform-imports');
 
 const config = {
+	mode: process.env.NODE_ENV || 'development',
 	context: resourceFolder,
 	entry: {
 		app: './index.jsx'
@@ -15,17 +15,20 @@ const config = {
 		chunkFilename: '[name].js' // Template based on keys in entry above
 	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			minChunks: function (m) {
-				return m.context && m.context.includes('node_modules');
-			}
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'manifest',
-			minChunks: Infinity
-		})
+
 	],
+	optimization: {
+		splitChunks: {
+			name: false,
+			cacheGroups: {
+				appVendor: {
+					test: /node_modules/,
+					chunks: 'initial',
+					name: 'vendor',
+				},
+			},
+		},
+	},
 	module: {
 		rules: [
 			{
