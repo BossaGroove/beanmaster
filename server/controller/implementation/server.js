@@ -22,8 +22,8 @@ class ServerController {
 	static async getInfo(ctx) {
 		let name;
 
-		const host = ctx.request.query.host;
-		const port = parseInt(ctx.request.query.port);
+		const {host} = ctx.request.query;
+		const port = parseInt(ctx.request.query.port, 10);
 
 		try {
 			const configs = await BeanstalkConfigManager.getConfig();
@@ -48,8 +48,11 @@ class ServerController {
 	static async getStat(ctx) {
 		let stat;
 
+		const {host} = ctx.request.query;
+		const port = parseInt(ctx.request.query.port, 10);
+
 		try {
-			const connection = await BeanstalkConnectionManager.connect(ctx.request.query.host, ctx.request.query.port);
+			const connection = await BeanstalkConnectionManager.connect(host, port);
 			[stat] = await connection.statsAsync();
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -69,8 +72,8 @@ class ServerController {
 		let name;
 		let tubesInfo;
 
-		const host = ctx.request.query.host;
-		const port = parseInt(ctx.request.query.port);
+		const {host} = ctx.request.query;
+		const port = parseInt(ctx.request.query.port, 10);
 
 		try {
 			const configs = await BeanstalkConfigManager.getConfig();
@@ -98,8 +101,11 @@ class ServerController {
 	static async getTubeStat(ctx) {
 		let stat;
 
+		const {host} = ctx.request.query;
+		const port = parseInt(ctx.request.query.port, 10);
+
 		try {
-			const connection = await BeanstalkConnectionManager.connect(ctx.request.query.host, ctx.request.query.port);
+			const connection = await BeanstalkConnectionManager.connect(host, port);
 			[stat] = await connection.statsAsync();
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
@@ -118,11 +124,14 @@ class ServerController {
 	static async addServer(ctx) {
 		let server;
 
+		const {name, host} = ctx.request.body;
+		const port = parseInt(ctx.request.body.port, 10);
+
 		try {
 			server = {
-				name: ctx.request.body.name,
-				host: ctx.request.body.host,
-				port: parseInt(ctx.request.body.port)
+				name,
+				host,
+				port
 			};
 
 			await BeanstalkConfigManager.addConfig(server);
@@ -145,10 +154,13 @@ class ServerController {
 	static async deleteServer(ctx) {
 		let server;
 
+		const {host} = ctx.request.query;
+		const port = parseInt(ctx.request.query.port, 10);
+
 		try {
 			server = {
-				host: ctx.request.query.host,
-				port: parseInt(ctx.request.query.port)
+				host,
+				port
 			};
 
 			await BeanstalkConfigManager.deleteConfig(server);
@@ -171,9 +183,9 @@ class ServerController {
 	static async search(ctx) {
 		let stat;
 
-		const host = ctx.request.body.host;
-		const port = parseInt(ctx.request.body.port);
-		const jobId = parseInt(ctx.request.body.job_id);
+		const {host} = ctx.request.body;
+		const port = parseInt(ctx.request.body.port, 10);
+		const jobId = parseInt(ctx.request.body.job_id, 10);
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
@@ -194,9 +206,9 @@ class ServerController {
 	 * @param ctx
 	 */
 	static async kick(ctx) {
-		const host = ctx.request.body.host;
-		const port = parseInt(ctx.request.body.port);
-		const jobId = parseInt(ctx.request.body.job_id);
+		const {host} = ctx.request.body;
+		const port = parseInt(ctx.request.body.port, 10);
+		const jobId = parseInt(ctx.request.body.job_id, 10);
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);

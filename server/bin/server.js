@@ -1,11 +1,11 @@
-const app_root = `${__dirname}/..`;
+const appRoot = `${__dirname}/..`;
 
-const lib = require(`${app_root}/lib`);
+const lib = require(`${appRoot}/lib`);
 
 const port = 3000;
 
 // Bootstrap application settings
-lib.SharedManager.app = require(`${app_root}/setup/app`);
+lib.SharedManager.app = require(`${appRoot}/setup/app`);
 
 lib.SharedManager.app.listen(port);
 

@@ -91,7 +91,7 @@ class BeanstalkConfigManager {
 			port: inputConfig.port
 		});
 
-		return await this.saveConfig(configs);
+		return this.saveConfig(configs);
 	}
 
 	async deleteConfig(inputConfig) {
@@ -103,7 +103,7 @@ class BeanstalkConfigManager {
 			configs = _.without(configs, configToBeDeleted);
 		}
 
-		return await this.saveConfig(configs);
+		return this.saveConfig(configs);
 	}
 }
 

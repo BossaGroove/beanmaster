@@ -1,16 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
+import {BrowserRouter, Route} from 'react-router-dom';
 import Layout from './include/Layout';
 
-import {BrowserRouter, Route} from 'react-router-dom';
-
-class Root extends Component {
-	render() {
-		return (
-			<BrowserRouter>
-				<Route path="/" component={Layout} />
-			</BrowserRouter>
-		);
-	}
-}
+const Root = () => (
+	<BrowserRouter>
+		<Route path="/" component={Layout} />
+	</BrowserRouter>
+);
 
 export default Root;

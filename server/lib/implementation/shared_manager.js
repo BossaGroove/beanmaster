@@ -2,8 +2,7 @@
 
 class SharedManager {
 	constructor() {
-		const fakeLogger = function (msg) {
-			console.log(msg);
+		const fakeLogger = function () {
 		};
 
 		this.logger = {

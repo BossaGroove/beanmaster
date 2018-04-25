@@ -1,3 +1,4 @@
+const path = require('path');
 const Koa = require('koa');
 const helmet = require('koa-helmet');
 const responseTime = require('koa-response-time');
@@ -52,7 +53,7 @@ app.use(responseTime());
 app.use(logger());
 app.use(bodyParser());
 
-app.use(views(__dirname + '/../views', {
+app.use(views(path.resolve(__dirname, '../views'), {
 	extension: 'pug'
 }));
 

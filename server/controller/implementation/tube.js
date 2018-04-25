@@ -10,9 +10,8 @@ class TubeController {
 	static async getStat(ctx) {
 		let stat;
 
-		const host = ctx.request.query.host;
+		const {host, tube} = ctx.request.query;
 		const port = parseInt(ctx.request.query.port, 10);
-		const tube = ctx.request.query.tube;
 
 		try {
 			stat = await TubeController.getTubeInfo({
@@ -34,7 +33,13 @@ class TubeController {
 		const name = _.get(_.find(configs, {host: host, port: port}), 'name', null);
 		const connection = await BeanstalkConnectionManager.connect(host, port);
 
-		const [tubeInfo] = await connection.stats_tubeAsync(tube);
+		let tubeInfo = null;
+
+		try {
+			[tubeInfo] = await connection.stats_tubeAsync(tube);
+		} catch (e) {
+		}
+
 		let stats = {
 			'peek_ready': null,
 			'peek_delayed': null,
@@ -107,13 +112,11 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async addJob(ctx) {
-		const host = ctx.request.body.host;
+		const {host, tube, payload} = ctx.request.body;
 		const port = parseInt(ctx.request.body.port, 10);
-		const tube = ctx.request.body.tube;
 		const priority = ctx.request.body.priority || 0;
 		const delay = ctx.request.body.delay || 0;
 		const ttr = ctx.request.body.ttr || 1;
-		const payload = ctx.request.body.payload;
 
 		let jobId;
 
@@ -121,7 +124,7 @@ class TubeController {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
 			await connection.useAsync(tube);
 			[jobId] = await connection.putAsync(priority, delay, ttr, payload);
-			jobId = parseInt(jobId);
+			jobId = parseInt(jobId, 10);
 			await BeanstalkConnectionManager.closeConnection(connection);
 		} catch (e) {
 			const errorMessage = e.message;
@@ -138,10 +141,8 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async kickJob(ctx) {
-		const host = ctx.request.body.host;
+		const {host, tube, value} = ctx.request.body;
 		const port = parseInt(ctx.request.body.port, 10);
-		const tube = ctx.request.body.tube;
-		const value = ctx.request.body.value;
 		let kicked = 0;
 
 		try {
@@ -168,10 +169,8 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async deleteJob(ctx) {
-		const host = ctx.request.body.host;
+		const {host, tube, value} = ctx.request.body;
 		const port = parseInt(ctx.request.body.port, 10);
-		const tube = ctx.request.body.tube;
-		const value = ctx.request.body.value;
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
@@ -200,17 +199,16 @@ class TubeController {
 	 * @param ctx
 	 */
 	static async togglePause(ctx) {
-		const host = ctx.request.body.host;
+		const {host, tube} = ctx.request.body;
 		const port = parseInt(ctx.request.body.port, 10);
-		const tube = ctx.request.body.tube;
 
 		try {
 			const connection = await BeanstalkConnectionManager.connect(host, port);
-			const [tube_info] = await connection.stats_tubeAsync(tube);
+			const [tubeInfo] = await connection.stats_tubeAsync(tube);
 
 			let delay = 3600;
 
-			if (tube_info['pause-time-left'] > 0) {
+			if (tubeInfo['pause-time-left'] > 0) {
 				delay = 0;
 			}
 

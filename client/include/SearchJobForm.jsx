@@ -1,6 +1,7 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const validate = (values) => {
 	const errors = {};
@@ -32,6 +33,10 @@ let SearchJobForm = (props) => (
 		<Field className="form-control" name="job_id" component={renderInput} type="text" label="Job ID" />
 	</Form>
 );
+
+SearchJobForm.propTypes = {
+	handleSubmit: PropTypes.func.isRequired
+};
 
 SearchJobForm = reduxForm({
 	form: 'search_job',

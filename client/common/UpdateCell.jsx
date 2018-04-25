@@ -72,8 +72,17 @@ class UpdateCell extends Component {
 }
 
 UpdateCell.propTypes = {
-	delta: PropTypes.number.isRequired,
-	value: PropTypes.number.isRequired
+	delta: PropTypes.number,
+	value: PropTypes.oneOfType([
+		PropTypes.number,
+		PropTypes.string
+	])
 };
+
+UpdateCell.defaultProps = {
+	value: '-',
+	delta: 0
+};
+
 
 export default UpdateCell;

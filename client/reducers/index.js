@@ -1,3 +1,4 @@
+import {reducer as form} from 'redux-form';
 import {combineReducers} from 'redux';
 import servers from './servers';
 import addServerModal from './addServerModal';
@@ -10,7 +11,6 @@ import serverRow from './serverRow';
 import tubes from './tubes';
 import tubeDetail from './tubeDetail';
 import busy from './busy';
-import {reducer as form} from 'redux-form';
 
 export default combineReducers({
 	servers,

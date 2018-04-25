@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import preloader from '../assets/images/preloader.gif';
 
-class Preloader extends Component {
-	render() {
-		return (
-			<span className={`preloader ${this.props.show ? '' : 'hidden'}`}>
-				<img alt="preloader" src={preloader} />
-			</span>
-		);
-	}
-}
+const Preloader = (props) => (
+	<span className={`preloader ${props.show ? '' : 'hidden'}`}>
+		<img alt="preloader" src={preloader} />
+	</span>
+);
+
+Preloader.propTypes = {
+	show: PropTypes.bool.isRequired
+};
 
 export default Preloader;

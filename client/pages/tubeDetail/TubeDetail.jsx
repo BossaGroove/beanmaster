@@ -4,6 +4,8 @@ import {Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col} from 're
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {get, isUndefined} from 'lodash-es';
+import PropTypes from 'prop-types';
+
 import UpdateCell from '../../common/UpdateCell';
 import Preloader from '../../include/Preloader';
 
@@ -18,7 +20,7 @@ class TubeDetail extends Component {
 	constructor(props) {
 		super(props);
 		const serverInfo = this.props.match.params.server.split(':');
-		const tube = this.props.match.params.tube;
+		const {tube} = this.props.match.params;
 
 		this.state = {
 			host: serverInfo[0],
@@ -30,15 +32,15 @@ class TubeDetail extends Component {
 		};
 	}
 
+	componentWillMount() {
+		this.isMount = true;
+		this.init();
+	}
+
 	componentWillUpdate(nextProps) {
 		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
 			this.performUpdate(nextProps.autoUpdate);
 		}
-	}
-
-	componentWillMount() {
-		this.isMount = true;
-		this.init();
 	}
 
 	componentWillUnmount() {
@@ -188,7 +190,7 @@ class TubeDetail extends Component {
 			value
 		}).then(() => {
 
-		}).catch((e) => {
+		}).catch(() => {
 
 		}).finally(() => {
 			this.props.notBusy();
@@ -205,7 +207,7 @@ class TubeDetail extends Component {
 			value
 		}).then(() => {
 
-		}).catch((e) => {
+		}).catch(() => {
 
 		}).finally(() => {
 			this.props.notBusy();
@@ -217,7 +219,7 @@ class TubeDetail extends Component {
 
 		this.togglePause(this.state).then(() => {
 
-		}).catch((e) => {
+		}).catch(() => {
 
 		}).finally(() => {
 			this.props.notBusy();
@@ -236,7 +238,7 @@ class TubeDetail extends Component {
 			tubeStat = (
 				<tr>
 					<td>
-						{this.props.tubeDetail.current.tubeInfo.name}
+						{this.props.tubeDetail.current.tubeInfo.name || '-'}
 					</td>
 					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-urgent']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-urgent']} />
 					<UpdateCell value={this.props.tubeDetail.current.tubeInfo['current-jobs-ready']} delta={this.props.tubeDetail.delta.tubeInfo['current-jobs-ready']} />
@@ -261,7 +263,7 @@ class TubeDetail extends Component {
 							<div key={state} >
 								<Row>
 									<Col md={12}>
-										<h4>Next job in "{state.split('_')[1]}" state</h4>
+										<h4>Next job in &quot;{state.split('_')[1]}&quot; state</h4>
 									</Col>
 								</Row>
 								{this.props.tubeDetail.current.stats[state] ?
@@ -405,9 +407,6 @@ class TubeDetail extends Component {
 								&nbsp;Add Job
 							</Button>
 						</li>
-						{/* <li> */}
-						{/* <Button className="btn-primary" onClick={() => {this.updateTube().then(() => {}).catch((e) => {})}} disabled={this.props.busy}>Update</Button> */}
-						{/* </li> */}
 						<li>
 							<Preloader show={this.props.busy} />
 						</li>
@@ -421,6 +420,19 @@ class TubeDetail extends Component {
 	}
 }
 
+TubeDetail.propTypes = {
+	busy: PropTypes.bool.isRequired,
+	match: PropTypes.object.isRequired,
+	currentServer: PropTypes.object.isRequired,
+	tubeDetail: PropTypes.object.isRequired,
+	autoUpdate: PropTypes.bool.isRequired,
+	showAddJobModal: PropTypes.func.isRequired,
+	setServer: PropTypes.func.isRequired,
+	isBusy: PropTypes.func.isRequired,
+	notBusy: PropTypes.func.isRequired,
+	dispatchTubeDetail: PropTypes.func.isRequired,
+	destroyTubeDetail: PropTypes.func.isRequired
+};
 
 export default connect((state) => ({
 	busy: state.busy,
