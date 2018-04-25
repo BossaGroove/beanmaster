@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import Table from 'react-bootstrap/lib/Table';
+import {Table} from 'react-bootstrap';
 import axios from 'axios';
-import get from 'lodash/get';
-import isUndefined from 'lodash/isUndefined';
-import find from 'lodash/find';
+import {find, get, isUndefined} from 'lodash-es';
 import TubeRow from './TubeRow';
 
 import {setServer} from '../../actions/currentServer';

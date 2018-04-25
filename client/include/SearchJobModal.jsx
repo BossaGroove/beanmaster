@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import get from 'lodash/get';
-import Button from 'react-bootstrap/lib/Button';
-import Modal from 'react-bootstrap/lib/Modal';
-import Alert from 'react-bootstrap/lib/Alert';
-import Table from 'react-bootstrap/lib/Table';
+import {get} from 'lodash-es';
+import {Button, Modal, Alert, Table} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
 import {isBusy, notBusy} from '../actions/busy';

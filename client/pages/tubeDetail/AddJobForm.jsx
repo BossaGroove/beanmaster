@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
-import Form from 'react-bootstrap/lib/Form';
-import Col from 'react-bootstrap/lib/Col';
-import _isNaN from 'lodash/isNaN';
+import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
+import {isNaN as _isNaN} from 'lodash-es';
 
 const validate = (values) => {
 	const errors = {};

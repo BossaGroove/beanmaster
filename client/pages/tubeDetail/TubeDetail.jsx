@@ -1,16 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import Table from 'react-bootstrap/lib/Table';
-import Button from 'react-bootstrap/lib/Button';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import {Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import get from 'lodash/get';
-import isUndefined from 'lodash/isUndefined';
+import {get, isUndefined} from 'lodash-es';
 import UpdateCell from '../../common/UpdateCell';
 import Preloader from '../../include/Preloader';
 

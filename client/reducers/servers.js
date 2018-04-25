@@ -1,4 +1,4 @@
-import filter from 'lodash/filter';
+import {filter} from 'lodash-es';
 import {INIT_SERVERS, ADD_SERVER, REMOVE_SERVER} from '../constants/ActionTypes';
 
 export default function servers(state = [], action) {

@@ -1,9 +1,6 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
-import Form from 'react-bootstrap/lib/Form';
-import Col from 'react-bootstrap/lib/Col';
+import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
 
 const validate = (values) => {
 	const errors = {};

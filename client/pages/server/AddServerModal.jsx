@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import Button from 'react-bootstrap/lib/Button';
-import Modal from 'react-bootstrap/lib/Modal';
-import Alert from 'react-bootstrap/lib/Alert';
+import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 
 import {isBusy, notBusy} from '../../actions/busy';

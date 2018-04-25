@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import Button from 'react-bootstrap/lib/Button';
+import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import get from 'lodash/get';
+import {get} from 'lodash-es';
 
 import {showRemoveServerModal} from '../../actions/removeServerModal';
 import {dispatchServerRow} from '../../actions/serverRow';

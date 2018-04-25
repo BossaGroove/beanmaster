@@ -1,12 +1,9 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
-import Form from 'react-bootstrap/lib/Form';
-import Col from 'react-bootstrap/lib/Col';
+import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
 import isURL from 'validator/lib/isURL';
 import isIP from 'validator/lib/isIP';
-import _isFinite from 'lodash/isFinite';
+import {isFinite} from 'lodash-es';
 
 const validate = (values) => {
 	const errors = {};
@@ -20,7 +17,7 @@ const validate = (values) => {
 	}
 
 	const port = parseInt(values.port, 10);
-	if (!values.port || !_isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
+	if (!values.port || !isFinite(port) || port <= 0 || port >= 65536 || !values.port.match(/[0-9]+/)) {
 		errors.port = 'Port invalid';
 	}
 

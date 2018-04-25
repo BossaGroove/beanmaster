@@ -1,8 +1,7 @@
-
-
 const path = require('path');
 const webpack = require('webpack');
 const resourceFolder = path.resolve(__dirname, '../client');
+const BabelPluginTransformImports = require('babel-plugin-transform-imports');
 
 const config = {
 	context: resourceFolder,
@@ -32,7 +31,31 @@ const config = {
 			{
 				test: /\.jsx*?$/,
 				use: [
-					'babel-loader'
+					{
+						loader: 'babel-loader',
+						query: {
+							plugins: [
+								[
+									BabelPluginTransformImports,
+									{
+										'react-bootstrap': {
+											'transform': function(importName) {
+												return `react-bootstrap/es/${importName}`;
+											},
+											preventFullImport: true
+										},
+										'lodash-es': {
+											'transform': function(importName) {
+												return `lodash-es/${importName}`;
+											},
+											preventFullImport: true
+										}
+									}
+								]
+							]
+						}
+
+					}
 				]
 			},
 			{
