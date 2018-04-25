@@ -68,6 +68,7 @@
     "koa-static": "^4.0.2",
     "koa-views": "^6.1.4",
     "lodash": "^4.17.10",
+    "prop-types": "^15.6.1",
     "pug": "^2.0.3",
     "require-all": "^2.2.0",
     "validator": "^9.4.1"

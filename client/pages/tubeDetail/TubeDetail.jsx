@@ -277,7 +277,15 @@ class TubeDetail extends Component {
 															return (
 																<tr key={key}>
 																	<td>{key}</td>
-																	<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]} />
+																	{['tube', 'state'].includes(key) ?
+																		(
+																			<td>{this.props.tubeDetail.current.stats[state].stat[key]}</td>
+																		)
+																		:
+																		(
+																			<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]} />
+																		)
+																	}
 																</tr>
 															);
 														})}

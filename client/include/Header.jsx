@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Navbar, Button, Glyphicon} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {showSearchJobModal} from '../actions/searchJobModal';
 import {toggleAutoUpdate} from '../actions/autoUpdate';
 import SearchJobModal from './SearchJobModal';
@@ -43,6 +44,14 @@ class Header extends Component {
 		);
 	}
 }
+
+Header.propTypes = {
+	toggleAutoUpdate: PropTypes.func.isRequired,
+	showSearchJobModal: PropTypes.func.isRequired,
+	autoUpdate: PropTypes.bool.isRequired,
+	showSearch: PropTypes.bool.isRequired,
+	showPause: PropTypes.bool.isRequired
+};
 
 export default connect((state) => ({
 	autoUpdate: state.autoUpdate

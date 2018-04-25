@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class UpdateCell extends Component {
 	constructor(props) {
@@ -69,5 +70,10 @@ class UpdateCell extends Component {
 		);
 	}
 }
+
+UpdateCell.propTypes = {
+	delta: PropTypes.number.isRequired,
+	value: PropTypes.number.isRequired
+};
 
 export default UpdateCell;
