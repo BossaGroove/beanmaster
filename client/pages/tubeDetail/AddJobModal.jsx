@@ -68,7 +68,7 @@ class AddJobModal extends Component {
 
 		if (this.state.alert) {
 			alert = (
-				<Alert bsStyle="danger" onDismiss={this.hideAlert.bind(this)}>
+				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert}
 				</Alert>
 			);
@@ -82,7 +82,7 @@ class AddJobModal extends Component {
 					</Modal.Header>
 					<Modal.Body>
 						{alert}
-						<AddJobForm onSubmit={this.onSubmit.bind(this)} defaultTube={this.props.defaultTube} />
+						<AddJobForm onSubmit={(values) => { this.onSubmit(values); }} defaultTube={this.props.defaultTube} />
 					</Modal.Body>
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />

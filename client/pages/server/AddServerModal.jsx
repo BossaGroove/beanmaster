@@ -68,7 +68,7 @@ class AddServerModal extends Component {
 
 		if (this.state.alert) {
 			alert = (
-				<Alert bsStyle="danger" onDismiss={this.hideAlert.bind(this)}>
+				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert}
 				</Alert>
 			);
@@ -82,7 +82,7 @@ class AddServerModal extends Component {
 					</Modal.Header>
 					<Modal.Body>
 						{alert}
-						<AddServerForm onSubmit={this.onSubmit.bind(this)} />
+						<AddServerForm onSubmit={(values) => { this.onSubmit(values); }} />
 					</Modal.Body>
 					<Modal.Footer>
 						<Preloader show={this.props.busy} />

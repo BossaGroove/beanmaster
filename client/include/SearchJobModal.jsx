@@ -133,7 +133,7 @@ class SearchJobModal extends Component {
 
 		if (this.state.alert) {
 			alert = (
-				<Alert bsStyle={this.state.alert.status} onDismiss={this.hideAlert.bind(this)}>
+				<Alert bsStyle={this.state.alert.status} onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert.message}
 				</Alert>
 			);
@@ -176,7 +176,7 @@ class SearchJobModal extends Component {
 					</Modal.Header>
 					<Modal.Body>
 						{alert}
-						<SearchJobForm onSubmit={this.search.bind(this)} />
+						<SearchJobForm onSubmit={(values) => { this.search(values); }} />
 						{stat}
 					</Modal.Body>
 					<Modal.Footer>

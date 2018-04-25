@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Table} from 'react-bootstrap';
 import axios from 'axios';
 import {find, get, isUndefined} from 'lodash-es';
+import PropTypes from 'prop-types';
 import TubeRow from './TubeRow';
 
 import {setServer} from '../../actions/currentServer';
@@ -155,6 +156,15 @@ class Tube extends Component {
 	}
 }
 
+Tube.propTypes = {
+	match: PropTypes.object.isRequired,
+	autoUpdate: PropTypes.bool.isRequired,
+	currentServer: PropTypes.object.isRequired,
+	tubes: PropTypes.array.isRequired,
+	setServer: PropTypes.func.isRequired,
+	dispatchTubes: PropTypes.func.isRequired,
+	destroyTubes: PropTypes.func.isRequired,
+};
 
 export default connect((state) => ({
 	autoUpdate: state.autoUpdate,
