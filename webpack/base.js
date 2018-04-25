@@ -27,7 +27,7 @@ const config = {
 					name: 'vendor',
 				},
 			},
-		},
+		}
 	},
 	module: {
 		rules: [

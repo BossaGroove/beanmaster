@@ -1,5 +1,6 @@
 const config = require('./base');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
