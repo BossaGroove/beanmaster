@@ -1,7 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {submit} from 'redux-form';
+import actions from "redux-form/es/actions";
 import {Button} from 'react-bootstrap';
+const submit = actions.submit;
 
 const AddServerFormSubmitButton = ({dispatch}) => (
 	<Button bsStyle="primary" onClick={() => dispatch(submit('add_server'))}>Add</Button>

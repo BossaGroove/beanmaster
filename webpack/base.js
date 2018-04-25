@@ -49,6 +49,18 @@ const config = {
 												return `lodash-es/${importName}`;
 											},
 											preventFullImport: true
+										},
+										'validator': {
+											'transform': function(importName) {
+												return `validator/lib/${importName}`;
+											},
+											preventFullImport: true
+										},
+										'redux-form': {
+											'transform': function(importName) {
+												return `redux-form/es/${importName}`;
+											},
+											preventFullImport: true
 										}
 									}
 								]

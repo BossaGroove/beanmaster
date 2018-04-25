@@ -1,8 +1,7 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
-import isURL from 'validator/lib/isURL';
-import isIP from 'validator/lib/isIP';
+import {isURL, isIP} from 'validator';
 import {isFinite} from 'lodash-es';
 
 const validate = (values) => {
