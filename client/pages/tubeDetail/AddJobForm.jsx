@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
 import {isNaN as _isNaN} from 'lodash-es';
+import PropTypes from 'prop-types';
 
 const validate = (values) => {
 	const errors = {};
@@ -42,6 +43,24 @@ const renderInput = ({input, className, type, placeholder, meta, label}) => {
 	);
 };
 
+renderInput.propTypes = {
+	input: PropTypes.object,
+	className: PropTypes.string,
+	type: PropTypes.string,
+	placeholder: PropTypes.string,
+	meta: PropTypes.object,
+	label: PropTypes.string
+};
+
+renderInput.defaultProps = {
+	input: {},
+	className: null,
+	type: null,
+	placeholder: null,
+	meta: null,
+	label: null
+};
+
 const renderTextArea = ({input, className, type, placeholder, meta, label}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
@@ -53,6 +72,24 @@ const renderTextArea = ({input, className, type, placeholder, meta, label}) => {
 			</Col>
 		</FormGroup>
 	);
+};
+
+renderTextArea.propTypes = {
+	input: PropTypes.object,
+	className: PropTypes.string,
+	type: PropTypes.string,
+	placeholder: PropTypes.string,
+	meta: PropTypes.object,
+	label: PropTypes.string
+};
+
+renderTextArea.defaultProps = {
+	input: {},
+	className: null,
+	type: null,
+	placeholder: null,
+	meta: null,
+	label: null
 };
 
 class AddJobForm extends Component {
@@ -75,6 +112,11 @@ class AddJobForm extends Component {
 		);
 	}
 }
+
+AddJobForm.propTypes = {
+	handleSubmit: PropTypes.func.isRequired,
+	defaultTube: PropTypes.string.isRequired
+};
 
 AddJobForm = reduxForm({
 	form: 'add_job',

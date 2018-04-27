@@ -4,6 +4,7 @@ import axios from 'axios';
 import {get} from 'lodash-es';
 import {Button, Modal, Alert, Table} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import {isBusy, notBusy} from '../actions/busy';
 
@@ -88,9 +89,6 @@ class SearchJobModal extends Component {
 					});
 				}
 			})
-			.catch((e) => {
-
-			})
 			.finally(() => {
 				this.props.notBusy();
 			});
@@ -104,7 +102,7 @@ class SearchJobModal extends Component {
 			port: this.props.currentServer.port,
 			jobId: jobId
 		})
-			.then((data) => {
+			.then(() => {
 				this.setAlert({
 					status: 'success',
 					message: 'Job kicked'
@@ -129,10 +127,10 @@ class SearchJobModal extends Component {
 	}
 
 	render() {
-		let alert = null;
+		let alertMsg = null;
 
 		if (this.state.alert) {
-			alert = (
+			alertMsg = (
 				<Alert bsStyle={this.state.alert.status} onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert.message}
 				</Alert>
@@ -175,7 +173,7 @@ class SearchJobModal extends Component {
 						<Modal.Title>Search job</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						{alert}
+						{alertMsg}
 						<SearchJobForm onSubmit={(values) => { this.search(values); }} />
 						{stat}
 					</Modal.Body>
@@ -190,6 +188,16 @@ class SearchJobModal extends Component {
 		);
 	}
 }
+
+SearchJobModal.propTypes = {
+	busy: PropTypes.bool.isRequired,
+	searchJobModal: PropTypes.object.isRequired,
+	currentServer: PropTypes.object.isRequired,
+	isBusy: PropTypes.func.isRequired,
+	notBusy: PropTypes.func.isRequired,
+	hideSearchJobModal: PropTypes.func.isRequired
+};
+
 
 export default connect((state) => ({
 	busy: state.busy,

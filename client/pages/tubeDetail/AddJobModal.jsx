@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import {isBusy, notBusy} from '../../actions/busy';
 import {hideAddJobModal} from '../../actions/addJobModal';
@@ -64,10 +65,10 @@ class AddJobModal extends Component {
 	}
 
 	render() {
-		let alert = null;
+		let alertMsg = null;
 
 		if (this.state.alert) {
-			alert = (
+			alertMsg = (
 				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert}
 				</Alert>
@@ -81,7 +82,7 @@ class AddJobModal extends Component {
 						<Modal.Title>Add New Job</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						{alert}
+						{alertMsg}
 						<AddJobForm onSubmit={(values) => { this.onSubmit(values); }} defaultTube={this.props.defaultTube} />
 					</Modal.Body>
 					<Modal.Footer>
@@ -94,6 +95,15 @@ class AddJobModal extends Component {
 		);
 	}
 }
+
+AddJobModal.propTypes = {
+	busy: PropTypes.bool.isRequired,
+	currentServer: PropTypes.object.isRequired,
+	addJobModal: PropTypes.object.isRequired,
+	hideAddJobModal: PropTypes.func.isRequired,
+	isBusy: PropTypes.func.isRequired,
+	notBusy: PropTypes.func.isRequired
+};
 
 export default connect((state) => ({
 	busy: state.busy,

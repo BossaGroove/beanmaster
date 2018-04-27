@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import {Button, Modal, Alert} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import {isBusy, notBusy} from '../../actions/busy';
 import {addServer} from '../../actions/servers';
@@ -64,10 +65,10 @@ class AddServerModal extends Component {
 	}
 
 	render() {
-		let alert = null;
+		let alertMsg = null;
 
 		if (this.state.alert) {
-			alert = (
+			alertMsg = (
 				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert}
 				</Alert>
@@ -81,7 +82,7 @@ class AddServerModal extends Component {
 						<Modal.Title>Add Server</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						{alert}
+						{alertMsg}
 						<AddServerForm onSubmit={(values) => { this.onSubmit(values); }} />
 					</Modal.Body>
 					<Modal.Footer>
@@ -95,9 +96,18 @@ class AddServerModal extends Component {
 	}
 }
 
+AddServerModal.propTypes = {
+	busy: PropTypes.bool.isRequired,
+	addServerModal: PropTypes.object.isRequired,
+	addServer: PropTypes.func.isRequired,
+	hideAddServerModal: PropTypes.func.isRequired,
+	isBusy: PropTypes.func.isRequired,
+	notBusy: PropTypes.func.isRequired
+};
+
+
 export default connect((state) => ({
 	busy: state.busy,
-	servers: state.servers,
 	addServerModal: state.addServerModal
 }), {
 	addServer,

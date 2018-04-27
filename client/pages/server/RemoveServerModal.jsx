@@ -10,10 +10,6 @@ import {removeServer} from '../../actions/servers';
 import Preloader from '../../include/Preloader';
 
 class RemoveServerModal extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	static async removeServerRequest(server) {
 		const result = await axios.delete(`/api/servers?host=${server.host}&port=${server.port}`);
 		return result.data.body.server;
@@ -37,9 +33,6 @@ class RemoveServerModal extends Component {
 			.then(() => {
 				this.hideRemoveServerModal();
 				this.props.removeServer(server);
-			})
-			.catch((e) => {
-				console.log(e);
 			});
 	}
 

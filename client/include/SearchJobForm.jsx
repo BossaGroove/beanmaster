@@ -28,6 +28,24 @@ const renderInput = ({input, className, type, placeholder, meta, label}) => {
 	);
 };
 
+renderInput.propTypes = {
+	input: PropTypes.object,
+	className: PropTypes.string,
+	type: PropTypes.string,
+	placeholder: PropTypes.string,
+	meta: PropTypes.object,
+	label: PropTypes.string
+};
+
+renderInput.defaultProps = {
+	input: {},
+	className: null,
+	type: null,
+	placeholder: null,
+	meta: null,
+	label: null
+};
+
 let SearchJobForm = (props) => (
 	<Form horizontal onSubmit={props.handleSubmit}>
 		<Field className="form-control" name="job_id" component={renderInput} type="text" label="Job ID" />
@@ -37,6 +55,7 @@ let SearchJobForm = (props) => (
 SearchJobForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired
 };
+
 
 SearchJobForm = reduxForm({
 	form: 'search_job',

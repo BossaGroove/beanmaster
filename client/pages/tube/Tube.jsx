@@ -15,8 +15,7 @@ class Tube extends Component {
 		const serverInfo = this.props.match.params.server.split(':');
 		this.state = {
 			host: serverInfo[0],
-			port: serverInfo[1],
-			tubes: []
+			port: serverInfo[1]
 		};
 
 		props.setServer({
@@ -25,17 +24,16 @@ class Tube extends Component {
 		});
 	}
 
-	componentWillUpdate(nextProps) {
-		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
-			this.performUpdate(nextProps.autoUpdate);
-		}
-	}
-
 	componentWillMount() {
 		this.isMount = true;
 		this.init();
 	}
 
+	componentWillUpdate(nextProps) {
+		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
+			this.performUpdate(nextProps.autoUpdate);
+		}
+	}
 	componentWillUnmount() {
 		this.isMount = false;
 		this.props.destroyTubes();
