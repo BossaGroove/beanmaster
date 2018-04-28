@@ -38,6 +38,7 @@ class TubeController {
 		try {
 			[tubeInfo] = await connection.stats_tubeAsync(tube);
 		} catch (e) {
+			tubeInfo = null;
 		}
 
 		let stats = {

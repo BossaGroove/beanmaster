@@ -24,6 +24,28 @@ class Tube extends Component {
 		});
 	}
 
+	static async getServerInfo(host, port) {
+		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
+		return result.data.body.info;
+	}
+
+	static async getTubes(host, port) {
+		const result = await axios.get(`/api/servers/tubes?host=${host}&port=${port}`);
+		return result.data.body;
+	}
+
+	static getDelta(oldTube, currentTube) {
+		const delta = {};
+		for (const key of Object.keys(currentTube)) {
+			if (!isUndefined(oldTube[key])) {
+				delta[key] = currentTube[key] - oldTube[key];
+			} else {
+				delta[key] = 0;
+			}
+		}
+		return delta;
+	}
+
 	componentWillMount() {
 		this.isMount = true;
 		this.init();
@@ -40,6 +62,14 @@ class Tube extends Component {
 		clearTimeout(this.timeoutHandler);
 	}
 
+	async updateTubes() {
+		const server = await Tube.getTubes(this.state.host, this.state.port);
+
+		const tubes = this.parseTubes(server.tubesInfo);
+
+		this.props.dispatchTubes(tubes);
+	}
+
 	performUpdate(autoUpdateOverride) {
 		if ((this.props.autoUpdate || autoUpdateOverride) && this.isMount) {
 			this.timeoutHandler = setTimeout(() => {
@@ -51,7 +81,7 @@ class Tube extends Component {
 	}
 
 	init() {
-		this.getServerInfo(this.state.host, this.state.port).then((info) => {
+		Tube.getServerInfo(this.state.host, this.state.port).then((info) => {
 			const serverInfo = {
 				name: info.name || null,
 				host: this.state.host,
@@ -64,24 +94,6 @@ class Tube extends Component {
 		this.updateTubes().then(() => {});
 
 		this.performUpdate();
-	}
-
-	async updateTubes() {
-		const server = await this.getTubes(this.state.host, this.state.port);
-
-		const tubes = this.parseTubes(server.tubesInfo);
-
-		this.props.dispatchTubes(tubes);
-	}
-
-	async getServerInfo(host, port) {
-		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
-		return result.data.body.info;
-	}
-
-	async getTubes(host, port) {
-		const result = await axios.get(`/api/servers/tubes?host=${host}&port=${port}`);
-		return result.data.body;
 	}
 
 	parseTubes(currentTubes) {
@@ -97,18 +109,6 @@ class Tube extends Component {
 				delta: Tube.getDelta(get(oldTube, 'current', {}), currentTube)
 			};
 		});
-	}
-
-	static getDelta(oldTube, currentTube) {
-		const delta = {};
-		for (const key of Object.keys(currentTube)) {
-			if (!isUndefined(oldTube[key])) {
-				delta[key] = currentTube[key] - oldTube[key];
-			} else {
-				delta[key] = 0;
-			}
-		}
-		return delta;
 	}
 
 	render() {
@@ -158,7 +158,10 @@ Tube.propTypes = {
 	match: PropTypes.object.isRequired,
 	autoUpdate: PropTypes.bool.isRequired,
 	currentServer: PropTypes.object.isRequired,
-	tubes: PropTypes.array.isRequired,
+	tubes: PropTypes.arrayOf(PropTypes.shape({
+		current: PropTypes.object,
+		delta: PropTypes.object
+	})).isRequired,
 	setServer: PropTypes.func.isRequired,
 	dispatchTubes: PropTypes.func.isRequired,
 	destroyTubes: PropTypes.func.isRequired,

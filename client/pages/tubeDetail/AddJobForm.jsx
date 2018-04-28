@@ -61,7 +61,7 @@ renderInput.defaultProps = {
 	label: null
 };
 
-const renderTextArea = ({input, className, type, placeholder, meta, label}) => {
+const renderTextArea = ({input, className, placeholder, meta, label}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>
@@ -114,6 +114,7 @@ class AddJobForm extends Component {
 }
 
 AddJobForm.propTypes = {
+	initialize: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	defaultTube: PropTypes.string.isRequired
 };

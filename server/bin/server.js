@@ -9,4 +9,4 @@ lib.SharedManager.app = require(`${appRoot}/setup/app`);
 
 lib.SharedManager.app.listen(port);
 
-console.log('Beanmaster listening port ' + port);
+lib.SharedManager.logger.info('Beanmaster listening port ' + port);

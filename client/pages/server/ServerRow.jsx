@@ -4,26 +4,19 @@ import {Button} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {get} from 'lodash-es';
+import PropTypes from 'prop-types';
 
 import {showRemoveServerModal} from '../../actions/removeServerModal';
 import {dispatchServerRow} from '../../actions/serverRow';
 
 class ServerRow extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			info: {
-				connections: '-',
-				version: '-',
-				totalJobs: '-',
-				pid: '-',
-				uptime: '-'
-			}
-		};
-	}
-
 	componentWillMount() {
 		this.init();
+	}
+
+	async getServerStat() {
+		const result = await axios.get(`/api/servers/stat?host=${this.props.host}&port=${this.props.port}`);
+		return result.data.body.stat;
 	}
 
 	init() {
@@ -40,11 +33,6 @@ class ServerRow extends Component {
 				uptime: serverInfo.uptime
 			});
 		});
-	}
-
-	async getServerStat() {
-		const result = await axios.get(`/api/servers/stat?host=${this.props.host}&port=${this.props.port}`);
-		return result.data.body.stat;
 	}
 
 	render() {
@@ -78,8 +66,26 @@ class ServerRow extends Component {
 	}
 }
 
+ServerRow.propTypes = {
+	name: PropTypes.string.isRequired,
+	host: PropTypes.string.isRequired,
+	port: PropTypes.number.isRequired,
+	serverRow: PropTypes.shape({
+		connections: PropTypes.number,
+		version: PropTypes.number,
+		totalJobs: PropTypes.number,
+		pid: PropTypes.number,
+		uptime: PropTypes.number,
+	}),
+	dispatchServerRow: PropTypes.func.isRequired,
+	showRemoveServerModal: PropTypes.func.isRequired
+};
+
+ServerRow.defaultProps = {
+	serverRow: {}
+};
+
 export default connect((state, ownProps) => ({
-	removeServerModal: state.removeServerModal,
 	serverRow: state.serverRow[`${ownProps.host}:${ownProps.port}`]
 }), {
 	dispatchServerRow,

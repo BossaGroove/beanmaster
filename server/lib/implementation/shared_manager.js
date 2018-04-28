@@ -1,17 +1,11 @@
-
+const bunyan = require('bunyan');
 
 class SharedManager {
 	constructor() {
-		const fakeLogger = function () {
-		};
-
-		this.logger = {
-			trace: fakeLogger,
-			info: fakeLogger,
-			debug: fakeLogger,
-			fatal: fakeLogger,
-			warn: fakeLogger
-		};
+		this.logger = bunyan.createLogger({
+			name: 'beanmaster-react',
+			level: 'info'
+		});
 
 		this.app = null;
 	}

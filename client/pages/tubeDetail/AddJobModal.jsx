@@ -97,6 +97,7 @@ class AddJobModal extends Component {
 }
 
 AddJobModal.propTypes = {
+	defaultTube: PropTypes.string.isRequired,
 	busy: PropTypes.bool.isRequired,
 	currentServer: PropTypes.object.isRequired,
 	addJobModal: PropTypes.object.isRequired,

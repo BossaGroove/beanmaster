@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Button} from 'react-bootstrap';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import {initServers} from '../../actions/servers';
 import {showAddServerModal} from '../../actions/addServerModal';
@@ -19,6 +20,11 @@ class Server extends Component {
 		props.unsetServer();
 	}
 
+	static async getServers() {
+		const result = await axios.get('/api/servers');
+		return result.data.body.servers;
+	}
+
 	componentWillMount() {
 		this.init();
 	}
@@ -28,14 +34,9 @@ class Server extends Component {
 	}
 
 	init() {
-		this.getServers().then((servers) => {
+		Server.getServers().then((servers) => {
 			this.props.initServers(servers);
 		});
-	}
-
-	async getServers() {
-		const result = await axios.get('/api/servers');
-		return result.data.body.servers;
 	}
 
 	showAddServerModal() {
@@ -77,6 +78,19 @@ class Server extends Component {
 	}
 }
 
+Server.propTypes = {
+	servers: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string,
+			host: PropTypes.string,
+			port: PropTypes.number,
+		})
+	).isRequired,
+	initServers: PropTypes.func.isRequired,
+	unsetServer: PropTypes.func.isRequired,
+	destroyServerRow: PropTypes.func.isRequired,
+	showAddServerModal: PropTypes.func.isRequired
+};
 
 export default connect((state) => ({
 	servers: state.servers

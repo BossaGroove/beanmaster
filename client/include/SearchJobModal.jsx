@@ -24,6 +24,26 @@ class SearchJobModal extends Component {
 		};
 	}
 
+	static async searchJob({host, port, jobId}) {
+		const result = await axios.post('/api/servers/search', {
+			host,
+			port,
+			job_id: jobId
+		});
+
+		return result.data.body;
+	}
+
+	static async kickJob({host, port, jobId}) {
+		const result = await axios.post('/api/servers/kick', {
+			host,
+			port,
+			job_id: jobId
+		});
+
+		return result.data.body;
+	}
+
 	setAlert({status, message}) {
 		this.setState({
 			alert: {
@@ -46,26 +66,6 @@ class SearchJobModal extends Component {
 		this.setState({
 			alert: null
 		});
-	}
-
-	static async searchJob({host, port, jobId}) {
-		const result = await axios.post('/api/servers/search', {
-			host,
-			port,
-			job_id: jobId
-		});
-
-		return result.data.body;
-	}
-
-	static async kickJob({host, port, jobId}) {
-		const result = await axios.post('/api/servers/kick', {
-			host,
-			port,
-			job_id: jobId
-		});
-
-		return result.data.body;
 	}
 
 	search(values) {

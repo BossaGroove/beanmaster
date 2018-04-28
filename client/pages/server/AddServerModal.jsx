@@ -23,11 +23,6 @@ class AddServerModal extends Component {
 		};
 	}
 
-	async addServer({name, host, port}) {
-		const server = await AddServerModal.postServer(name, host, port);
-		this.props.addServer(server);
-	}
-
 	static async postServer(name, host, port) {
 		const result = await axios.post('/api/servers', {
 			name,
@@ -36,12 +31,6 @@ class AddServerModal extends Component {
 		});
 
 		return result.data.body.server;
-	}
-
-	close() {
-		this.props.notBusy();
-		this.props.hideAddServerModal();
-		this.hideAlert();
 	}
 
 	onSubmit(values) {
@@ -56,6 +45,17 @@ class AddServerModal extends Component {
 					alert: e.response.data.meta.error
 				});
 			});
+	}
+
+	async addServer({name, host, port}) {
+		const server = await AddServerModal.postServer(name, host, port);
+		this.props.addServer(server);
+	}
+
+	close() {
+		this.props.notBusy();
+		this.props.hideAddServerModal();
+		this.hideAlert();
 	}
 
 	hideAlert() {

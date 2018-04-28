@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Modal} from 'react-bootstrap';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import {isBusy, notBusy} from '../../actions/busy';
 import {hideRemoveServerModal} from '../../actions/removeServerModal';
@@ -54,6 +55,15 @@ class RemoveServerModal extends Component {
 		);
 	}
 }
+
+RemoveServerModal.propTypes = {
+	busy: PropTypes.bool.isRequired,
+	removeServerModal: PropTypes.object.isRequired,
+	removeServer: PropTypes.func.isRequired,
+	hideRemoveServerModal: PropTypes.func.isRequired,
+	isBusy: PropTypes.func.isRequired,
+	notBusy: PropTypes.func.isRequired
+};
 
 export default connect((state) => ({
 	removeServerModal: state.removeServerModal,

@@ -14,6 +14,15 @@ module.exports = {
 			imports: 'ignore',
 			exports: 'ignore',
 			functions: 'ignore'
+		}],
+		"react/sort-comp": [2, {
+			"order": [
+				"constructor",
+				"static-methods",
+				"lifecycle",
+				"everything-else",
+				"render"
+			]
 		}]
 	}
 };

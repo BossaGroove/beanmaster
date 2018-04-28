@@ -66,6 +66,42 @@ class TubeDetail extends Component {
 		};
 	}
 
+	static async getServerInfo({host, port}) {
+		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
+		return result.data.body.info;
+	}
+
+	static async getTubeStat({host, port, tube}) {
+		const result = await axios.get(`/api/tubes/stat?host=${host}&port=${port}&tube=${tube}`);
+		return result.data.body.stat;
+	}
+
+	static async kickJob({host, port, tube, value}) {
+		await axios.post('/api/tubes/kick-job', {
+			host,
+			port,
+			tube,
+			value
+		});
+	}
+
+	static async deleteJob({host, port, tube, value}) {
+		await axios.post('/api/tubes/delete-job', {
+			host,
+			port,
+			tube,
+			value
+		});
+	}
+
+	static async togglePause({host, port, tube}) {
+		await axios.post('/api/tubes/toggle-pause', {
+			host,
+			port,
+			tube
+		});
+	}
+
 	componentWillMount() {
 		this.isMount = true;
 		this.init();
@@ -83,42 +119,6 @@ class TubeDetail extends Component {
 		clearTimeout(this.timeoutHandler);
 	}
 
-	async getServerInfo({host, port}) {
-		const result = await axios.get(`/api/servers/info?host=${host}&port=${port}`);
-		return result.data.body.info;
-	}
-
-	async getTubeStat({host, port, tube}) {
-		const result = await axios.get(`/api/tubes/stat?host=${host}&port=${port}&tube=${tube}`);
-		return result.data.body.stat;
-	}
-
-	async kickJob({host, port, tube, value}) {
-		await axios.post('/api/tubes/kick-job', {
-			host,
-			port,
-			tube,
-			value
-		});
-	}
-
-	async deleteJob({host, port, tube, value}) {
-		await axios.post('/api/tubes/delete-job', {
-			host,
-			port,
-			tube,
-			value
-		});
-	}
-
-	async togglePause({host, port, tube}) {
-		await axios.post('/api/tubes/toggle-pause', {
-			host,
-			port,
-			tube
-		});
-	}
-
 	performUpdate(autoUpdateOverride) {
 		if ((this.props.autoUpdate || autoUpdateOverride) && this.isMount) {
 			this.timeoutHandler = setTimeout(() => {
@@ -130,7 +130,7 @@ class TubeDetail extends Component {
 	}
 
 	init() {
-		this.getServerInfo(this.state).then((info) => {
+		TubeDetail.getServerInfo(this.state).then((info) => {
 			const serverInfo = {
 				name: info.name || null,
 				host: this.state.host,
@@ -150,7 +150,7 @@ class TubeDetail extends Component {
 			return;
 		}
 
-		const stat = await this.getTubeStat(this.state);
+		const stat = await TubeDetail.getTubeStat(this.state);
 
 		const statWithDelta = this.parseStat(stat);
 
@@ -183,7 +183,7 @@ class TubeDetail extends Component {
 	kickJobButton(value) {
 		this.props.isBusy();
 
-		this.kickJob({
+		TubeDetail.kickJob({
 			host: this.state.host,
 			port: this.state.port,
 			tube: this.state.tube,
@@ -200,7 +200,7 @@ class TubeDetail extends Component {
 	deleteJobButton(value) {
 		this.props.isBusy();
 
-		this.deleteJob({
+		TubeDetail.deleteJob({
 			host: this.state.host,
 			port: this.state.port,
 			tube: this.state.tube,
@@ -217,7 +217,7 @@ class TubeDetail extends Component {
 	togglePauseButton() {
 		this.props.isBusy();
 
-		this.togglePause(this.state).then(() => {
+		TubeDetail.togglePause(this.state).then(() => {
 
 		}).catch(() => {
 
