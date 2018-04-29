@@ -1,7 +1,6 @@
 {
   "name": "beanmaster",
   "version": "4.0.0",
-  "private": true,
   "bin": {
     "beanmaster": "server/bin/cli.js"
   },
