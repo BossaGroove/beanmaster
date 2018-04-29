@@ -57,6 +57,8 @@
     "bootstrap-sass": "^3.3.7",
     "bunyan": "^1.8.12",
     "change-case": "^3.0.2",
+    "commander": "^2.15.1",
+    "daemonize2": "^0.4.2",
     "debug": "^3.1.0",
     "fivebeans": "^1.5.0",
     "koa": "^2.5.1",

@@ -1,8 +1,3 @@
-/**
- * Created by Bossa on 10/12/14.
- */
-
-
 const path = require('path');
 
 class Utility {
