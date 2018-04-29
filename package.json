@@ -86,6 +86,7 @@
     "dev": "NODE_ENV=development webpack-dev-server --port 4003 --progress --host 0.0.0.0",
     "start": "NODE_ENV=development node ./server/bin/server.js",
     "prod": "NODE_ENV=production node ./server/bin/server.js",
+    "cli": "node ./server/bin/cli.js",
     "build": "npm run clean && webpack --hide-modules",
     "clean": "find ./public -type f | grep -v manifest.json | grep -v .gitignore | xargs rm -rf && touch ./public/tmp",
     "test": "node scripts/test.js --env=jsdom",
