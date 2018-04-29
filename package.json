@@ -87,7 +87,7 @@
     "start": "NODE_ENV=development node ./server/bin/server.js",
     "prod": "NODE_ENV=production node ./server/bin/server.js",
     "build": "npm run clean && webpack --hide-modules",
-    "clean": "find ./public -type f | grep -v manifest.json | grep -v .gitignore | xargs rm -rf",
+    "clean": "find ./public -type f | grep -v manifest.json | grep -v .gitignore | xargs rm -rf && touch ./public/tmp",
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint --ext .jsx,.js ."
   },
