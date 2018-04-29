@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// override the node env
+process.env.NODE_ENV = 'production';
+
 const pjson = require('../../package.json');
 const commander = require('commander');
 const p = require('path');
