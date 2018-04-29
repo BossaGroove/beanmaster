@@ -2,6 +2,9 @@
   "name": "beanmaster-react",
   "version": "1.0.0",
   "private": true,
+  "bin": {
+    "beanmaster": "server/bin/cli.js"
+  },
   "devDependencies": {
     "autoprefixer": "^8.4.1",
     "babel-core": "^6.26.3",
