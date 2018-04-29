@@ -3,7 +3,7 @@ const bunyan = require('bunyan');
 class SharedManager {
 	constructor() {
 		this.logger = bunyan.createLogger({
-			name: 'beanmaster-react',
+			name: 'beanmaster',
 			level: 'info'
 		});
 
