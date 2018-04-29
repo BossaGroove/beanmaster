@@ -119,9 +119,9 @@ AddJobForm.propTypes = {
 	defaultTube: PropTypes.string.isRequired
 };
 
-AddJobForm = reduxForm({
+const AddJobFormRedux = reduxForm({
 	form: 'add_job',
 	validate
 })(AddJobForm);
 
-export default AddJobForm;
+export default AddJobFormRedux;

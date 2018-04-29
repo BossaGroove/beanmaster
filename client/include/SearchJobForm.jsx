@@ -46,7 +46,7 @@ renderInput.defaultProps = {
 	label: null
 };
 
-let SearchJobForm = (props) => (
+const SearchJobForm = (props) => (
 	<Form horizontal onSubmit={props.handleSubmit}>
 		<Field className="form-control" name="job_id" component={renderInput} type="text" label="Job ID" />
 	</Form>
@@ -57,9 +57,9 @@ SearchJobForm.propTypes = {
 };
 
 
-SearchJobForm = reduxForm({
+const SearchJobFormRedux = reduxForm({
 	form: 'search_job',
 	validate
 })(SearchJobForm);
 
-export default SearchJobForm;
+export default SearchJobFormRedux;

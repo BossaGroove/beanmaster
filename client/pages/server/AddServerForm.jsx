@@ -55,7 +55,7 @@ renderInput.defaultProps = {
 	label: null
 };
 
-let AddServerForm = (props) => (
+const AddServerForm = (props) => (
 	<Form horizontal onSubmit={props.handleSubmit}>
 		<Field className="form-control" name="name" component={renderInput} type="text" placeholder="My cool beanstalk server" label="Name" />
 		<Field className="form-control" name="host" component={renderInput} type="text" placeholder="127.0.0.1 / localhost / my-cool-beanstalk-server.com" label="Host" />
@@ -67,9 +67,9 @@ AddServerForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired
 };
 
-AddServerForm = reduxForm({
+const AddServerFormRedux = reduxForm({
 	form: 'add_server',
 	validate
 })(AddServerForm);
 
-export default AddServerForm;
+export default AddServerFormRedux;

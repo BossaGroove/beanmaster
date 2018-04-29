@@ -23,6 +23,18 @@ module.exports = {
 				"everything-else",
 				"render"
 			]
-		}]
+		}],
+		"no-shadow": [
+			"error",
+			{
+				"allow": [
+					"name",
+					"history",
+					"status",
+					"location",
+					"event"
+				]
+			}
+		]
 	}
 };

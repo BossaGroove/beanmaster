@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table} from 'react-bootstrap';
 import axios from 'axios';
-import {find, get, isUndefined} from 'lodash-es';
+import {find as _find, get, isUndefined} from 'lodash-es';
 import PropTypes from 'prop-types';
 import TubeRow from './TubeRow';
 
@@ -100,8 +100,8 @@ class Tube extends Component {
 		const oldTubes = this.props.tubes;
 
 		return currentTubes.map((currentTube) => {
-			const oldTube = find(oldTubes, (oldTube) => {
-				return (oldTube.current.name === currentTube.name);
+			const oldTube = _find(oldTubes, (_oldTube) => {
+				return (_oldTube.current.name === currentTube.name);
 			});
 
 			return {
