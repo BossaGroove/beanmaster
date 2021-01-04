@@ -1,6 +1,6 @@
 {
   "name": "beanmaster",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "bin": {
     "beanmaster": "server/bin/cli.js"
   },
