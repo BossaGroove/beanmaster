@@ -3,7 +3,8 @@
 // override the node env
 process.env.NODE_ENV = 'production';
 
-const commander = require('commander');
+const { Command } = require('commander');
+const program = new Command();
 const p = require('path');
 const daemonize = require('daemonize2');
 const pjson = require('../../package.json');
@@ -51,15 +52,6 @@ function killServer() {
 	daemon.kill();
 }
 
-commander
-	.version(pjson.version)
-	.option('-p, --port <n>', 'Specify the port number', parseInt)
-	.option('start', 'Start server as a daemon process')
-	.option('status', 'Show server daemon status')
-	.option('restart', 'Restart server daemon')
-	.option('stop', 'Stop server daemon')
-	.option('kill', 'Kill server daemon')
-	.parse(process.argv);
 
 const daemonOption = {
 	main: p.resolve(__dirname, './server.js'),
@@ -75,7 +67,7 @@ daemon
 		SharedManager.logger.info('Starting Beanmaster daemon...');
 	})
 	.on('started', function (pid) {
-		SharedManager.logger.info('Beanmaster daemon started. PID: ' + pid + ', port: ' + (commander.port || config.port));
+		SharedManager.logger.info('Beanmaster daemon started. PID: ' + pid + ', port: ' + (program.port || config.port));
 	})
 	.on('stopping', function () {
 		SharedManager.logger.info('Stopping Beanmaster daemon...');
@@ -95,16 +87,50 @@ daemon
 		SharedManager.logger.error('Beanmaster daemon failed to start:  ' + err.message);
 	});
 
-if (commander.start) {
-	startServer();
-} else if (commander.status) {
-	serverStatus();
-} else if (commander.restart) {
-	restartServer();
-} else if (commander.stop) {
-	stopServer();
-} else if (commander.kill) {
-	killServer();
-} else {
-	require('./server');
-}
+program
+	.version(pjson.version, '-v')
+	.option('-p, --port <n>', 'Specify the port number', parseInt);
+
+program
+	.command('start')
+	.description('Start server as a daemon process')
+	.action(() => {
+		startServer();
+	});
+
+program
+	.command('status')
+	.description('Show server daemon status')
+	.action(() => {
+		serverStatus();
+	});
+
+program
+	.command('restart')
+	.description('Restart server daemon')
+	.action(() => {
+		restartServer();
+	});
+
+program
+	.command('stop')
+	.description('Stop server daemon')
+	.action(() => {
+		stopServer();
+	});
+
+program
+	.command('kill')
+	.description('Kill server daemon')
+	.action(() => {
+		killServer();
+	});
+
+program
+	.command('serve', { isDefault: true })
+	.description('launch web server')
+	.action(() => {
+		require('./server');
+	});
+
+program.parse(process.argv);
