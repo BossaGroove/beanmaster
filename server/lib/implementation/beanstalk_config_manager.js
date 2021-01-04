@@ -7,12 +7,24 @@ const BEANMASTER_CONFIG_PATH = BEANMASTER_HOME_PATH + '/config.json';
 
 class BeanstalkConfigManager {
 	constructor() {
-		if (!fs.existsSync(BEANMASTER_HOME_PATH)) {
-			fs.mkdirSync(BEANMASTER_HOME_PATH);
+		try {
+			fs.statSync(BEANMASTER_HOME_PATH);
+		} catch (e) {
+			if (e.code === 'ENOENT') {
+				fs.mkdirSync(BEANMASTER_HOME_PATH);
+			} else {
+				throw e;
+			}
 		}
 
-		if (!fs.existsSync(BEANMASTER_CONFIG_PATH)) {
-			fs.writeFileSync(BEANMASTER_CONFIG_PATH);
+		try {
+			fs.statSync(BEANMASTER_CONFIG_PATH);
+		} catch (e) {
+			if (e.code === 'ENOENT') {
+				fs.writeFileSync(BEANMASTER_CONFIG_PATH, JSON.stringify([], null, 4));
+			} else {
+				throw e;
+			}
 		}
 
 		this._cachedConfig = null;
