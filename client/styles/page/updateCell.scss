@@ -1,4 +1,4 @@
-div.container {
+.containerBox {
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -6,7 +6,7 @@ div.container {
 	z-index: 100;
 }
 
-td.update-cell {
+.update-cell {
 	position: relative;
 	padding: 0 !important;
 
@@ -15,7 +15,7 @@ td.update-cell {
 		animation-name: update;
 	}
 
-	.container {
+	.containerBox {
 		position: inherit;
 	}
 }

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
-import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
+import {
+	ControlLabel, FormGroup, Form, Col
+} from 'react-bootstrap';
 import {isNaN as _isNaN} from 'lodash-es';
 import PropTypes from 'prop-types';
 
@@ -30,7 +32,9 @@ const validate = (values) => {
 	return errors;
 };
 
-const renderInput = ({input, className, type, placeholder, meta, label}) => {
+const renderInput = ({
+	input, className, type, placeholder, meta, label
+}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>
@@ -61,7 +65,9 @@ renderInput.defaultProps = {
 	label: null
 };
 
-const renderTextArea = ({input, className, placeholder, meta, label}) => {
+const renderTextArea = ({
+	input, className, placeholder, meta, label
+}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>

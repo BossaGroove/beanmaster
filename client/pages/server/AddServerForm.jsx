@@ -1,6 +1,8 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
-import {ControlLabel, FormGroup, Form, Col} from 'react-bootstrap';
+import {
+	ControlLabel, FormGroup, Form, Col
+} from 'react-bootstrap';
 import {isURL, isIP} from 'validator';
 import {isFinite as _isFinite} from 'lodash-es';
 import PropTypes from 'prop-types';
@@ -24,7 +26,9 @@ const validate = (values) => {
 	return errors;
 };
 
-const renderInput = ({input, className, type, placeholder, meta, label}) => {
+const renderInput = ({
+	input, className, type, placeholder, meta, label
+}) => {
 	return (
 		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
 			<Col componentClass={ControlLabel} sm={2}>

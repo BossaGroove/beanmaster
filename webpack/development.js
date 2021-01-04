@@ -1,11 +1,11 @@
-const config = require('./base');
 const webpack = require('webpack');
 const path = require('path');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const config = require('./base');
 
 Object.assign(config, {
-	devtool: 'cheap-module-eval-source-map',
+	devtool: 'cheap-module-source-map',
 	devServer: {
 		hot: true,
 		quiet: false, // display nothing to the console
@@ -29,12 +29,16 @@ Object.assign(config, {
 
 config.plugins.push(
 	new webpack.HotModuleReplacementPlugin(),
-	new ManifestPlugin({
+	new WebpackManifestPlugin({
 		fileName: 'manifest.json',
 		writeToFileEmit: true,
 		publicPath: config.output.publicPath
 	}),
-	new CaseSensitivePathsPlugin()
+	new CaseSensitivePathsPlugin(),
+	new webpack.EnvironmentPlugin({
+		NODE_ENV: 'development',
+		DEBUG: false
+	})
 );
 
 config.module.rules.push(
@@ -50,7 +54,9 @@ config.module.rules.push(
 				options: {
 					// modules: true,
 					importLoaders: 2,
-					localIdentName: '[name]__[local]',
+					modules: {
+						localIdentName: '[name]__[local]',
+					},
 					sourceMap: true
 				}
 			},
@@ -61,8 +67,10 @@ config.module.rules.push(
 			{
 				loader: 'sass-loader',
 				options: {
-					sourceMap: true,
-					includePaths: [path.resolve(__dirname, '../client')]
+					sassOptions: {
+						includePaths: [path.resolve(__dirname, '../client')],
+					},
+					sourceMap: true
 				}
 			}
 		]
@@ -82,10 +90,16 @@ config.module.rules.push(
 				}
 			},
 			{
+				loader: 'postcss-loader',
+				options: {sourceMap: true}
+			},
+			{
 				loader: 'sass-loader',
 				options: {
 					sourceMap: true,
-					includePaths: [path.resolve(__dirname, '../client')]
+					sassOptions: {
+						includePaths: [path.resolve(__dirname, '../client')]
+					}
 				}
 			}
 		]

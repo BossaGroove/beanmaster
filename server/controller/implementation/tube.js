@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const lib = require('../../lib');
+
 const {BeanstalkConfigManager, BeanstalkConnectionManager, ResponseManager} = lib;
 
 class TubeController {
@@ -137,6 +138,7 @@ class TubeController {
 			jobId
 		});
 	}
+
 	/**
 	 * POST /tubes/kick-job
 	 * @param ctx
@@ -165,6 +167,7 @@ class TubeController {
 			kicked
 		});
 	}
+
 	/**
 	 * POST /tubes/delete-job
 	 * @param ctx

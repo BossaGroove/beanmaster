@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col} from 'react-bootstrap';
+import {
+	Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col
+} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {get, isUndefined} from 'lodash-es';
@@ -15,6 +17,8 @@ import {isBusy, notBusy} from '../../actions/busy';
 import {showAddJobModal} from '../../actions/addJobModal';
 import {dispatchTubeDetail, destroyTubeDetail} from '../../actions/tubeDetail';
 import AddJobModal from './AddJobModal';
+
+import tubeCss from '../../styles/page/tube.scss';
 
 class TubeDetail extends Component {
 	constructor(props) {
@@ -76,7 +80,9 @@ class TubeDetail extends Component {
 		return result.data.body.stat;
 	}
 
-	static async kickJob({host, port, tube, value}) {
+	static async kickJob({
+		host, port, tube, value
+	}) {
 		await axios.post('/api/tubes/kick-job', {
 			host,
 			port,
@@ -85,7 +91,9 @@ class TubeDetail extends Component {
 		});
 	}
 
-	static async deleteJob({host, port, tube, value}) {
+	static async deleteJob({
+		host, port, tube, value
+	}) {
 		await axios.post('/api/tubes/delete-job', {
 			host,
 			port,
@@ -260,14 +268,14 @@ class TubeDetail extends Component {
 				<div>
 					{Object.keys(this.props.tubeDetail.current.stats).map((state) => {
 						return (
-							<div key={state} >
+							<div key={state}>
 								<Row>
 									<Col md={12}>
 										<h4>Next job in &quot;{state.split('_')[1]}&quot; state</h4>
 									</Col>
 								</Row>
-								{this.props.tubeDetail.current.stats[state] ?
-									(
+								{this.props.tubeDetail.current.stats[state]
+									? (
 										<Row>
 											<Col md={2}>
 												<p>
@@ -279,12 +287,11 @@ class TubeDetail extends Component {
 															return (
 																<tr key={key}>
 																	<td>{key}</td>
-																	{['tube', 'state'].includes(key) ?
-																		(
+																	{['tube', 'state'].includes(key)
+																		? (
 																			<td>{this.props.tubeDetail.current.stats[state].stat[key]}</td>
 																		)
-																		:
-																		(
+																		:																		(
 																			<UpdateCell value={this.props.tubeDetail.current.stats[state].stat[key]} delta={this.props.tubeDetail.delta.stats[state].stat[key]} />
 																		)
 																	}
@@ -351,7 +358,7 @@ class TubeDetail extends Component {
 						{tubeStat}
 					</tbody>
 				</Table>
-				<div id="tube-controls">
+				<div id="tube-controls" className={tubeCss.tubeControl}>
 					<strong>Actions:</strong>
 					&nbsp;
 					<ul>

@@ -1,5 +1,7 @@
-const router = require('koa-router')();
+const Router = require('@koa/router');
 const Controller = require('../controller');
+
+const router = new Router();
 
 router.get('/api/servers', Controller.Server.index);
 router.get('/api/servers/info', Controller.Server.getInfo);
@@ -16,6 +18,6 @@ router.post('/api/tubes/kick-job', Controller.Tube.kickJob);
 router.post('/api/tubes/delete-job', Controller.Tube.deleteJob);
 router.post('/api/tubes/toggle-pause', Controller.Tube.togglePause);
 
-router.get('*', Controller.Home.index);
+router.get('(.*)', Controller.Home.index);
 
 module.exports = router;

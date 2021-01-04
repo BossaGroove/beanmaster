@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import preloader from '../assets/images/preloader.gif';
 
+import preloaderCss from '../styles/common.scss';
+
 const Preloader = (props) => (
-	<span className={`preloader ${props.show ? '' : 'hidden'}`}>
+	<span className={`${preloaderCss.preloader} ${props.show ? '' : 'hidden'}`}>
 		<img alt="preloader" src={preloader} />
 	</span>
 );

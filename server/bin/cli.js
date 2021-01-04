@@ -3,10 +3,10 @@
 // override the node env
 process.env.NODE_ENV = 'production';
 
-const pjson = require('../../package.json');
 const commander = require('commander');
 const p = require('path');
 const daemonize = require('daemonize2');
+const pjson = require('../../package.json');
 const Utility = require('../lib/implementation/utility');
 const SharedManager = require('../lib/implementation/shared_manager');
 

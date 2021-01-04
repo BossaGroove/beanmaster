@@ -56,6 +56,7 @@ class Tube extends Component {
 			this.performUpdate(nextProps.autoUpdate);
 		}
 	}
+
 	componentWillUnmount() {
 		this.isMount = false;
 		this.props.destroyTubes();

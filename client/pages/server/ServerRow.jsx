@@ -59,7 +59,8 @@ class ServerRow extends Component {
 							host: this.props.host,
 							port: this.props.port
 						})}
-					>Delete</Button>
+					>Delete
+					</Button>
 				</td>
 			</tr>
 		);

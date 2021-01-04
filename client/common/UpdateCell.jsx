@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import updateCellCss from '../styles/page/updateCell.scss';
 
 class UpdateCell extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			cellStyle: 'update-cell',
+			cellStyle: '',
 			updated: false,
 			delta: 0
 		};
@@ -22,7 +23,7 @@ class UpdateCell extends Component {
 
 	setBackgroundAnimation(delta) {
 		this.setState({
-			cellStyle: 'update-cell updated',
+			cellStyle: updateCellCss.updated,
 			updated: true,
 			delta: delta
 		});
@@ -30,7 +31,7 @@ class UpdateCell extends Component {
 
 	removeBackgroundAnimation() {
 		this.setState({
-			cellStyle: 'update-cell'
+			cellStyle: ''
 		});
 	}
 
@@ -45,25 +46,25 @@ class UpdateCell extends Component {
 		let popup = '';
 
 		if (this.state.updated) {
-			let colorClass = 'decrease';
+			let colorClass = updateCellCss.decrease;
 			let prefix = '';
 
 			if (this.state.delta > 0) {
-				colorClass = 'increase';
+				colorClass = updateCellCss.increase;
 				prefix = '+';
 			}
 
 			popup = (
-				<div className={'popup ' + colorClass} onAnimationEnd={() => { this.removePopup(); }}>
+				<div className={`${updateCellCss.popup} ${colorClass}`} onAnimationEnd={() => { this.removePopup(); }}>
 					{prefix}{this.state.delta}
 				</div>
 			);
 		}
 
 		return (
-			<td className={this.state.cellStyle} onAnimationEnd={() => { this.removeBackgroundAnimation(); }}>
+			<td className={`${updateCellCss['update-cell']} ${this.state.cellStyle}`} onAnimationEnd={() => { this.removeBackgroundAnimation(); }}>
 				{popup}
-				<div className="container">
+				<div className={updateCellCss.containerBox}>
 					{this.props.value}
 				</div>
 			</td>

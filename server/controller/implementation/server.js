@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const lib = require('../../lib');
+
 const {BeanstalkConfigManager, BeanstalkConnectionManager, ResponseManager} = lib;
 
 class ServerController {

@@ -30,7 +30,7 @@ class BeanstalkConnectionManager {
 			});
 
 			setTimeout(() => {
-				reject('timeout');
+				reject(new Error('timeout'));
 			}, 10000);
 		}));
 

@@ -22,7 +22,9 @@ class AddJobModal extends Component {
 		};
 	}
 
-	static async addJob({host, port, tube, priority, delay, ttr, payload}) {
+	static async addJob({
+		host, port, tube, priority, delay, ttr, payload
+	}) {
 		const result = await axios.post('/api/tubes/add-job', {
 			host, port, tube, priority, delay, ttr, payload
 		});

@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import {get} from 'lodash-es';
-import {Button, Modal, Alert, Table} from 'react-bootstrap';
+import {
+	Button, Modal, Alert, Table
+} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -11,7 +13,7 @@ import {isBusy, notBusy} from '../actions/busy';
 import SearchJobForm from './SearchJobForm';
 import SearchJobFormSubmitButton from './SearchJobFormSubmitButton';
 
-import Preloader from '../include/Preloader';
+import Preloader from './Preloader';
 import {hideSearchJobModal} from '../actions/searchJobModal';
 
 class SearchJobModal extends Component {

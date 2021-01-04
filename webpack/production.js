@@ -1,9 +1,9 @@
-const config = require('./base');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const path = require('path');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const config = require('./base');
 
 config.output.filename = '[name]-[chunkhash].js';
 config.output.chunkFilename = '[name]-[chunkhash].js';
@@ -18,12 +18,11 @@ config.module.rules.push(
 			{
 				loader: 'css-loader',
 				options: {
-					importLoaders: 3,
-					minimize: true
+					modules: {
+						localIdentName: '[name]__[local]',
+					},
+					importLoaders: 3
 				}
-			},
-			{
-				loader: 'clean-css-loader'
 			},
 			{
 				loader: 'postcss-loader'
@@ -31,7 +30,9 @@ config.module.rules.push(
 			{
 				loader: 'sass-loader',
 				options: {
-					includePaths: [path.resolve(__dirname, '../client')]
+					sassOptions: {
+						includePaths: [path.resolve(__dirname, '../client')]
+					}
 				}
 			}
 		]
@@ -44,12 +45,8 @@ config.module.rules.push(
 			{
 				loader: 'css-loader',
 				options: {
-					importLoaders: 3,
-					minimize: true
+					importLoaders: 3
 				}
-			},
-			{
-				loader: 'clean-css-loader'
 			},
 			{
 				loader: 'postcss-loader'
@@ -57,7 +54,9 @@ config.module.rules.push(
 			{
 				loader: 'sass-loader',
 				options: {
-					includePaths: [path.resolve(__dirname, '../client')]
+					sassOptions: {
+						includePaths: [path.resolve(__dirname, '../client')]
+					}
 				}
 			}
 		]
@@ -69,7 +68,7 @@ config.plugins.push(
 		filename: '[name]-[contenthash].css',
 		chunkFilename: '[name]-[contenthash].css'
 	}),
-	new ManifestPlugin({
+	new WebpackManifestPlugin({
 		fileName: 'manifest.json',
 		writeToFileEmit: true,
 		publicPath: config.output.publicPath
