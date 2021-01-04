@@ -6,3 +6,4 @@ postcss.config.js
 .eslintignore
 .gitignore
 .browserslistrc
+.idea
