@@ -21,7 +21,11 @@ if (ENV === 'production') {
 	app.use(serve(`${__dirname}/../../public`));
 }
 
-app.use(helmet());
+app.use(helmet({
+	contentSecurityPolicy: false,
+	hsts: false,
+	expectCt: false
+}));
 app.use(responseTime());
 app.use(logger());
 app.use(bodyParser());
