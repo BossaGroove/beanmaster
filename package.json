@@ -1,11 +1,15 @@
 {
   "name": "beanmaster",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "bin": {
     "beanmaster": "server/bin/cli.js"
   },
   "engines": {
     "node": ">=12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BossaGroove/beanmaster"
   },
   "devDependencies": {
     "autoprefixer": "^10.1.0",
