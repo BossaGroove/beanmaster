@@ -5,3 +5,4 @@ postcss.config.js
 .eslintrc.js
 .eslintignore
 .gitignore
+.browserslistrc
