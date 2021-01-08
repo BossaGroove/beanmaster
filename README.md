@@ -67,19 +67,19 @@ yarn
 #### Start koa server
 
 ```
-yarn start
+yarn dev
 ```
 
 #### Start webpack development server
 
 ```
-yarn dev
+yarn dev:browser
 ```
 
 #### Build
 
 ```
-NODE_ENV=production yarn build
+yarn build
 ```
 
 ### Todo
