@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {
-	ControlLabel, FormGroup, Form, Col
+	Form, Col, Row
 } from 'react-bootstrap';
 import {isNaN as _isNaN} from 'lodash-es';
 import PropTypes from 'prop-types';
@@ -17,15 +17,15 @@ const validate = (values) => {
 		errors.payload = 'Required';
 	}
 
-	if (values.priority !== '' && _isNaN(values.priority)) {
+	if (values.priority !== undefined && values.priority !== '0' && !values.priority.match(/^[1-9][0-9]*$/)) {
 		errors.priority = 'Invalid';
 	}
 
-	if (values.delay !== '' && _isNaN(values.delay)) {
+	if (values.delay !== undefined && values.delay !== '0' && !values.delay.match(/^[1-9][0-9]*$/)) {
 		errors.delay = 'Invalid';
 	}
 
-	if (values.ttr !== '' && _isNaN(values.ttr)) {
+	if (values.ttr !== undefined && values.ttr !== '0' && !values.ttr.match(/^[1-9][0-9]*$/)) {
 		errors.ttr = 'Invalid';
 	}
 
@@ -36,14 +36,17 @@ const renderInput = ({
 	input, className, type, placeholder, meta, label
 }) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
-			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
-			</Col>
+		<Form.Group className="mb-3" as={Row} controlId={input.name}>
+			<Form.Label column sm={2}>
+				{label}
+			</Form.Label>
 			<Col sm={10}>
-				<input {...input} className={className} type={type} placeholder={placeholder} />
+				<Form.Control {...input} className={className} type={type} placeholder={placeholder} isInvalid={Boolean(meta.error) && meta.touched} />
+				<Form.Control.Feedback type="invalid">
+					{meta.error && meta.touched ? `${meta.error}` : ''}
+				</Form.Control.Feedback>
 			</Col>
-		</FormGroup>
+		</Form.Group>
 	);
 };
 
@@ -69,14 +72,17 @@ const renderTextArea = ({
 	input, className, placeholder, meta, label
 }) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
-			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
-			</Col>
+		<Form.Group className="mb-3" as={Row} controlId={input.name}>
+			<Form.Label column sm={2}>
+				{label}
+			</Form.Label>
 			<Col sm={10}>
-				<textarea {...input} className={className} placeholder={placeholder} />
+				<Form.Control as="textarea" {...input} className={className} placeholder={placeholder} isInvalid={Boolean(meta.error) && meta.touched} />
+				<Form.Control.Feedback type="invalid">
+					{meta.error && meta.touched ? `${meta.error}` : ''}
+				</Form.Control.Feedback>
 			</Col>
-		</FormGroup>
+		</Form.Group>
 	);
 };
 
@@ -108,16 +114,28 @@ class AddJobForm extends Component {
 
 	render() {
 		return (
-			<Form horizontal onSubmit={this.props.handleSubmit}>
+			<Form noValidate onSubmit={this.props.handleSubmit}>
 				<Field className="form-control" name="tube" component={renderInput} type="text" label="Tube Name" value={this.props.defaultTube} />
 				<Field className="form-control" name="payload" component={renderTextArea} type="text" label="Payload" />
-				<Field className="form-control" name="priority" component={renderInput} type="number" label="Priority" />
-				<Field className="form-control" name="delay" component={renderInput} type="number" label="Delay" />
-				<Field className="form-control" name="ttr" component={renderInput} type="number" label="TTR" />
+				<Field className="form-control" name="priority" component={renderInput} type="text" label="Priority" />
+				<Field className="form-control" name="delay" component={renderInput} type="text" label="Delay" />
+				<Field className="form-control" name="ttr" component={renderInput} type="text" label="TTR" />
 			</Form>
 		);
 	}
 }
+
+// const AddJobForm = (props) => {
+// 	return (
+// 		<Form noValidate onSubmit={props.handleSubmit}>
+// 			<Field className="form-control" name="tube" component={renderInput} type="text" label="Tube Name" />
+// 			<Field className="form-control" name="payload" component={renderTextArea} type="text" label="Payload" />
+// 			<Field className="form-control" name="priority" component={renderInput} type="number" label="Priority" />
+// 			<Field className="form-control" name="delay" component={renderInput} type="number" label="Delay" />
+// 			<Field className="form-control" name="ttr" component={renderInput} type="number" label="TTR" />
+// 		</Form>
+// 	);
+// }
 
 AddJobForm.propTypes = {
 	initialize: PropTypes.func.isRequired,

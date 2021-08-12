@@ -49,7 +49,7 @@ class RemoveServerModal extends Component {
 				<Modal.Footer>
 					<Preloader show={this.props.busy} />
 					<Button onClick={() => this.hideRemoveServerModal()}>Close</Button>
-					<Button bsStyle="danger" onClick={() => this.removeServer()}>Delete</Button>
+					<Button variant="danger" onClick={() => this.removeServer()}>Delete</Button>
 				</Modal.Footer>
 			</Modal>
 		);

@@ -5,7 +5,7 @@ import preloader from '../assets/images/preloader.gif';
 import preloaderCss from '../styles/common.scss';
 
 const Preloader = (props) => (
-	<span className={`${preloaderCss.preloader} ${props.show ? '' : 'hidden'}`}>
+	<span className={`${preloaderCss.preloader} ${props.show ? '' : 'd-none'}`}>
 		<img alt="preloader" src={preloader} />
 	</span>
 );

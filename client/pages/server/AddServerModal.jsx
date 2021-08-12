@@ -41,6 +41,7 @@ class AddServerModal extends Component {
 				this.close();
 			})
 			.catch((e) => {
+				this.props.notBusy();
 				this.setState({
 					alert: e.response.data.meta.error
 				});
@@ -69,29 +70,27 @@ class AddServerModal extends Component {
 
 		if (this.state.alert) {
 			alertMsg = (
-				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
+				<Alert variant="danger" onClose={() => { this.hideAlert(); }} dismissible>
 					{this.state.alert}
 				</Alert>
 			);
 		}
 
 		return (
-			<span>
-				<Modal show={this.props.addServerModal.show} onHide={() => this.close()}>
-					<Modal.Header closeButton>
-						<Modal.Title>Add Server</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						{alertMsg}
-						<AddServerForm onSubmit={(values) => { this.onSubmit(values); }} />
-					</Modal.Body>
-					<Modal.Footer>
-						<Preloader show={this.props.busy} />
-						<Button onClick={() => this.close()}>Close</Button>
-						<AddServerFormSubmitButton />
-					</Modal.Footer>
-				</Modal>
-			</span>
+			<Modal show={this.props.addServerModal.show} onHide={() => this.close()} size="lg">
+				<Modal.Header closeButton>
+					<Modal.Title>Add Server</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{alertMsg}
+					<AddServerForm onSubmit={(values) => { this.onSubmit(values); }} />
+				</Modal.Body>
+				<Modal.Footer>
+					<Preloader show={this.props.busy} />
+					<Button variant="secondary" onClick={() => this.close()}>Close</Button>
+					<AddServerFormSubmitButton />
+				</Modal.Footer>
+			</Modal>
 		);
 	}
 }

@@ -48,12 +48,12 @@ class ServerRow extends Component {
 				<td>{get(this.props.serverRow, 'uptime', '-')}</td>
 				<td>
 					<Link to={`/${this.props.host}:${this.props.port}`}>
-						<Button bsStyle="primary">View</Button>
+						<Button variant="primary">View</Button>
 					</Link>
 				</td>
 				<td>
 					<Button
-						bsStyle="danger"
+						variant="danger"
 						onClick={() => this.props.showRemoveServerModal({
 							name: this.props.name,
 							host: this.props.host,

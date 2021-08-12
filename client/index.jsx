@@ -2,7 +2,7 @@ import React from 'react';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import {render} from 'react-dom';
-import 'bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+import 'bootstrap/scss/bootstrap.scss';
 import rootReducer from './reducers';
 import './styles/style.scss';
 import Root from './root';

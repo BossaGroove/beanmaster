@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Button} from 'react-bootstrap';
+import {Row, Col, Table, Button} from 'react-bootstrap';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
@@ -45,35 +45,45 @@ class Server extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>Servers</h1>
-				<Table responsive striped bordered hover>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Host</th>
-							<th>Port</th>
-							<th>Connections</th>
-							<th>Server Version</th>
-							<th>Total Jobs</th>
-							<th>PID</th>
-							<th>Up time</th>
-							<th>View</th>
-							<th>Delete</th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.servers.map((server, i) => {
-							return (
-								<ServerRow key={i} name={server.name} host={server.host} port={server.port} />
-							);
-						})}
-					</tbody>
-				</Table>
-				<Button bsStyle="primary" onClick={() => this.showAddServerModal()}>Add Server</Button>
-				<AddServerModal />
-				<RemoveServerModal />
-			</div>
+			<Row>
+				<Col>
+					<Row>
+						<Col>
+							<h2 className="mb-3 p-2 border-bottom">Servers</h2>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<Table responsive striped bordered hover>
+								<thead>
+								<tr>
+									<th>Name</th>
+									<th>Host</th>
+									<th>Port</th>
+									<th>Connections</th>
+									<th>Server Version</th>
+									<th>Total Jobs</th>
+									<th>PID</th>
+									<th>Up time</th>
+									<th>View</th>
+									<th>Delete</th>
+								</tr>
+								</thead>
+								<tbody>
+								{this.props.servers.map((server, i) => {
+									return (
+										<ServerRow key={i} name={server.name} host={server.host} port={server.port} />
+									);
+								})}
+								</tbody>
+							</Table>
+							<Button variant="primary" onClick={() => this.showAddServerModal()}>Add Server</Button>
+							<AddServerModal />
+							<RemoveServerModal />
+						</Col>
+					</Row>
+				</Col>
+			</Row>
 		);
 	}
 }

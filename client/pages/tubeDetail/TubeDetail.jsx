@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {
-	Table, Button, ButtonGroup, DropdownButton, MenuItem, Row, Col
+	Table, Button, SplitButton, DropdownButton, Dropdown, Row, Col
 } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
@@ -19,6 +19,9 @@ import {dispatchTubeDetail, destroyTubeDetail} from '../../actions/tubeDetail';
 import AddJobModal from './AddJobModal';
 
 import tubeCss from '../../styles/page/tube.scss';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
 class TubeDetail extends Component {
 	constructor(props) {
@@ -281,7 +284,7 @@ class TubeDetail extends Component {
 												<p>
 													<strong>Stats</strong>
 												</p>
-												<Table condensed>
+												<Table size="sm">
 													<tbody>
 														{Object.keys(this.props.tubeDetail.current.stats[state].stat).map((key) => {
 															return (
@@ -332,97 +335,108 @@ class TubeDetail extends Component {
 		}
 
 		return (
-			<div>
-				<h1><Link to={`/${this.state.host}:${this.state.port}`}>{title}</Link> / {this.state.tube}</h1>
-				<hr />
-				<Table responsive striped bordered hover>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Urgent</th>
-							<th>Ready</th>
-							<th>Reserved</th>
-							<th>Delayed</th>
-							<th>Buried</th>
-							<th>Total</th>
-							<th>Using</th>
-							<th>Watching</th>
-							<th>Waiting</th>
-							<th>Delete (cmd)</th>
-							<th>Pause (cmd)</th>
-							<th>Pause (sec)</th>
-							<th>Pause (left)</th>
-						</tr>
-					</thead>
-					<tbody>
-						{tubeStat}
-					</tbody>
-				</Table>
-				<div id="tube-controls" className={tubeCss.tubeControl}>
-					<strong>Actions:</strong>
-					&nbsp;
-					<ul>
-						<li>
-							<ButtonGroup>
-								<Button bsStyle="warning" disabled={this.props.busy} onClick={() => { this.kickJobButton(1); }}>
-									<i className="glyphicon glyphicon-play" />
-									&nbsp;Kick 1
-								</Button>
-								<DropdownButton title="" id="kick_job" bsStyle="warning" disabled={this.props.busy}>
-									{
-										[10, 100, 1000, 10000, 100000].map((val) => {
-											return (
-												<MenuItem key={`kick${val}`} onClick={() => { this.kickJobButton(val); }}>
-													<i className="glyphicon glyphicon-forward" />
-													&nbsp;Kick {val}
-												</MenuItem>
-											);
-										})
-									}
-								</DropdownButton>
-							</ButtonGroup>
-						</li>
-						<li>
-							<ButtonGroup>
-								<Button bsStyle="danger" disabled={this.props.busy} onClick={() => { this.deleteJobButton(1); }}>
-									<i className="glyphicon glyphicon-trash" />
-									&nbsp;Delete 1
-								</Button>
-								<DropdownButton title="" id="delete_job" bsStyle="danger" disabled={this.props.busy}>
-									{
-										[10, 100, 1000, 10000, 100000].map((val) => {
-											return (
-												<MenuItem key={`delete${val}`} onClick={() => { this.deleteJobButton(val); }}>
-													<i className="glyphicon glyphicon-trash" />
-													&nbsp;Delete {val}
-												</MenuItem>
-											);
-										})
-									}
-								</DropdownButton>
-							</ButtonGroup>
-						</li>
-						<li>
-							<Button onClick={() => { this.togglePauseButton(); }} disabled={this.props.busy}>
-								<i className={`glyphicon ${this.state.paused ? 'glyphicon-play' : 'glyphicon-pause'}`} />
-								&nbsp;{this.state.paused ? 'Unpause' : 'Pause'}
-							</Button>
-						</li>
-						<li>
-							<Button bsStyle="success" disabled={this.props.busy} onClick={() => { this.addJobButton(); }}>
-								<i className="glyphicon glyphicon-plus" />
-								&nbsp;Add Job
-							</Button>
-						</li>
-						<li>
-							<Preloader show={this.props.busy} />
-						</li>
-					</ul>
-				</div>
-				<hr />
-				{jobStateStat}
-				<AddJobModal defaultTube={this.state.tube} />
-			</div>
+			<Row>
+				<Col>
+					<Row>
+						<Col>
+							<h2 className="mb-3 p-2 border-bottom"><Link to={`/${this.state.host}:${this.state.port}`}>{title}</Link> / {this.state.tube}</h2>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<Table responsive striped bordered hover>
+								<thead>
+								<tr>
+									<th>Name</th>
+									<th>Urgent</th>
+									<th>Ready</th>
+									<th>Reserved</th>
+									<th>Delayed</th>
+									<th>Buried</th>
+									<th>Total</th>
+									<th>Using</th>
+									<th>Watching</th>
+									<th>Waiting</th>
+									<th>Delete (cmd)</th>
+									<th>Pause (cmd)</th>
+									<th>Pause (sec)</th>
+									<th>Pause (left)</th>
+								</tr>
+								</thead>
+								<tbody>
+								{tubeStat}
+								</tbody>
+							</Table>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<div id="tube-controls" className={tubeCss.tubeControl}>
+								<strong>Actions:</strong>
+								&nbsp;
+								<ul>
+									<li>
+										<div>
+											<SplitButton title={"Kick 1"} id="kick_job" variant="warning" disabled={this.props.busy} onClick={() => { this.kickJobButton(1); }}>
+												{
+													[10, 100, 1000, 10000, 100000].map((val) => {
+														return (
+															<Dropdown.Item key={`kick${val}`} onClick={() => { this.kickJobButton(val); }}>
+																{/*<i className="glyphicon glyphicon-forward" />*/}
+																&nbsp;Kick {val}
+															</Dropdown.Item>
+														);
+													})
+												}
+											</SplitButton>
+										</div>
+									</li>
+									<li>
+										<div>
+											<SplitButton title="Delete 1" id="delete_job" variant="danger" disabled={this.props.busy} onClick={() => { this.deleteJobButton(1); }}>
+												{
+													[10, 100, 1000, 10000, 100000].map((val) => {
+														return (
+															<Dropdown.Item key={`delete${val}`} onClick={() => { this.deleteJobButton(val); }}>
+																{/*<i className="glyphicon glyphicon-trash" />*/}
+																&nbsp;Delete {val}
+															</Dropdown.Item>
+														);
+													})
+												}
+											</SplitButton>
+										</div>
+									</li>
+									<li>
+										<Button onClick={() => { this.togglePauseButton(); }} disabled={this.props.busy}>
+											&nbsp;{this.state.paused ? 'Unpause' : 'Pause'}
+										</Button>
+									</li>
+									<li>
+										<Button variant="success" disabled={this.props.busy} onClick={() => { this.addJobButton(); }}>
+											&nbsp;Add Job
+										</Button>
+									</li>
+									<li>
+										<Preloader show={this.props.busy} />
+									</li>
+								</ul>
+							</div>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<hr />
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							{jobStateStat}
+							<AddJobModal defaultTube={this.state.tube} />
+						</Col>
+					</Row>
+				</Col>
+			</Row>
 		);
 	}
 }

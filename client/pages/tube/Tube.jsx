@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table} from 'react-bootstrap';
+import {Table, Row, Col} from 'react-bootstrap';
 import axios from 'axios';
 import {find as _find, get, isUndefined} from 'lodash-es';
 import PropTypes from 'prop-types';
@@ -119,38 +119,47 @@ class Tube extends Component {
 		}
 
 		return (
-			<div>
-				<h1>{title}</h1>
-				<hr />
-				<Table responsive striped bordered hover>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Urgent</th>
-							<th>Ready</th>
-							<th>Reserved</th>
-							<th>Delayed</th>
-							<th>Buried</th>
-							<th>Total</th>
-							<th>Using</th>
-							<th>Watching</th>
-							<th>Waiting</th>
-							<th>Delete (cmd)</th>
-							<th>Pause (cmd)</th>
-							<th>Pause (sec)</th>
-							<th>Pause (left)</th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.tubes.map((tube, i) => {
-							return (
-								<TubeRow key={i} host={this.props.currentServer.host} port={this.props.currentServer.port} tube={tube.current} delta={tube.delta} />
-							);
-						})}
-					</tbody>
-				</Table>
-				{/*<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>*/}
-			</div>
+			<Row>
+				<Col>
+					<Row>
+						<Col>
+							<h2 className="mb-3 p-2 border-bottom">{title}</h2>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<Table responsive striped bordered hover>
+								<thead>
+								<tr>
+									<th>Name</th>
+									<th>Urgent</th>
+									<th>Ready</th>
+									<th>Reserved</th>
+									<th>Delayed</th>
+									<th>Buried</th>
+									<th>Total</th>
+									<th>Using</th>
+									<th>Watching</th>
+									<th>Waiting</th>
+									<th>Delete (cmd)</th>
+									<th>Pause (cmd)</th>
+									<th>Pause (sec)</th>
+									<th>Pause (left)</th>
+								</tr>
+								</thead>
+								<tbody>
+								{this.props.tubes.map((tube, i) => {
+									return (
+										<TubeRow key={i} host={this.props.currentServer.host} port={this.props.currentServer.port} tube={tube.current} delta={tube.delta} />
+									);
+								})}
+								</tbody>
+							</Table>
+							{/*<Button variant="primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>*/}
+						</Col>
+					</Row>
+				</Col>
+			</Row>
 		);
 	}
 }

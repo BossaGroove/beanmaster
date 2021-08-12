@@ -1,7 +1,7 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {
-	ControlLabel, FormGroup, Form, Col
+	Form, Col, Row
 } from 'react-bootstrap';
 import {isURL, isIP} from 'validator';
 import {isFinite as _isFinite} from 'lodash-es';
@@ -30,14 +30,17 @@ const renderInput = ({
 	input, className, type, placeholder, meta, label
 }) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
-			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
-			</Col>
+		<Form.Group as={Row} className="mb-3" controlId={input.name}>
+			<Form.Label column sm={2}>
+				{label}
+			</Form.Label>
 			<Col sm={10}>
-				<input {...input} className={className} type={type} placeholder={placeholder} />
+				<Form.Control {...input} className={className} type={type} placeholder={placeholder} isInvalid={Boolean(meta.error) && meta.touched} isValid={!Boolean(meta.error)} />
+				<Form.Control.Feedback type="invalid">
+					{meta.error && meta.touched ? `${meta.error}` : ''}
+				</Form.Control.Feedback>
 			</Col>
-		</FormGroup>
+		</Form.Group>
 	);
 };
 
@@ -59,13 +62,15 @@ renderInput.defaultProps = {
 	label: null
 };
 
-const AddServerForm = (props) => (
-	<Form horizontal onSubmit={props.handleSubmit}>
-		<Field className="form-control" name="name" component={renderInput} type="text" placeholder="My cool beanstalk server" label="Name" />
-		<Field className="form-control" name="host" component={renderInput} type="text" placeholder="127.0.0.1 / localhost / my-cool-beanstalk-server.com" label="Host" />
-		<Field className="form-control" name="port" component={renderInput} type="number" placeholder="11300, port should be > 1 and < 65536" label="Port" />
-	</Form>
-);
+const AddServerForm = (props) => {
+	return (
+		<Form noValidate onSubmit={props.handleSubmit}>
+			<Field className="form-control" name="name" component={renderInput} type="text" placeholder="My cool beanstalk server" label="Name" />
+			<Field className="form-control" name="host" component={renderInput} type="text" placeholder="127.0.0.1 / localhost / my-cool-beanstalk-server.com" label="Host" />
+			<Field className="form-control" name="port" component={renderInput} type="number" placeholder="11300, port should be > 1 and < 65536" label="Port" />
+		</Form>
+	);
+};
 
 AddServerForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired

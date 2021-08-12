@@ -1,7 +1,7 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {
-	ControlLabel, FormGroup, Form, Col
+	Form, Col, Row
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -21,14 +21,17 @@ const renderInput = ({
 	input, className, type, placeholder, meta, label
 }) => {
 	return (
-		<FormGroup controlId={input.name} validationState={meta.error && meta.touched ? 'error' : null}>
-			<Col componentClass={ControlLabel} sm={2}>
-				{label} {meta.error && meta.touched ? `* ${meta.error}` : ''}
+		<Form.Group as={Row} className="mb-3" controlId={input.name}>
+			<Form.Label column sm={3}>
+				{label}
+			</Form.Label>
+			<Col sm={9}>
+				<Form.Control {...input} className={className} type={type} placeholder={placeholder} isInvalid={Boolean(meta.error) && meta.touched} isValid={!Boolean(meta.error)} />
+				<Form.Control.Feedback type="invalid">
+					{meta.error && meta.touched ? `${meta.error}` : ''}
+				</Form.Control.Feedback>
 			</Col>
-			<Col sm={10}>
-				<input {...input} className={className} type={type} placeholder={placeholder} />
-			</Col>
-		</FormGroup>
+		</Form.Group>
 	);
 };
 
@@ -50,16 +53,17 @@ renderInput.defaultProps = {
 	label: null
 };
 
-const SearchJobForm = (props) => (
-	<Form horizontal onSubmit={props.handleSubmit}>
-		<Field className="form-control" name="job_id" component={renderInput} type="text" label="Job ID" />
-	</Form>
-);
+const SearchJobForm = (props) => {
+	return (
+		<Form noValidate onSubmit={props.handleSubmit}>
+			<Field className="form-control" name="job_id" component={renderInput} type="text" label="Job ID" />
+		</Form>
+	);
+};
 
 SearchJobForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired
 };
-
 
 const SearchJobFormRedux = reduxForm({
 	form: 'search_job',

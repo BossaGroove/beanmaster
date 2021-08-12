@@ -133,7 +133,7 @@ class SearchJobModal extends Component {
 
 		if (this.state.alert) {
 			alertMsg = (
-				<Alert bsStyle={this.state.alert.status} onDismiss={() => { this.hideAlert(); }}>
+				<Alert variant={this.state.alert.status} onClose={() => { this.hideAlert(); }} dismissible>
 					{this.state.alert.message}
 				</Alert>
 			);
@@ -149,7 +149,7 @@ class SearchJobModal extends Component {
 					<p>
 						<strong>Stats</strong>
 					</p>
-					<Table condensed>
+					<Table size="sm">
 						<tbody>
 							{Object.keys(this.state.jobStat).map((statKey) => {
 								return (
@@ -164,29 +164,27 @@ class SearchJobModal extends Component {
 				</div>
 			);
 			kickJobButton = (
-				<Button bsStyle="danger" onClick={() => { this.kick(this.state.jobStat.id); }}>Kick Job</Button>
+				<Button variant="danger" onClick={() => { this.kick(this.state.jobStat.id); }}>Kick Job</Button>
 			);
 		}
 
 		return (
-			<span>
-				<Modal show={this.props.searchJobModal.show} onHide={() => this.close()}>
-					<Modal.Header closeButton>
-						<Modal.Title>Search job</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						{alertMsg}
-						<SearchJobForm onSubmit={(values) => { this.search(values); }} />
-						{stat}
-					</Modal.Body>
-					<Modal.Footer>
-						<Preloader show={this.props.busy} />
-						{kickJobButton}
-						<Button onClick={() => this.close()}>Close</Button>
-						<SearchJobFormSubmitButton />
-					</Modal.Footer>
-				</Modal>
-			</span>
+			<Modal show={this.props.searchJobModal.show} onHide={() => this.close()}>
+				<Modal.Header closeButton>
+					<Modal.Title>Search job</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{alertMsg}
+					<SearchJobForm onSubmit={(values) => { this.search(values); }} />
+					{stat}
+				</Modal.Body>
+				<Modal.Footer>
+					<Preloader show={this.props.busy} />
+					{kickJobButton}
+					<Button variant={"secondary"} onClick={() => this.close()}>Close</Button>
+					<SearchJobFormSubmitButton />
+				</Modal.Footer>
+			</Modal>
 		);
 	}
 }

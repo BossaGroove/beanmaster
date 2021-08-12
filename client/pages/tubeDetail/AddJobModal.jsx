@@ -71,29 +71,27 @@ class AddJobModal extends Component {
 
 		if (this.state.alert) {
 			alertMsg = (
-				<Alert bsStyle="danger" onDismiss={() => { this.hideAlert(); }}>
+				<Alert variant="danger" onDismiss={() => { this.hideAlert(); }}>
 					{this.state.alert}
 				</Alert>
 			);
 		}
 
 		return (
-			<span>
-				<Modal show={this.props.addJobModal.show} onHide={() => this.close()}>
-					<Modal.Header closeButton>
-						<Modal.Title>Add New Job</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						{alertMsg}
-						<AddJobForm onSubmit={(values) => { this.onSubmit(values); }} defaultTube={this.props.defaultTube} />
-					</Modal.Body>
-					<Modal.Footer>
-						<Preloader show={this.props.busy} />
-						<Button onClick={() => this.close()}>Close</Button>
-						<AddJobFormSubmitButton />
-					</Modal.Footer>
-				</Modal>
-			</span>
+			<Modal show={this.props.addJobModal.show} onHide={() => this.close()} size="lg">
+				<Modal.Header closeButton>
+					<Modal.Title>Add New Job</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{alertMsg}
+					<AddJobForm onSubmit={(values) => { this.onSubmit(values); }} defaultTube={this.props.defaultTube} />
+				</Modal.Body>
+				<Modal.Footer>
+					<Preloader show={this.props.busy} />
+					<Button variant="secondary" onClick={() => this.close()}>Close</Button>
+					<AddJobFormSubmitButton />
+				</Modal.Footer>
+			</Modal>
 		);
 	}
 }

@@ -42,12 +42,6 @@ const config = {
 								[
 									BabelPluginTransformImports,
 									{
-										'react-bootstrap': {
-											'transform': function (importName) {
-												return `react-bootstrap/es/${importName}`;
-											},
-											preventFullImport: true
-										},
 										'lodash-es': {
 											'transform': function (importName) {
 												return `lodash-es/${importName}`;

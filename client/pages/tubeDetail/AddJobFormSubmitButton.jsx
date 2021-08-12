@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 const {submit} = actions;
 
 const AddJobFormSubmitButton = ({dispatch}) => (
-	<Button bsStyle="primary" onClick={() => dispatch(submit('add_job'))}>Add</Button>
+	<Button variant="primary" onClick={() => dispatch(submit('add_job'))}>Add</Button>
 );
 
 AddJobFormSubmitButton.propTypes = {
