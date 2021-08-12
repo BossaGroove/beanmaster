@@ -46,14 +46,14 @@ class Tube extends Component {
 		return delta;
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.isMount = true;
 		this.init();
 	}
 
-	componentWillUpdate(nextProps) {
-		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
-			this.performUpdate(nextProps.autoUpdate);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (!prevProps.autoUpdate && this.props.autoUpdate) {
+			this.performUpdate(this.props.autoUpdate);
 		}
 	}
 
@@ -149,7 +149,7 @@ class Tube extends Component {
 						})}
 					</tbody>
 				</Table>
-				{/* <Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button> */}
+				{/*<Button className="btn-primary" onClick={() => {this.updateTubes().then(() => {}).catch((e) => {})}}>Update</Button>*/}
 			</div>
 		);
 	}

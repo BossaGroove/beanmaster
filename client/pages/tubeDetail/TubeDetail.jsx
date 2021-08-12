@@ -110,14 +110,14 @@ class TubeDetail extends Component {
 		});
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.isMount = true;
 		this.init();
 	}
 
-	componentWillUpdate(nextProps) {
-		if (nextProps.autoUpdate !== this.props.autoUpdate && nextProps.autoUpdate) {
-			this.performUpdate(nextProps.autoUpdate);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (!prevProps.autoUpdate && this.props.autoUpdate) {
+			this.performUpdate(this.props.autoUpdate);
 		}
 	}
 

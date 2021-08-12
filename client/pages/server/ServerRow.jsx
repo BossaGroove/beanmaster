@@ -10,7 +10,7 @@ import {showRemoveServerModal} from '../../actions/removeServerModal';
 import {dispatchServerRow} from '../../actions/serverRow';
 
 class ServerRow extends Component {
-	componentWillMount() {
+	componentDidMount() {
 		this.init();
 	}
 
@@ -73,7 +73,7 @@ ServerRow.propTypes = {
 	port: PropTypes.number.isRequired,
 	serverRow: PropTypes.shape({
 		connections: PropTypes.number,
-		version: PropTypes.number,
+		version: PropTypes.string,
 		totalJobs: PropTypes.number,
 		pid: PropTypes.number,
 		uptime: PropTypes.number,

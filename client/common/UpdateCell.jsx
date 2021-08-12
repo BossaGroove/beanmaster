@@ -8,25 +8,27 @@ class UpdateCell extends Component {
 
 		this.state = {
 			cellStyle: '',
-			updated: false,
-			delta: 0
+			delta: 0,
+			updateDone: false
 		};
 	}
 
-	componentWillReceiveProps(nextProps) {
-		const delta = nextProps.delta || 0;
-
-		if (delta !== 0) {
-			this.setBackgroundAnimation(nextProps.delta);
+	componentDidUpdate(prevProps, prevState) {
+		// if updated from outside, reset update done
+		if (this.props.value !== prevProps.value || this.props.delta !== prevProps.delta) {
+			this.setState({
+				updateDone: false
+			});
 		}
-	}
 
-	setBackgroundAnimation(delta) {
-		this.setState({
-			cellStyle: updateCellCss.updated,
-			updated: true,
-			delta: delta
-		});
+		// trigger the animation if update allowed and delta is not 0
+		if (!this.state.updateDone && this.props.delta !== 0) {
+			this.setState({
+				cellStyle: updateCellCss.updated,
+				delta: this.props.delta,
+				updateDone: true
+			});
+		}
 	}
 
 	removeBackgroundAnimation() {
@@ -37,7 +39,6 @@ class UpdateCell extends Component {
 
 	removePopup() {
 		this.setState({
-			updated: false,
 			delta: 0
 		});
 	}
@@ -45,7 +46,7 @@ class UpdateCell extends Component {
 	render() {
 		let popup = '';
 
-		if (this.state.updated) {
+		if (this.state.delta !== 0) {
 			let colorClass = updateCellCss.decrease;
 			let prefix = '';
 

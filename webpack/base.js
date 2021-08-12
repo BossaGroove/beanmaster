@@ -134,17 +134,16 @@ const config = {
 	},
 	resolve: {
 		modules: [
-
 			path.resolve(__dirname, '../client'),
 			'node_modules'
 		],
 		fallback: {
-			http: require.resolve('stream-http'),
-			https: require.resolve('https-browserify'),
-			zlib: require.resolve('browserify-zlib'),
-			tty: require.resolve('tty-browserify'),
-			stream: require.resolve('stream-browserify'),
-			os: require.resolve('os-browserify/browser')
+			http: false,
+			https: false,
+			zlib: false,
+			tty: false,
+			stream: false,
+			os: false
 		},
 		extensions: ['.js', '.json', '.jsx']
 	}

@@ -25,7 +25,7 @@ class Server extends Component {
 		return result.data.body.servers;
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.init();
 	}
 

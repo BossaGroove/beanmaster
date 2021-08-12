@@ -107,7 +107,7 @@ config.module.rules.push(
 );
 
 config.entry.app = [
-	'webpack-dev-server/client?http://localhost:4003',
+	'webpack-dev-server/client?http://localhost:4000',
 	'./index.jsx'
 ];
 
