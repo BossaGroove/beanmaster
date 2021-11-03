@@ -84,7 +84,7 @@
     "lodash": "^4.17.21",
     "pug": "^3.0.2",
     "require-all": "^3.0.0",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development node ./server/bin/server.js",
