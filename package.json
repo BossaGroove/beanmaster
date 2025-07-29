@@ -73,7 +73,7 @@
     "daemonize2": "^0.4.2",
     "debug": "^4.3.2",
     "fivebeans": "^1.5.0",
-    "koa": "^2.13.1",
+    "koa": "^3.0.1",
     "koa-bodyparser": "^4.3.0",
     "koa-csrf": "^3.0.8",
     "koa-helmet": "^6.1.0",
